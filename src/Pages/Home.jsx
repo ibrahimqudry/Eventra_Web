@@ -2,6 +2,7 @@ import React from 'react'
 import Nav from '../componats/Nav';
 import Footer from '../componats/Footer';
 import "../css/home.css";
+import{Link} from "react-router-dom";
 
 const Home = () => {
   return (
@@ -75,8 +76,10 @@ const Home = () => {
                 <span className="attendees">200+ Attendees</span>
               </div>
               <p>Turn your idea into reality in 54 hours with mentors, investors, and fellow entrepreneurs.</p>
-              <button className="details-btn">View Details</button>
-            </div>
+              <Link to="/events-details">
+  <button className="details-btn">View Details</button>
+</Link>               
+</div>
           </div>
         </div>
       </section>
@@ -134,7 +137,6 @@ const Home = () => {
           </form>
         </div>
       </section>
-      <Footer />
     </React.Fragment>
   )
 }

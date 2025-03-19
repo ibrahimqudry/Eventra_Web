@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+.container- {
+    display: flex;
+    height: 100vh;
+}
+.sidebar {
+    width: 250px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.user-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: auto;
+}
+.avatar img{
+    width:100%;
+    border-radius: 50%;
+}
+.profile-content button{
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.profile-content .delete{
+    background: transparent ;
+    border: solid 1.3px #a855f7;
+    color: #6366f1;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.menu ul {
+    list-style: none;
+}
+.menu ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+.menu ul .active {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+.content {
+    flex: 1;
+    background: #F4F4F4;
+    padding: 20px;
+}
+.settings {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+.settings-container- {
+    display: flex;
+}
+.settings-content {
+    flex: 1;
+    padding-left: 20px;
+}
+.profile-upload{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin-block: 20px;
+}
+.profile-content h3{
+    margin-block: 10px;
+
+}
+
+form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+form label {
+    display: block;
+}
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.interests{
+    margin-block: 20px;
+}
+.interests span{
+    color: #6366f1;
+    font-size: 15px;
+    margin-right: 5px;
+
+}
+.interests-btns{
+    margin-block: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.interests-btns button{
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 3px;
+}
+.buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+.cancel, .save {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.cancel {
+    background: transparent ;
+    border: solid 1.3px #a855f7;
+    color: #6366f1;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.save {
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+}
+@media (max-width: 768px) {
+    .container- {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+    }
+    .menu ul {
+        display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .menu ul li {
+        padding: 10px 15px;
+    }
+    .settings-container- {
+        flex-direction: column;
+        align-items: center;
+    }
+    .settings-content {
+        padding-left: 0;
+    }
+}

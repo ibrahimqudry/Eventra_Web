@@ -2,11 +2,6 @@ import React from 'react'
 import Nav from '../componats/Nav'
 import Footer from '../componats/Footer'
 import "../css/about.css"
-
-
-
-
-
 const About = () => {
   return (
     <>

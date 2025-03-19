@@ -1,6 +1,4 @@
 
-
-
 import React, { useState } from "react";
 import "../css/auth.css"; 
 import Nav from "../componats/Nav";

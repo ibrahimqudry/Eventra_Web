@@ -6,10 +6,13 @@ import "../css/events.css";
 import { Link } from 'react-router-dom';
 
 
+
 const Event = () => {
+
   return (
     <>
       <Nav />
+
       <section className="events-hero">
         <div className="events-hero-content">
           <h1>Discover Events</h1>
@@ -56,8 +59,8 @@ const Event = () => {
             <img
               src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
               alt="Tech Summit"
-            />
-            <div className="event-date">
+            /> 
+             <div className="event-date">
               <span className="day">15</span>
               <span className="month">APR</span>
             </div>
@@ -81,10 +84,13 @@ const Event = () => {
               Join the biggest tech conference of the year featuring industry
               leaders and innovators.
             </p>
+            
             <div className="event-footer">
               <span className="price">$299</span>
-              <button className="register-btn">Register Now</button>
-            </div>
+<Link to="/events-details">
+  <button className="register-btn">Register Now</button>
+</Link>          
+  </div>
           </div>
         </div>
 
@@ -164,8 +170,6 @@ const Event = () => {
       <div className="load-more">
         <button>Load More Events</button>
       </div>
-
-      <Footer />
     </>
   );
 };
