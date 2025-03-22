@@ -1,0 +1,82 @@
+:root {
+    --primary-color: #6366f1;
+    --secondary-color: #a855f7;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --bg-light: #f3f4f6;
+    --bg-white: #ffffff;
+    --success-color: #4CAF50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --border-color: #e5e7eb;
+}
+
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background: var(--bg-white);
+    border-right: 1px solid var(--border-color);
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.sidebar-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.logo span {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    background-clip: text;    -webkit-text-fill-color: transparent;
+}
+
+.sidebar-nav {
+    padding: 1.5rem 0;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav li.active a {
+    color: var(--primary-color);
+    background: linear-gradient(to right, rgba(99, 102, 241, 0.1), transparent);
+    border-left: 3px solid var(--primary-color);
+}
+
+.sidebar-nav i {
+    width: 20px;
+    margin-right: 0.75rem;
+}
