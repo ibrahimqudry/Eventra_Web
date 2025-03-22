@@ -13,27 +13,27 @@ import EventDetails from './Pages/EventDetails'
 import UserDashboard from './Pages/UserDashboard'
 
 function App() {
-  
+
 
   return (
     <>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/Nav" element={<Navbar />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/user" element={<UserDashboard/>} />
-         <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} /> 
-         <Route path="/signin" element={<Signin />} /> 
-        <Route path='/Create' element={<Createevent />} />
-        <Route path='/events' element={<Events />} />
-        <Route path='/events-details' element={<EventDetails/>} />
-        <Route path='/Servses' element={<Servses />} /> 
-        <Route path='/Footer' element={<Footer />} />
-      </Routes>
-      <Footer/>
-    </BrowserRouter>
- 
+      <BrowserRouter>
+        <Routes>
+          <Route path="/Nav" element={<Navbar />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/user" element={<UserDashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path='/Create' element={<Createevent />} />
+          <Route path='/events' element={<Events />} />
+          <Route path='/events-details' element={<EventDetails />} />
+          <Route path='/Servses' element={<Servses />} />
+          <Route path='/Footer' element={<Footer />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+
     </>
   )
 }
