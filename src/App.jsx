@@ -4,7 +4,6 @@ import Home from './pages/Home'
 import About from './Pages/About'
 import Contact from './Pages/Contact'
 import Navbar from './componats/Nav'
-import Signin from './Pages/Signin'
 import Createevent from './pages/Createevent'
 import Events from './pages/Events'
 import Servses from './Pages/Servses'
@@ -20,7 +19,6 @@ function App() {
         <Route path="/" element={<Home />} />
          <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} /> 
-         <Route path="/signin" element={<Signin />} /> 
         <Route path='/Create' element={<Createevent />} />
         <Route path='/events' element={<Events />} />
         <Route path='/Servses' element={<Servses />} /> 
