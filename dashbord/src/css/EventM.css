@@ -77,6 +77,7 @@ body {
     background: white;
     color: var(--text-primary);
     min-width: 150px;
+    display: flex;
 }
 
 .btn-filter {
@@ -92,6 +93,7 @@ body {
     gap: 0.5rem;
     transition: all 0.3s ease;
 }
+
 
 .btn-filter:hover {
     background: var(--border-color);
@@ -286,13 +288,30 @@ body {
 
     .filter-select,
     .filter-date {
-        flex: 1;
+        flex: 1; 
         min-width: 0;
     }
 
     .btn-filter {
         width: 100%;
         justify-content: center;
+    }
+    .data-table td{
+        display: flex;
+        flex-direction: column;
+    }
+    .data-table th{
+        display: flex;
+        flex-direction: column;
+    }
+    .data-table td{
+        display: flex;
+        flex-direction: column;
+    }
+    tbody tr{
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-bottom: 2px solid var(--border-color);
+        /* border-radius: 20px; */
     }
 }
 
@@ -308,6 +327,42 @@ body {
         justify-content: center;
     }
 
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .events-table {
+        width: 100%;
+    }
+    td{
+        display: flex;
+        flex-direction: column;
+    }
+    th{
+        display: flex;
+        flex-direction: column;
+    }
+
+    tbody tr{
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-bottom: 2px solid var(--border-color);
+    }
+}
+
+@media (max-width: 480px) {
+    td{
+        display: flex;
+        flex-direction: column;
+    }
+    th{
+        display: flex;
+        flex-direction: column;
+    }
+
+    tbody tr{
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-bottom: 2px solid var(--border-color);
+    }
     .table-container {
         overflow-x: auto;
     }

@@ -13,7 +13,7 @@ function EventM() {
               <SideNav />
               <main className="main-content">
                   < TopNav />
-                          <div className="events-content">
+        <div className="events-content">
             <div className="page-header">
                 <h1>Events Management</h1>
                 <button className="btn-create">
@@ -166,15 +166,7 @@ function EventM() {
                 </button>
             </div>
         </div>
-
-
-
-
-                  </main>
-
-
-
-
+</main>
       </body>
       
       </>
