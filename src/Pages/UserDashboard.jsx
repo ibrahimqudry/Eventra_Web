@@ -18,9 +18,11 @@ function UserDashboard() {
           {" "}
           <i className="fa-solid fa-gears" /> Settings
         </li>
+        {/* <Link to="/notifications"> */}
         <li>
           <i className="fa-solid fa-bell" /> Notifications
         </li>
+        {/* </Link> */}
         <li>
           {" "}
           <i className="fa-solid fa-clipboard-list" /> Scheduled Events
