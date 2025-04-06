@@ -9,6 +9,7 @@ import Events from "./Pages/Events";
 import Servses from "./Pages/Servses";
 import UserDashboard from "./Pages/UserDashboard";
 import EventDetails from "./Pages/EventDetails";
+import Notifications from "./Pages/Notifications";
 import Footer from "./componats/Footer";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/Servses" element={<Servses />} />
         <Route path="/UserDashboard" element={<UserDashboard />} />
         <Route path="/event-details" element={<EventDetails />} />
+        <Route path="/Notifications" element={<Notifications />} />
         <Route path="/Footer" element={<Footer />} />
       </Routes>
     </BrowserRouter>
