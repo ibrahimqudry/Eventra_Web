@@ -37,11 +37,15 @@ body {
 }
 
 .slideshow-container {
-    /* position: relative; */
+    position: relative;
     border-radius: 20px;
-    /* overflow: hidden; */
+    overflow: hidden;
     height: 60vh;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.slide.active {
+    display: block;
+    opacity: 1;
 }
 
 .slides-wrapper {
@@ -55,23 +59,24 @@ body {
     object-fit: cover;
 }
 
-.nav-btn {
-    /* position: absolute; */
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
-    border: none;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10;
+
+    .nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(4px);
+        border: none;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
 }
 
 .nav-btn:hover {
@@ -92,7 +97,6 @@ body {
     background: var(--bg-white);
     border-radius: 20px;
     padding: 2rem;
-    height: 200vh;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
@@ -219,6 +223,7 @@ body {
 /* Previous Events */
 .previous-events {
     margin-bottom: 3rem;
+
 }
 
 .previous-events h2 {
@@ -237,7 +242,7 @@ body {
     /* position: relative; */
     border-radius: 15px;
     overflow: hidden;
-    aspect-ratio: 16/9;
+    /* aspect-ratio: 16/9; */
 }
 
 .event-card img {
@@ -461,6 +466,6 @@ body {
     }
 
     .tickets-grid {
-        grid-template-columns: 1fr;
-    }
+        grid-template-columns: 1fr;
+}
 }
