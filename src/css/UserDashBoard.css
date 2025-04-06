@@ -1,14 +1,9 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-.container- {
+
+.user-dashboard-container {
     display: flex;
     height: 100vh;
 }
-.sidebar {
+.user-dashboard-sidebar {
     width: 250px;
     background: linear-gradient(135deg, #6366f1, #a855f7);
     color: white;
@@ -16,21 +11,31 @@
     display: flex;
     flex-direction: column;
 }
-.user-info {
+.user-profile-info {
     text-align: center;
     margin-bottom: 20px;
 }
-.avatar {
+.user-avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     margin: auto;
 }
-.avatar img{
+.user-avatar img {
     width:100%;
     border-radius: 50%;
 }
-.profile-content button{
+.user-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: auto;
+}
+.user-avatar-large img {
+    width:100%;
+    border-radius: 50%;
+}
+.profile-actions button {
     background: linear-gradient(135deg, #6366f1, #a855f7);
     color: white;
     padding: 10px 20px;
@@ -38,8 +43,8 @@
     border-radius: 5px;
     cursor: pointer;
 }
-.profile-content .delete{
-    background: transparent ;
+.profile-actions .delete-btn {
+    background: transparent;
     border: solid 1.3px #a855f7;
     color: #6366f1;
     padding: 10px 20px;
@@ -47,74 +52,72 @@
     cursor: pointer;
 }
 
-.menu ul {
+.user-dashboard-menu ul {
     list-style: none;
 }
-.menu ul li {
+.user-dashboard-menu ul li {
     padding: 10px;
     cursor: pointer;
 }
-.menu ul .active {
+.user-dashboard-menu ul .menu-item-active {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
 }
-.content {
+.user-dashboard-content {
     flex: 1;
     background: #F4F4F4;
     padding: 20px;
 }
-.settings {
+.user-settings-section {
     background: white;
     padding: 20px;
     border-radius: 10px;
 }
-.settings-container- {
+.settings-container {
     display: flex;
 }
-.settings-content {
+.settings-content-wrapper {
     flex: 1;
     padding-left: 20px;
 }
-.profile-upload{
+.profile-image-upload {
     display: flex;
     flex-direction: column;
     width: 300px;
     margin-block: 20px;
 }
-.profile-content h3{
+.profile-actions h3 {
     margin-block: 10px;
-
 }
 
-form {
+.profile-form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
-form label {
+.form-label {
     display: block;
 }
-input {
+.form-input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-.interests{
+.interests-section {
     margin-block: 20px;
 }
-.interests span{
+.icon-wrapper {
     color: #6366f1;
     font-size: 15px;
     margin-right: 5px;
-
 }
-.interests-btns{
+.interest-tags {
     margin-block: 10px;
     display: flex;
     flex-wrap: wrap;
 }
-.interests-btns button{
+.interest-tag {
     background: linear-gradient(135deg, #6366f1, #a855f7);
     color: white;
     padding: 10px 20px;
@@ -123,47 +126,47 @@ input {
     cursor: pointer;
     margin: 3px;
 }
-.buttons {
+.form-actions {
     margin-top: 20px;
     text-align: right;
 }
-.cancel, .save {
+.cancel-btn, .save-btn {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
-.cancel {
-    background: transparent ;
+.cancel-btn {
+    background: transparent;
     border: solid 1.3px #a855f7;
     color: #6366f1;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
-.save {
+.save-btn {
     background: linear-gradient(135deg, #6366f1, #a855f7);
     color: white;
 }
 @media (max-width: 768px) {
-    .container- {
+    .user-dashboard-container {
         flex-direction: column;
     }
-    .sidebar {
+    .user-dashboard-sidebar {
         width: 100%;
     }
-    .menu ul {
+    .user-dashboard-menu ul {
         display: grid;
-      grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
     }
-    .menu ul li {
+    .user-dashboard-menu ul li {
         padding: 10px 15px;
     }
-    .settings-container- {
+    .settings-container {
         flex-direction: column;
         align-items: center;
     }
-    .settings-content {
+    .settings-content-wrapper {
         padding-left: 0;
     }
 }

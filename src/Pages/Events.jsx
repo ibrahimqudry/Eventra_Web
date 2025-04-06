@@ -81,7 +81,9 @@ const Event = () => {
             </p>
             <div className="event-footer">
               <span className="price">$299</span>
-              <button className="register-btn">Register Now</button>
+              <Link to="/event-details">
+                <button className="register-btn">Register Now</button>
+              </Link>
             </div>
           </div>
         </div>
@@ -117,7 +119,9 @@ const Event = () => {
             </p>
             <div className="event-footer">
               <span className="price">$199</span>
-              <button className="register-btn">Register Now</button>
+              <Link to="/event-details">
+                <button className="register-btn">Register Now</button>
+              </Link>
             </div>
           </div>
         </div>
@@ -153,7 +157,9 @@ const Event = () => {
             </p>
             <div className="event-footer">
               <span className="price">$149</span>
-              <button className="register-btn">Register Now</button>
+              <Link to="/event-details">
+                <button className="register-btn">Register Now</button>
+              </Link>
             </div>
           </div>
         </div>
