@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Nav from '../componats/Nav';
-// import Footer from '../componats/Footer';
+import Footer from '../componats/Footer';
 import "../css/eventDetails.css";
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const images = [
   "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
@@ -297,7 +297,7 @@ function EventDetails() {
         </div>
       </div>
 
-
+     <Footer />
     </>
   )
 }
