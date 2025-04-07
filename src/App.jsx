@@ -1,29 +1,35 @@
-import React from 'react';
-import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import SideNav from './coponats/SideNav';
-import TopNav from './coponats/TopNav';
-import Dashbord from './pages/Dashbord';
-import EventM from './pages/EventM';
-import Orderm from './pages/Ordersm';
-import Profile from './pages/Profile';
 
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import About from './Pages/About'
+import Contact from './Pages/Contact'
+import Navbar from './componats/Nav'
+import Createevent from './pages/Createevent'
+import Events from './pages/Events'
+import Servses from './Pages/Servses'
+import Footer from './componats/Footer'
+import GenerateQR from './Pages/GenerateQR'
+import SubscriberInfo from './Pages/SubscriberInfo'
 
 function App() {
 
+
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/topnav" element={<TopNav />} />
-          <Route path="/" element={<SideNav />} />
-          <Route path="/dashbord" element={<Dashbord />} />
-          <Route path='/Eventm' element={<EventM />} />
-          <Route path='/orders' element={<Orderm />} />
-          <Route path='/profile' element={<Profile />} />
-        </Routes>
-      </Router>
-    </>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/Nav" element={<Navbar />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path='/Create' element={<Createevent />} />
+        <Route path='/events' element={<Events />} />
+        <Route path='/Servses' element={<Servses />} />
+        <Route path='/Footer' element={<Footer />} />
+        <Route path="/generateQR" element={<GenerateQR />} />
+        <Route path="/subscriber/:id" element={<SubscriberInfo />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App;
