@@ -10,18 +10,18 @@ import Servses from './Pages/Servses'
 import Footer from './componats/Footer'
 
 function App() {
-  
+
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/Nav" element={<Navbar />} />
         <Route path="/" element={<Home />} />
-         <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} /> 
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path='/Create' element={<Createevent />} />
         <Route path='/events' element={<Events />} />
-        <Route path='/Servses' element={<Servses />} /> 
+        <Route path='/Servses' element={<Servses />} />
         <Route path='/Footer' element={<Footer />} />
       </Routes>
     </BrowserRouter>
