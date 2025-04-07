@@ -13,6 +13,7 @@ const Home = () => {
           <p>Find and join the most exciting events happening around you.</p>
           <div className="search-box">
             <input type="text" placeholder="Search events..." />
+            
             <button>Search</button>
           </div>
         </div>
