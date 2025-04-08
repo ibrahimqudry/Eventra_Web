@@ -29,6 +29,10 @@ import SavedEvents from './Pages/SavedEvents'
 import EventDetails from './Pages/EventDetails'
 import UserDashboard from './Pages/UserDashboard'
 
+// Paypal 
+import CheckoutPage from './Pages/CheckoutPage';
+
+
 function App() {
 
 
@@ -62,6 +66,9 @@ function App() {
         <Route path='/notifications' element={<Notifications />} />
         <Route path='/savedEvents' element={<SavedEvents />} />
         <Route path="/user" element={<UserDashboard />} />
+
+        {/* Paypal */}
+        <Route path="/checkout" element={<CheckoutPage />} />
       </Routes>
     </BrowserRouter>
   )
