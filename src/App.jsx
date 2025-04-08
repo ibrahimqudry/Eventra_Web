@@ -2,6 +2,7 @@
 // Importing React and other necessary libraries
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import './App.css'
 import Home from './pages/Home'
 import About from './Pages/About'
 import Contact from './Pages/Contact'
@@ -14,8 +15,6 @@ import GenerateQR from './Pages/GenerateQR'
 import SubscriberInfo from './Pages/SubscriberInfo'
 
 // Event Manager Dashboard
-import SideNav from './components/SideNav';
-import TopNav from './components/TopNav';
 import EventMDashbord from './Pages/EventManagerDashboard';
 import EventM from './pages/EventM';
 import Orderm from './pages/Ordersm';
@@ -40,9 +39,6 @@ function App() {
         <Route path="/subscriber/:id" element={<SubscriberInfo />} />
 
         {/* EventManager Dashboard /> */}
-
-        {/* <Route path="/topnav" element={<TopNav />} />
-        <Route path="/" element={<SideNav />} /> */}
         <Route path="/EventMDashbord" element={<EventMDashbord />} />
         <Route path='/Eventm' element={<EventM />} />
         <Route path='/orders' element={<Orderm />} />
