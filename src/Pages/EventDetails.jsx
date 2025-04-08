@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Nav from '../componats/Nav';
 import Footer from '../componats/Footer';
 import "../css/eventDetails.css";
+import { Link } from "react-router";
 
 const EventDetails = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -187,12 +188,12 @@ const EventDetails = () => {
                                 <i className="fas fa-arrow-right"></i>
                             </button>
                         </div>
-                        <div className="ed-ticket-footer">
+                        {/* <div className="ed-ticket-footer"> */}
                             <div className="ed-barcode">
-                                <div className="ed-barcode-lines"></div>
+                                {/* <div className="ed-barcode-lines"></div> */}
                                 <span className="ed-ticket-number">EB24-0001</span>
                             </div>
-                        </div>
+                        {/* </div> */}
                     </div>
 
                     {/* Standard Ticket */}
@@ -230,12 +231,12 @@ const EventDetails = () => {
                                 <i className="fas fa-arrow-right"></i>
                             </button>
                         </div>
-                        <div className="ed-ticket-footer">
+                        {/* <div className="ed-ticket-footer"> */}
                             <div className="ed-barcode">
-                                <div className="ed-barcode-lines"></div>
+                                {/* <div className="ed-barcode-lines"></div> */}
                                 <span className="ed-ticket-number">ST24-0001</span>
                             </div>
-                        </div>
+                        {/* </div> */}
                     </div>
 
                     {/* VIP Ticket */}
@@ -275,12 +276,12 @@ const EventDetails = () => {
                                 <i className="fas fa-arrow-right"></i>
                             </button>
                         </div>
-                        <div className="ed-ticket-footer">
+                        {/* <div className="ed-ticket-footer"> */}
                             <div className="ed-barcode">
-                                <div className="ed-barcode-lines"></div>
+                                {/* <div className="ed-barcode-lines"></div> */}
                                 <span className="ed-ticket-number">VIP24-0001</span>
                             </div>
-                        </div>
+                        {/* </div> */}
                     </div>
                 </div>
             </div>

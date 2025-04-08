@@ -19,7 +19,7 @@ const Notifications = () => {
       {/* If no notifications, show empty state */}
       {notifications.length === 0 ? (
         <div className="empty-container">
-          {/* <img src="/empty.png" alt="Empty notifications" className="bell-image" /> */}
+          <img src="../assets/empty.png" alt="Empty notifications" className="bell-image" />
           <div className="empty-text">Nothing here!!!</div>
           <div className="sub-text">Tap the notification settings button below and check again.</div>
           <button className="settings-button">
@@ -39,10 +39,13 @@ const Notifications = () => {
               {/* Buttons */}
               <div className="buttons-container">
                 <button className="ignore-button" onClick={() => removeNotification(item.id)}>
-                  <span className="icon">×</span>
+                  <span className="icon"><i class="fa-solid fa-xmark"></i></span>
                 </button>
                 <button className="accept-button" onClick={() => navigation.navigate("event-details")}>
-                  <span className="icon">→</span>
+                  <span className="icon-arrow">
+                  <i class="fa-solid fa-arrow-right">
+                  </i>
+                  </span>
                 </button>
               </div>
             </div>

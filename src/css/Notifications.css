@@ -103,8 +103,17 @@
     background-color: #81C784;
   }
   
-  .icon {
+  .icon{
     color: #fff;
     font-size: 20px;
     line-height: 1;
+  }
+  .icon-arrow{
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    transition: transform 0.3s ease-in-out;
+  }
+  .icon-arrow:hover{
+    transform: rotate(-45deg);
   }

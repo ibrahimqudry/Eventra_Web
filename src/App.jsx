@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import Home from "./Pages/Home";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import Navbar from "./componats/Nav";
@@ -10,11 +12,13 @@ import Servses from "./Pages/Servses";
 import UserDashboard from "./Pages/UserDashboard";
 import EventDetails from "./Pages/EventDetails";
 import Notifications from "./Pages/Notifications";
+import SavedEvents from './Pages/SavedEvents';
 import Footer from "./componats/Footer";
 
 function App() {
   return (
-    <BrowserRouter>
+    <Provider store={store}>
+         <BrowserRouter>
       <Routes>
         <Route path="/Nav" element={<Navbar />} />
         <Route path="/" element={<Home />} />
@@ -27,9 +31,11 @@ function App() {
         <Route path="/UserDashboard" element={<UserDashboard />} />
         <Route path="/event-details" element={<EventDetails />} />
         <Route path="/Notifications" element={<Notifications />} />
+        <Route path="/SavedEvents" element={<SavedEvents />} />
         <Route path="/Footer" element={<Footer />} />
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+      </Provider>
   );
 }
 

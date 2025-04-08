@@ -17,11 +17,11 @@ function UserDashboard() {
               <li className="menu-item-active">
                 <i className="fa-solid fa-gears" /> Settings
               </li>
-             
-                <li className="menu-item">
-                  <i className="fa-solid fa-bell" /> Notifications
-                </li>
-             
+             <Link to="/Notifications">
+               <li className="menu-item">
+                 <i className="fa-solid fa-bell" /> Notifications
+               </li>
+             </Link>
               <li className="menu-item">
                 <i className="fa-solid fa-clipboard-list" /> Scheduled Events
               </li>
