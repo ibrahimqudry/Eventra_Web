@@ -83,7 +83,7 @@ const Event = () => {
             </p>
             <div className="event-footer">
               <span className="price">$299</span>
-              <button className="register-btn">Register Now</button>
+              <button className="register-btn">Learn More</button>
             </div>
           </div>
         </div>
@@ -119,7 +119,7 @@ const Event = () => {
             </p>
             <div className="event-footer">
               <span className="price">$199</span>
-              <button className="register-btn">Register Now</button>
+              <button className="register-btn">Learn More</button>
             </div>
           </div>
         </div>

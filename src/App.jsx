@@ -20,8 +20,6 @@ import EventM from './pages/EventM';
 import Orderm from './pages/Ordersm';
 import Profile from './pages/Profile';
 
-// ServiceOnwerDashboard
-import ServiceOnwerDashboard from './Pages/ServiceOnwerDashboard';
 
 // UserDashboard
 import Notifications from './Pages/Notifications'
@@ -31,6 +29,13 @@ import UserDashboard from './Pages/UserDashboard'
 
 // Paypal 
 import CheckoutPage from './Pages/CheckoutPage';
+
+// ServiceOwnerDashboard
+import SOBookings from './components/Bookings'
+import SOServices from './components/Services'
+import SOProfile from './components/Profile'
+import SODashboard from './components/Dashboard'
+
 
 
 function App() {
@@ -57,8 +62,8 @@ function App() {
         <Route path='/orders' element={<Orderm />} />
         <Route path='/profile' element={<Profile />} />
 
-        {/* ServiceOnwerDashboard */}
-        <Route path="/ServiceOnwerDashboard" element={<ServiceOnwerDashboard />} />
+        {/* ServiceOwnerDashboard */}
+        {/* <Route path="/ServiceOwnerDashboard" element={<ServiceOwnerDashboard />} /> */}
 
 
         {/* UserDashboard */}
@@ -69,6 +74,13 @@ function App() {
 
         {/* Paypal */}
         <Route path="/checkout" element={<CheckoutPage />} />
+
+        {/* ServiceOwnerDashboard */}
+        <Route path="serviceOwnerDashboard" element={<SODashboard />} />
+        <Route path="ServiceOwnerDashboard/services" element={<SOServices />} />
+        <Route path="ServiceOwnerDashboard/profile" element={<SOProfile />} />
+        <Route path="ServiceOwnerDashboard/bookings" element={<SOBookings />} />
+
       </Routes>
     </BrowserRouter>
   )
