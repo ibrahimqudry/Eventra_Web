@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/UserDashboard.css';
+import { Link } from 'react-router';
 
 function UserDashboard() {
   return (
@@ -17,11 +18,11 @@ function UserDashboard() {
               <li className="menu-item-active">
                 <i className="fa-solid fa-gears" /> Settings
               </li>
-             <Link to="/Notifications">
-               <li className="menu-item">
-                 <i className="fa-solid fa-bell" /> Notifications
-               </li>
-             </Link>
+              <li className="menu-item">
+                {/* <Link to="``>"> */}
+                <i className="fa-solid fa-bell" /> Notifications
+                {/* </Link> */}
+              </li>
               <li className="menu-item">
                 <i className="fa-solid fa-clipboard-list" /> Scheduled Events
               </li>

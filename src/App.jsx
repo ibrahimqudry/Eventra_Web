@@ -30,7 +30,8 @@ function App() {
           <Route path="/signin" element={<Signin />} />
           <Route path='/Create' element={<Createevent />} />
           <Route path='/events' element={<Events />} />
-          <Route path='/events-details' element={<EventDetails />} />
+          <Route path='/event-details' element={<EventDetails />} />
+          <Route path='/notifications' element={<Notifications />} />
           <Route path='/Servses' element={<Servses />} />
           <Route path='/Footer' element={<Footer />} />
         </Routes>
