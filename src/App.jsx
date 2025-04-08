@@ -9,7 +9,7 @@ import Contact from './Pages/Contact'
 import Navbar from './components/Nav'
 import Createevent from './pages/Createevent'
 import Events from './pages/Events'
-import Services from './Pages/services'
+import Services from './Pages/Services'
 import Footer from './components/Footer'
 import GenerateQR from './Pages/GenerateQR'
 import SubscriberInfo from './Pages/SubscriberInfo'
@@ -19,6 +19,9 @@ import EventMDashbord from './Pages/EventManagerDashboard';
 import EventM from './pages/EventM';
 import Orderm from './pages/Ordersm';
 import Profile from './pages/Profile';
+
+// ServiceOnwerDashboard
+import ServiceOnwerDashboard from './Pages/ServiceOnwerDashboard';
 
 function App() {
 
@@ -43,6 +46,9 @@ function App() {
         <Route path='/Eventm' element={<EventM />} />
         <Route path='/orders' element={<Orderm />} />
         <Route path='/profile' element={<Profile />} />
+
+        {/* ServiceOnwerDashboard */}
+        <Route path="/ServiceOnwerDashboard" element={<ServiceOnwerDashboard />} />
       </Routes>
     </BrowserRouter>
   )
