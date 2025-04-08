@@ -1,6 +1,6 @@
 import React from 'react'
-import SideNav from '../coponats/SideNav';
-import TopNav from '../coponats/TopNav';
+import SideNav from '../components/SideNav';
+import TopNav from '../components/TopNav';
 import "../css/Profile.css";
 
 function Profile() {

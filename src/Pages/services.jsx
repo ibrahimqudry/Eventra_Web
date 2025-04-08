@@ -1,10 +1,10 @@
 import React from 'react';
 import '../css/services.css';
-import Footer from '../componats/Footer';
-import Nav from '../componats/Nav';
+import Footer from '../components/Footer';
+import Nav from '../components/Nav';
 
 
-const Servses = () => {
+const services = () => {
     return (
         <>
             <Nav/>
@@ -189,4 +189,4 @@ const Servses = () => {
     )
 }
 
-export default Servses;
+export default services;

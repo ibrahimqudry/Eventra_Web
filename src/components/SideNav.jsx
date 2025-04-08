@@ -17,8 +17,8 @@ function SideNav() {
       </div>
       <nav className="sidebar-nav">
         <ul>
-          <li className={location.pathname === "/dashbord" ? "active" : ""}>
-            <Link to="/dashbord">
+          <li className={location.pathname === "/EventMDashbord" ? "active" : ""}>
+            <Link to="/EventMDashbord">
               <i className="fas fa-tachometer-alt"></i>
               <span>Dashboard</span>
             </Link>

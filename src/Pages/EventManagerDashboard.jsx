@@ -1,9 +1,9 @@
 import React from 'react'
-import SideNav from '../coponats/SideNav';
-import TopNav from '../coponats/TopNav';
-import "../css/Dashbord.css";
+import SideNav from '../components/SideNav';
+import TopNav from '../components/TopNav';
+import "../css/EventManagerDashboard.css";
 import { Link } from 'react-router-dom';
-function Dashbord() {
+function EventMDashbord() {
   return (
     <>
       <body>
@@ -261,4 +261,4 @@ function Dashbord() {
   );
 }
 
-export default Dashbord;
+export default EventMDashbord;

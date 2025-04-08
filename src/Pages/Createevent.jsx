@@ -1,6 +1,6 @@
 import React from 'react'
-import Nav from '../componats/Nav'
-import Footer from '../componats/Footer'
+import Nav from '../components/Nav'
+import Footer from '../components/Footer'
 import "../css/events.css"
 
 

@@ -1,8 +1,8 @@
 import React from 'react'
-import SideNav from '../coponats/SideNav'
-import TopNav from '../coponats/TopNav'
+import SideNav from '../components/SideNav'
+import TopNav from '../components/TopNav'
 import "../css/EventM.css";
-import "../css/Dashbord.css";
+import "../css/EventManagerDashboard.css";
 
 
 
