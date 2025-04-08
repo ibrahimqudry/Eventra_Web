@@ -23,6 +23,12 @@ import Profile from './pages/Profile';
 // ServiceOnwerDashboard
 import ServiceOnwerDashboard from './Pages/ServiceOnwerDashboard';
 
+// UserDashboard
+import Notifications from './Pages/Notifications'
+import SavedEvents from './Pages/SavedEvents'
+import EventDetails from './Pages/EventDetails'
+import UserDashboard from './Pages/UserDashboard'
+
 function App() {
 
 
@@ -49,6 +55,13 @@ function App() {
 
         {/* ServiceOnwerDashboard */}
         <Route path="/ServiceOnwerDashboard" element={<ServiceOnwerDashboard />} />
+
+
+        {/* UserDashboard */}
+        <Route path='/event-details' element={<EventDetails />} />
+        <Route path='/notifications' element={<Notifications />} />
+        <Route path='/savedEvents' element={<SavedEvents />} />
+        <Route path="/user" element={<UserDashboard />} />
       </Routes>
     </BrowserRouter>
   )

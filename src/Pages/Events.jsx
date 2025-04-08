@@ -154,8 +154,10 @@ const Event = () => {
               and fellow entrepreneurs.
             </p>
             <div className="event-footer">
-              <span className="price">$149</span>
-              <button className="register-btn">Register Now</button>
+              <span className="price">$500</span>
+              <Link to={`/event-details`}>
+                <button className="register-btn">Learn More</button>
+              </Link>
             </div>
           </div>
         </div>
