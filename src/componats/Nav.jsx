@@ -59,8 +59,8 @@ const Nav = () => {
           </Link>
         </li>
         <li>
-          <Link to="/user">
-          <i className="fa-solid fa-user" style={{fontSize: "25px"}}></i>
+          <Link to="/UserDashboard">
+            <i className="fa-solid fa-user" style={{ fontSize: "25px" }}></i>
           </Link>
         </li>
       </ul>

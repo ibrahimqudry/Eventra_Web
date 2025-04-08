@@ -1,18 +1,95 @@
-
-import React from 'react';
-import Nav from '../componats/Nav';
-import Footer from '../componats/Footer';
+import React, { useState, useEffect } from "react";
+import Nav from "../componats/Nav";
+import Footer from "../componats/Footer";
 import "../css/events.css";
-import { Link } from 'react-router-dom';
-
-
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addEvent, removeEvent } from "../redux/savedEventsSlice";
 
 const Event = () => {
+  const dispatch = useDispatch();
+  const savedEvents = useSelector((state) => state.savedEvents.savedEvents)
+
+
+  const [filters, setFilters] = useState({
+    category: "",
+    location: "",
+    date: "",
+    searchQuery: ""
+  });
+
+  const events = [
+    {
+      id: 1,
+      title: "Tech Summit 2024",
+      location: "Cairo International Convention Center",
+      time: "9:00 AM - 5:00 PM",
+      attendees: "500+ Attendees",
+      description: "Join the biggest tech conference of the year featuring industry leaders and innovators.",
+      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      date: { day: "15", month: "APR" },
+      category: "Technology",
+      price: "$299",
+    },
+    {
+      id: 2,
+      title: "Design Conference",
+      location: "Alexandria Arts Center",
+      time: "10:00 AM - 4:00 PM",
+      attendees: "300+ Attendees",
+      description: "Explore the latest trends in design with world-renowned designers and creative professionals.",
+      image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80",
+      date: { day: "20", month: "MAY" },
+      category: "Design",
+      price: "$199",
+    },
+    {
+      id: 3,
+      title: "Startup Weekend",
+      location: "Giza Innovation Hub",
+      time: "9:00 AM - 6:00 PM",
+      attendees: "200+ Attendees",
+      description: "Turn your idea into reality in 54 hours with mentors, investors, and fellow entrepreneurs.",
+      image: "https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      date: { day: "10", month: "JUN" },
+      category: "Business",
+      price: "$149",
+    },
+  ];
+
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) || 
+                         event.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+    const matchesCategory = !filters.category || event.category === filters.category;
+    const matchesLocation = !filters.location || event.location.includes(filters.location);
+    const matchesDate = !filters.date || 
+                       (event.date.month.toLowerCase().includes(filters.date.toLowerCase()) || 
+                        event.date.day.includes(filters.date));
+    
+    return matchesSearch && matchesCategory && matchesLocation && matchesDate;
+  });
+
+  // const handleBookmark = (event) => {
+  //   const isSaved = savedEvents.some(savedEvent => savedEvent.id === event.id);
+  //   if (isSaved) {
+  //     dispatch(removeEvent({ id: event.id }));
+  //   } else {
+  //     dispatch(addEvent(event));
+  //   }
+  // };
+  useEffect(() => {
+    events.forEach(event => {
+      dispatch(addEvent(event));
+    });
+  }, [dispatch]);
+
+  const handleBookmark = (event) => {
+    dispatch(toggleSaveEvent(event));
+  };
 
   return (
     <>
       <Nav />
-
       <section className="events-hero">
         <div className="events-hero-content">
           <h1>Discover Events</h1>
@@ -28,151 +105,93 @@ const Event = () => {
       <section className="search-filter">
         <div className="search-bar">
           <i className="fas fa-search"></i>
-          <input type="text" placeholder="Search events..." />
+          <input 
+            type="text" 
+            placeholder="Search events..." 
+            value={filters.searchQuery}
+            onChange={(e) => setFilters({...filters, searchQuery: e.target.value})}
+          />
         </div>
         <div className="filters">
-          <select>
+          <select 
+            value={filters.category}
+            onChange={(e) => setFilters({...filters, category: e.target.value})}
+          >
             <option value="">All Categories</option>
-            <option value="tech">Technology</option>
-            <option value="business">Business</option>
-            <option value="arts">Arts & Culture</option>
-            <option value="sports">Sports</option>
+            <option value="Technology">Technology</option>
+            <option value="Design">Design</option>
+            <option value="Business">Business</option>
           </select>
-          <select>
+          <select
+            value={filters.location}
+            onChange={(e) => setFilters({...filters, location: e.target.value})}
+          >
             <option value="">All Locations</option>
-            <option value="cairo">Cairo</option>
-            <option value="alex">Alexandria</option>
-            <option value="giza">Giza</option>
+            <option value="Cairo">Cairo</option>
+            <option value="Alexandria">Alexandria</option>
+            <option value="Giza">Giza</option>
           </select>
-          <select>
-            <option value="">Date Range</option>
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
+          <select
+            value={filters.date}
+            onChange={(e) => setFilters({...filters, date: e.target.value})}
+          >
+            <option value="">All Dates</option>
+            <option value="APR">April</option>
+            <option value="MAY">May</option>
+            <option value="JUN">June</option>
           </select>
         </div>
       </section>
 
       <section className="events-grid">
-        <div className="event-card">
-          <div className="event-image">
-            <img
-              src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-              alt="Tech Summit"
-            /> 
-             <div className="event-date">
-              <span className="day">15</span>
-              <span className="month">APR</span>
+        {filteredEvents.map((event) => (
+          <div className="event-card" key={event.id}>
+            <div className="event-image">
+              <img src={event.image} alt={event.title} />
+              <div className="event-date">
+                <span className="day">{event.date.day}</span>
+                <span className="month">{event.date.month}</span>
+              </div>
+              <div className="event-category">{event.category}</div>
             </div>
-            <div className="event-category">Technology</div>
-          </div>
-          <div className="event-details">
-            <h3>Tech Summit 2024</h3>
-            <div className="event-info">
-              <p>
-                <i className="fas fa-map-marker-alt"></i> Cairo International
-                Convention Center
-              </p>
-              <p>
-                <i className="fas fa-clock"></i> 9:00 AM - 5:00 PM
-              </p>
-              <p>
-                <i className="fas fa-users"></i> 500+ Attendees
-              </p>
-            </div>
-            <p className="event-description">
-              Join the biggest tech conference of the year featuring industry
-              leaders and innovators.
-            </p>
-            
-            <div className="event-footer">
-              <span className="price">$299</span>
-<Link to="/events-details">
-  <button className="register-btn">Register Now</button>
-</Link>          
-  </div>
-          </div>
-        </div>
-
-        <div className="event-card">
-          <div className="event-image">
-            <img
-              src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
-              alt="Design Conference"
-            />
-            <div className="event-date">
-              <span className="day">20</span>
-              <span className="month">MAY</span>
-            </div>
-            <div className="event-category">Design</div>
-          </div>
-          <div className="event-details">
-            <h3>Design Conference</h3>
-            <div className="event-info">
-              <p>
-                <i className="fas fa-map-marker-alt"></i> Alexandria Arts Center
-              </p>
-              <p>
-                <i className="fas fa-clock"></i> 10:00 AM - 4:00 PM
-              </p>
-              <p>
-                <i className="fas fa-users"></i> 300+ Attendees
-              </p>
-            </div>
-            <p className="event-description">
-              Explore the latest trends in design with world-renowned designers
-              and creative professionals.
-            </p>
-            <div className="event-footer">
-              <span className="price">$199</span>
-              <button className="register-btn">Register Now</button>
+            <div className="event-details">
+              <h3>{event.title}</h3>
+              <div className="event-info">
+                <p>
+                  <i className="fas fa-map-marker-alt"></i> {event.location}
+                </p>
+                <p>
+                  <i className="fas fa-clock"></i> {event.time}
+                </p>
+                <p>
+                  <i className="fas fa-users"></i> {event.attendees}
+                </p>
+              </div>
+              <p className="event-description">{event.description}</p>
+              <div className="event-footer">
+                <span className="price">{event.price}</span>
+                <Link to={`/event-details/${event.id}`}>
+                  <button className="register-btn">Learn More</button>
+                </Link>
+                <button 
+        className={`bookmark-btn ${savedEvents.some(e => e.id === event.id) ? 'saved' : ''}`}
+        onClick={() => handleBookmark(event)}
+      >
+        <i className="fas fa-bookmark"></i>
+      </button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="event-card">
-          <div className="event-image">
-            <img
-              src="https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-              alt="Startup Weekend"
-            />
-            <div className="event-date">
-              <span className="day">10</span>
-              <span className="month">JUN</span>
-            </div>
-            <div className="event-category">Business</div>
-          </div>
-          <div className="event-details">
-            <h3>Startup Weekend</h3>
-            <div className="event-info">
-              <p>
-                <i className="fas fa-map-marker-alt"></i> Giza Innovation Hub
-              </p>
-              <p>
-                <i className="fas fa-clock"></i> 9:00 AM - 6:00 PM
-              </p>
-              <p>
-                <i className="fas fa-users"></i> 200+ Attendees
-              </p>
-            </div>
-            <p className="event-description">
-              Turn your idea into reality in 54 hours with mentors, investors,
-              and fellow entrepreneurs.
-            </p>
-            <div className="event-footer">
-              <span className="price">$149</span>
-              <button className="register-btn">Register Now</button>
-            </div>
-          </div>
-        </div>
+        ))}
       </section>
 
       <div className="load-more">
         <button>Load More Events</button>
       </div>
+      <Footer />
+
     </>
   );
 };
 
 export default Event;
-

@@ -1,16 +1,19 @@
-
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './Pages/Home'
-import About from './Pages/About'
-import Contact from './Pages/Contact'
-import Navbar from './componats/Nav'
-import Signin from './Pages/Signin'
-import Createevent from './pages/Createevent'
-import Events from './Pages/Events'
-import Servses from './Pages/Servses'
-import Footer from './componats/Footer'
-import EventDetails from './Pages/EventDetails'
-import UserDashboard from './Pages/UserDashboard'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import Home from "./Pages/Home";
+import About from "./Pages/About";
+import Contact from "./Pages/Contact";
+import Navbar from "./componats/Nav";
+import Signin from "./Pages/Signin";
+import Createevent from "./pages/Createevent";
+import Events from "./Pages/Events";
+import Servses from "./Pages/Servses";
+import UserDashboard from "./Pages/UserDashboard";
+import EventDetails from "./Pages/EventDetails";
+import Notifications from "./Pages/Notifications";
+import SavedEvents from './Pages/SavedEvents';
+import Footer from "./componats/Footer";
 
 function App() {
 
@@ -38,4 +41,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

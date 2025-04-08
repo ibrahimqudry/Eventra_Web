@@ -2,11 +2,11 @@ import React from 'react'
 import Nav from '../componats/Nav';
 import Footer from '../componats/Footer';
 import "../css/home.css";
-import{Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <React.Fragment>
+    <>
       <Nav />
       <header className="hero">
         <div className="hero-content">
@@ -137,7 +137,8 @@ const Home = () => {
           </form>
         </div>
       </section>
-    </React.Fragment>
+      <Footer />
+    </>
   )
 }
 
