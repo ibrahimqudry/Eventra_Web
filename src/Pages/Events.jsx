@@ -6,9 +6,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toggleSaveEvent } from "../redux/savedEventsSlice";
 import "../css/events.css";
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 
 
 const Event = () => {
+=======
+// import { useDispatch, useSelector } from "react-redux";
+// import { addEvent, removeEvent } from "../redux/savedEventsSlice";
+
+const Event = () => {
+  // const dispatch = useDispatch();
+  // const savedEvents = useSelector((state) => state.savedEvents.savedEvents)
+
+>>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
 
   const [filters, setFilters] = useState({
     category: "",
@@ -68,6 +78,7 @@ const Event = () => {
     return matchesSearch && matchesCategory && matchesLocation && matchesDate;
   });
 
+<<<<<<< HEAD
   const dispatch = useDispatch();
   const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
 
@@ -87,6 +98,25 @@ const Event = () => {
       });
     }
   };
+=======
+  // const handleBookmark = (event) => {
+  //   const isSaved = savedEvents.some(savedEvent => savedEvent.id === event.id);
+  //   if (isSaved) {
+  //     dispatch(removeEvent({ id: event.id }));
+  //   } else {
+  //     dispatch(addEvent(event));
+  //   }
+  // };
+  // useEffect(() => {
+  //   events.forEach(event => {
+  //     dispatch(addEvent(event));
+  //   });
+  // }, [dispatch]);
+
+  // const handleBookmark = (event) => {
+  //   dispatch(toggleSaveEvent(event));
+  // };
+>>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
 
 
   return (
@@ -172,6 +202,7 @@ const Event = () => {
               <p className="event-description">{event.description}</p>
               <div className="event-footer">
                 <span className="price">{event.price}</span>
+<<<<<<< HEAD
                 {/* <Link to={`/event-details/${event.id}`}> */}
                 <Link to={"/event-details"}>
                   <button className="register-btn">Learn More</button>
@@ -184,6 +215,17 @@ const Event = () => {
                 >
                   <i className="fa-regular fa-bookmark"></i>
                 </span>
+=======
+                <Link to={`/events-details`}>
+                  <button className="register-btn">Learn More</button>
+                </Link>
+                {/* <button
+                  className={`bookmark-btn ${savedEvents.some(e => e.id === event.id) ? 'saved' : ''}`}
+                  onClick={() => handleBookmark(event)}
+                >
+                  <i className="fas fa-bookmark"></i>
+                </button> */}
+>>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
               </div>
             </div>
           </div>

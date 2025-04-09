@@ -43,8 +43,8 @@ const Notifications = () => {
                 </button>
                 <button className="accept-button" onClick={() => navigation.navigate("event-details")}>
                   <span className="icon-arrow">
-                  <i class="fa-solid fa-arrow-right">
-                  </i>
+                    <i class="fa-solid fa-arrow-right">
+                    </i>
                   </span>
                 </button>
               </div>

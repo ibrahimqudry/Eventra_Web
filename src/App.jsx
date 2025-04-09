@@ -19,7 +19,10 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+
+
   return (
+<<<<<<< HEAD
     <Provider store={store}>
          <BrowserRouter>
       <Routes>
@@ -48,9 +51,29 @@ function App() {
           draggable
           pauseOnHover
         />
+=======
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/Nav" element={<Navbar />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/user" element={<UserDashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path='/Create' element={<Createevent />} />
+          <Route path='/events' element={<Events />} />
+          <Route path='/event-details' element={<EventDetails />} />
+          <Route path='/notifications' element={<Notifications />} />
+          <Route path='/Servses' element={<Servses />} />
+          <Route path='/Footer' element={<Footer />} />
+        </Routes>
+        <Footer />
+>>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
       </BrowserRouter>
-      </Provider>
-  );
+
+    </>
+  )
 }
 
 export default App;

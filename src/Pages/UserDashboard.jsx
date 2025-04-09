@@ -1,6 +1,10 @@
 import React from 'react';
 import '../css/UserDashboard.css';
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
+=======
+import { Link } from 'react-router';
+>>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
 
 function UserDashboard() {
   return (
@@ -18,6 +22,7 @@ function UserDashboard() {
               <li className="menu-item-active">
                 <i className="fa-solid fa-gears" /> Settings
               </li>
+<<<<<<< HEAD
              <Link to="/Notifications">
                <li className="menu-item">
                  <i className="fa-solid fa-bell" /> Notifications
@@ -28,6 +33,13 @@ function UserDashboard() {
                <i class="fa-solid fa-bookmark"></i>Saved Events
                </li>
              </Link>
+=======
+              <li className="menu-item">
+                {/* <Link to="``>"> */}
+                <i className="fa-solid fa-bell" /> Notifications
+                {/* </Link> */}
+              </li>
+>>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
               <li className="menu-item">
                 <i className="fa-solid fa-clipboard-list" /> Scheduled Events
               </li>
