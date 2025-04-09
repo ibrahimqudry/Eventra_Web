@@ -30,7 +30,6 @@ function App() {
           <Route path="/Servses" element={<Servses />} />
           <Route path="/Footer" element={<Footer />} />
         </Routes>
-        <Footer />
       </BrowserRouter>
     </Provider>
   );

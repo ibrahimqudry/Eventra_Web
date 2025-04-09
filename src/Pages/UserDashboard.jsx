@@ -28,22 +28,24 @@ import {
   Bookmark,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import "../css/UserDashboard.css";
+import { updateProfile } from "../redux/authSlice";
 
 const UserDashboard = () => {
+  const user = useSelector((state) => state.auth.user);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [showNotifications, setShowNotifications] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [profileImage, setProfileImage] = useState(
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  );
+  const profileImage =
+    user?.profileImage ||
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80";
   const [userInfo, setUserInfo] = useState({
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "+1 234 567 890",
-    address: "123 Main St, New York, NY",
-    bio: "Event enthusiast and tech lover",
+    name: user ? `${user.firstName} ${user.lastName}` : "John Doe",
+    email: user?.email || "john@example.com",
+    phone: user?.phone || "+1 234 567 890",
+    address: user?.address || "123 Main St, New York, NY",
+    bio: user?.bio || "Event enthusiast and tech lover",
   });
   const fileInputRef = useRef(null);
   const [settings, setSettings] = useState({
@@ -53,6 +55,7 @@ const UserDashboard = () => {
     timeZone: "UTC",
   });
   const [, setShowChatSupport] = useState(false);
+  const dispatch = useDispatch();
 
   const tickets = [
     {
@@ -194,7 +197,14 @@ const UserDashboard = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result);
+        const base64String = reader.result;
+        // Update the user's profile image in Redux
+        dispatch(updateProfile({ profileImage: base64String }));
+        // Update local state
+        setUserInfo((prev) => ({
+          ...prev,
+          profileImage: base64String,
+        }));
       };
       reader.readAsDataURL(file);
     }
@@ -210,7 +220,12 @@ const UserDashboard = () => {
   const handleSave = () => {
     setIsEditing(false);
     // Here you would typically make an API call to save the changes
-    console.log("Saving changes:", userInfo);
+    console.log("Saving changes:", {
+      ...user,
+      ...userInfo,
+      firstName: userInfo.name.split(" ")[0],
+      lastName: userInfo.name.split(" ")[1] || "",
+    });
   };
 
   const handleBookmark = (event) => {
@@ -237,7 +252,7 @@ const UserDashboard = () => {
               <div className="eventra-account-content">
                 <div className="eventra-profile-picture">
                   <img
-                    src={profileImage}
+                    src={user?.profileImage || profileImage}
                     alt="Profile"
                     className="eventra-profile-image"
                     onClick={() => fileInputRef.current?.click()}
@@ -651,13 +666,13 @@ const UserDashboard = () => {
       <aside className="eventra-sidebar">
         <div className="eventra-user-profile">
           <img
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            src={user?.profileImage || profileImage}
             alt="User"
             className="eventra-user-avatar"
           />
           <div className="eventra-user-info">
-            <h3>John Doe</h3>
-            <p>john@example.com</p>
+            <h3>{user ? `${user.firstName} ${user.lastName}` : "John Doe"}</h3>
+            <p>{user?.email || "john@example.com"}</p>
           </div>
         </div>
 
@@ -701,7 +716,7 @@ const UserDashboard = () => {
       {/* Main Content */}
       <main className="eventra-main-content">
         <div className="eventra-header">
-          <h1>Welcome back, John!</h1>
+          <h1>Welcome back, {user?.firstName || "User"}!</h1>
           <div className="eventra-notifications-dropdown">
             <button
               className="eventra-notifications-btn"
