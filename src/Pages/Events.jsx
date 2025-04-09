@@ -3,19 +3,18 @@ import Nav from "../componats/Nav";
 import Footer from "../componats/Footer";
 import "../css/events.css";
 import { Link } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-// import { addEvent, removeEvent } from "../redux/savedEventsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSaveEvent } from "../redux/savedEventsSlice";
 
 const Event = () => {
-  // const dispatch = useDispatch();
-  // const savedEvents = useSelector((state) => state.savedEvents.savedEvents)
-
+  const dispatch = useDispatch();
+  const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
 
   const [filters, setFilters] = useState({
     category: "",
     location: "",
     date: "",
-    searchQuery: ""
+    searchQuery: "",
   });
 
   const events = [
@@ -25,8 +24,10 @@ const Event = () => {
       location: "Cairo International Convention Center",
       time: "9:00 AM - 5:00 PM",
       attendees: "500+ Attendees",
-      description: "Join the biggest tech conference of the year featuring industry leaders and innovators.",
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description:
+        "Join the biggest tech conference of the year featuring industry leaders and innovators.",
+      image:
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
       date: { day: "15", month: "APR" },
       category: "Technology",
       price: "$299",
@@ -37,8 +38,10 @@ const Event = () => {
       location: "Alexandria Arts Center",
       time: "10:00 AM - 4:00 PM",
       attendees: "300+ Attendees",
-      description: "Explore the latest trends in design with world-renowned designers and creative professionals.",
-      image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80",
+      description:
+        "Explore the latest trends in design with world-renowned designers and creative professionals.",
+      image:
+        "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80",
       date: { day: "20", month: "MAY" },
       category: "Design",
       price: "$199",
@@ -49,43 +52,43 @@ const Event = () => {
       location: "Giza Innovation Hub",
       time: "9:00 AM - 6:00 PM",
       attendees: "200+ Attendees",
-      description: "Turn your idea into reality in 54 hours with mentors, investors, and fellow entrepreneurs.",
-      image: "https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description:
+        "Turn your idea into reality in 54 hours with mentors, investors, and fellow entrepreneurs.",
+      image:
+        "https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
       date: { day: "10", month: "JUN" },
       category: "Business",
       price: "$149",
     },
   ];
 
-  const filteredEvents = events.filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-      event.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
-    const matchesCategory = !filters.category || event.category === filters.category;
-    const matchesLocation = !filters.location || event.location.includes(filters.location);
-    const matchesDate = !filters.date ||
-      (event.date.month.toLowerCase().includes(filters.date.toLowerCase()) ||
-        event.date.day.includes(filters.date));
+  const filteredEvents = events.filter((event) => {
+    const matchesSearch =
+      event.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+      event.description
+        .toLowerCase()
+        .includes(filters.searchQuery.toLowerCase());
+    const matchesCategory =
+      !filters.category || event.category === filters.category;
+    const matchesLocation =
+      !filters.location || event.location.includes(filters.location);
+    const matchesDate =
+      !filters.date ||
+      event.date.month.toLowerCase().includes(filters.date.toLowerCase()) ||
+      event.date.day.includes(filters.date);
 
     return matchesSearch && matchesCategory && matchesLocation && matchesDate;
   });
 
-  // const handleBookmark = (event) => {
-  //   const isSaved = savedEvents.some(savedEvent => savedEvent.id === event.id);
-  //   if (isSaved) {
-  //     dispatch(removeEvent({ id: event.id }));
-  //   } else {
-  //     dispatch(addEvent(event));
-  //   }
-  // };
-  // useEffect(() => {
-  //   events.forEach(event => {
-  //     dispatch(addEvent(event));
-  //   });
-  // }, [dispatch]);
+  const handleBookmark = (event) => {
+    dispatch(toggleSaveEvent(event));
+  };
 
-  // const handleBookmark = (event) => {
-  //   dispatch(toggleSaveEvent(event));
-  // };
+  useEffect(() => {
+    events.forEach((event) => {
+      dispatch(toggleSaveEvent(event));
+    });
+  }, [dispatch]);
 
   return (
     <>
@@ -109,13 +112,17 @@ const Event = () => {
             type="text"
             placeholder="Search events..."
             value={filters.searchQuery}
-            onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, searchQuery: e.target.value })
+            }
           />
         </div>
         <div className="filters">
           <select
             value={filters.category}
-            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, category: e.target.value })
+            }
           >
             <option value="">All Categories</option>
             <option value="Technology">Technology</option>
@@ -124,7 +131,9 @@ const Event = () => {
           </select>
           <select
             value={filters.location}
-            onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, location: e.target.value })
+            }
           >
             <option value="">All Locations</option>
             <option value="Cairo">Cairo</option>
@@ -173,12 +182,14 @@ const Event = () => {
                 <Link to={`/events-details`}>
                   <button className="register-btn">Learn More</button>
                 </Link>
-                {/* <button
-                  className={`bookmark-btn ${savedEvents.some(e => e.id === event.id) ? 'saved' : ''}`}
+                <button
+                  className={`bookmark-btn ${
+                    savedEvents.some((e) => e.id === event.id) ? "saved" : ""
+                  }`}
                   onClick={() => handleBookmark(event)}
                 >
                   <i className="fas fa-bookmark"></i>
-                </button> */}
+                </button>
               </div>
             </div>
           </div>
@@ -189,7 +200,6 @@ const Event = () => {
         <button>Load More Events</button>
       </div>
       <Footer />
-
     </>
   );
 };

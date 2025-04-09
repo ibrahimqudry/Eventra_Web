@@ -1,4 +1,4 @@
-
+/* 
 .user-dashboard-container {
     display: flex;
     height: 100vh;
@@ -169,4 +169,968 @@
     .settings-content-wrapper {
         padding-left: 0;
     }
+} */
+
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #a855f7;
+  --text-color: #1f2937;
+  --bg-color: #f3f4f6;
+  --white: #ffffff;
+  --border-color: #e5e7eb;
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.eventra-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+/* Sidebar Styles */
+.eventra-sidebar {
+  width: 280px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: var(--white);
+  padding: 2rem;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+}
+
+.eventra-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.eventra-user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.eventra-user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.eventra-user-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.eventra-user-info p {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.eventra-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eventra-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.eventra-nav-link:hover,
+.eventra-nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+  transform: translateX(5px);
+}
+
+/* Main Content Styles */
+.eventra-main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 2rem;
+  transition: margin-left 0.3s ease;
+}
+
+.eventra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--white);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.eventra-header h1 {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.eventra-notifications-dropdown {
+  position: relative;
+}
+
+.eventra-notifications-btn {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.eventra-notifications-btn:hover {
+  background-color: var(--bg-color);
+}
+
+.eventra-notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--danger-color);
+  color: var(--white);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.eventra-notifications-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  background: var(--white);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-lg);
+  margin-top: 1rem;
+  z-index: 100;
+  transform-origin: top right;
+  animation: eventra-slideDown 0.3s ease;
+}
+
+@keyframes eventra-slideDown {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.eventra-notifications-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eventra-notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.eventra-notification-item {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: background-color 0.3s ease;
+}
+
+.eventra-notification-item:hover {
+  background-color: var(--bg-color);
+}
+
+.eventra-notification-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.eventra-notification-content {
+  flex: 1;
+}
+
+.eventra-notification-content h4 {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.eventra-notification-content p {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+/* Dashboard Grid */
+.eventra-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.eventra-dashboard-card {
+  background: var(--white);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.eventra-dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.eventra-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.eventra-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.eventra-btn-icon {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.eventra-btn-icon:hover {
+  background-color: var(--bg-color);
+}
+
+/* Event List */
+.eventra-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.eventra-event-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-color);
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.eventra-event-item:hover {
+  transform: translateX(5px);
+}
+
+.eventra-event-date {
+  text-align: center;
+  min-width: 60px;
+  background: var(--white);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.eventra-event-date-day {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+.eventra-event-date-month {
+  font-size: 0.875rem;
+  color: var(--text-color);
+  text-transform: uppercase;
+}
+
+.eventra-event-details {
+  flex: 1;
+}
+
+.eventra-event-details h4 {
+  margin: 0;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.eventra-event-details p {
+  margin: 0.25rem 0 0;
+  color: var(--text-color);
+  opacity: 0.8;
+  font-size: 0.875rem;
+}
+
+/* Ticket List */
+.eventra-ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.eventra-ticket-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-color);
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.eventra-ticket-item:hover {
+  transform: translateX(5px);
+}
+
+.eventra-ticket-info h4 {
+  margin: 0;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.eventra-ticket-info p {
+  margin: 0.25rem 0 0;
+  color: var(--text-color);
+  opacity: 0.8;
+  font-size: 0.875rem;
+}
+
+.eventra-ticket-qr {
+  width: 40px;
+  height: 40px;
+  background: var(--white);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.eventra-ticket-qr:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+.eventra-ticket-qr img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0.25rem;
+}
+
+/* Bank Accounts */
+.eventra-bank-accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.eventra-bank-card {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: var(--white);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.eventra-bank-card:hover {
+  transform: translateY(-5px);
+}
+
+.eventra-bank-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+}
+
+.eventra-bank-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.eventra-card-number {
+  font-size: 1.25rem;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.eventra-card-holder,
+.eventra-card-expiry {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  position: relative;
+}
+
+/* Support Options */
+.eventra-support-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.eventra-support-option {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--bg-color);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.eventra-support-option:hover {
+  transform: translateY(-5px);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+.eventra-support-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  background: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  transition: transform 0.3s ease;
+}
+
+.eventra-support-option:hover .eventra-support-icon {
+  transform: scale(1.1);
+}
+
+/* Settings Form */
+.eventra-settings-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.eventra-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eventra-form-group label {
+  font-size: 0.875rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.eventra-form-group input,
+.eventra-form-group select {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.eventra-form-group input:focus,
+.eventra-form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.eventra-toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eventra-toggle-switch input[type="checkbox"] {
+  width: 40px;
+  height: 20px;
+  appearance: none;
+  background: var(--border-color);
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.eventra-toggle-switch input[type="checkbox"]:checked {
+  background: var(--primary-color);
+}
+
+.eventra-toggle-switch input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: var(--white);
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.eventra-toggle-switch input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .eventra-sidebar {
+    width: 80px;
+    padding: 1rem;
+  }
+
+  .eventra-user-info,
+  .eventra-nav-link span {
+    display: none;
+  }
+
+  .eventra-main-content {
+    margin-left: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .eventra-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .eventra-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .eventra-main-content {
+    margin-left: 0;
+  }
+
+  .eventra-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .eventra-notifications-panel {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* Account Information Styles */
+.eventra-account-section {
+  background: var(--white);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.eventra-account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.eventra-account-title {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.eventra-edit-btn {
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.eventra-edit-btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+.eventra-account-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+.eventra-profile-picture {
+  text-align: center;
+}
+
+.eventra-profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.eventra-profile-image:hover {
+  transform: scale(1.05);
+  border-color: var(--secondary-color);
+}
+
+.eventra-upload-btn {
+  background: var(--bg-color);
+  color: var(--text-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.eventra-upload-btn:hover {
+  background: var(--border-color);
+}
+
+.eventra-account-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.eventra-detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eventra-detail-label {
+  font-size: 0.875rem;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.eventra-detail-value {
+  font-size: 1rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.eventra-detail-input {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.eventra-detail-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.eventra-save-btn {
+  background: var(--success-color);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.eventra-save-btn:hover {
+  background: #1a9f4b;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design for Account Section */
+@media (max-width: 768px) {
+  .eventra-account-content {
+    grid-template-columns: 1fr;
+  }
+
+  .eventra-account-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Quick Links Styles */
+.eventra-quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.eventra-quick-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: var(--bg-color);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.eventra-quick-link:hover {
+  background: var(--white);
+  transform: translateX(5px);
+  box-shadow: var(--shadow-sm);
+}
+
+.eventra-quick-link-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.eventra-quick-link-content h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.eventra-quick-link-content p {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.eventra-quick-link svg:last-child {
+  color: var(--primary-color);
+  transition: transform 0.3s ease;
+}
+
+.eventra-quick-link:hover svg:last-child {
+  transform: translateX(5px);
+}
+
+/* Saved Events Styles */
+.eventra-saved-events {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.eventra-saved-event {
+  background: var(--white);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.eventra-saved-event:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.eventra-saved-event-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.eventra-saved-event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.eventra-saved-event:hover .eventra-saved-event-image img {
+  transform: scale(1.05);
+}
+
+.eventra-saved-event-date {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  min-width: 60px;
+}
+
+.eventra-saved-event-day {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.eventra-saved-event-month {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.eventra-saved-event-details {
+  padding: 1.5rem;
+}
+
+.eventra-saved-event-details h4 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.eventra-saved-event-location,
+.eventra-saved-event-time {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.eventra-saved-event-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.eventra-view-btn {
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.eventra-view-btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+.eventra-remove-btn {
+  background: var(--bg-color);
+  color: var(--text-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.eventra-remove-btn:hover {
+  background: var(--danger-color);
+  color: var(--white);
+}
+
+.eventra-no-events {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.eventra-no-events svg {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.eventra-browse-btn {
+  display: inline-block;
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.eventra-browse-btn:hover {
+  background: var(--secondary-color);
+  transform: translateY(-2px);
 }
