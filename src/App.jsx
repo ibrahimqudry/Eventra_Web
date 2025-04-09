@@ -11,8 +11,6 @@ import Events from "./Pages/Events";
 import Servses from "./Pages/Servses";
 import UserDashboard from "./Pages/UserDashboard";
 import EventDetails from "./Pages/EventDetails";
-import Notifications from "./Pages/Notifications";
-import SavedEvents from "./Pages/SavedEvents";
 import Footer from "./componats/Footer";
 
 function App() {
@@ -29,8 +27,6 @@ function App() {
           <Route path="/Create" element={<Createevent />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event-details" element={<EventDetails />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/saved-events" element={<SavedEvents />} />
           <Route path="/Servses" element={<Servses />} />
           <Route path="/Footer" element={<Footer />} />
         </Routes>

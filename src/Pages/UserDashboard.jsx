@@ -52,6 +52,42 @@ const UserDashboard = () => {
     language: "en",
     timeZone: "UTC",
   });
+  const [, setShowChatSupport] = useState(false);
+
+  const tickets = [
+    {
+      id: 1,
+      eventName: "Tech Summit 2024",
+      ticketType: "VIP Pass",
+      date: "Apr 15, 2024",
+      qrCode:
+        "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=VIP123456",
+    },
+    {
+      id: 2,
+      eventName: "Design Conference",
+      ticketType: "Standard Pass",
+      date: "May 20, 2024",
+      qrCode:
+        "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=STD789012",
+    },
+  ];
+  const bankAccounts = [
+    {
+      id: 1,
+      bank: "Universal Bank",
+      number: "**** **** **** 1234",
+      holder: "John Doe",
+      expiry: "12/25",
+    },
+    {
+      id: 2,
+      bank: "Global Bank",
+      number: "**** **** **** 5678",
+      holder: "John Doe",
+      expiry: "09/26",
+    },
+  ];
   const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
 
   const notifications = [
@@ -95,42 +131,6 @@ const UserDashboard = () => {
     },
   ];
 
-  const tickets = [
-    {
-      id: 1,
-      eventName: "Tech Summit 2024",
-      ticketType: "VIP Pass",
-      date: "Apr 15, 2024",
-      qrCode:
-        "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=VIP123456",
-    },
-    {
-      id: 2,
-      eventName: "Design Conference",
-      ticketType: "Standard Pass",
-      date: "May 20, 2024",
-      qrCode:
-        "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=STD789012",
-    },
-  ];
-
-  const bankAccounts = [
-    {
-      id: 1,
-      bank: "Universal Bank",
-      number: "**** **** **** 1234",
-      holder: "John Doe",
-      expiry: "12/25",
-    },
-    {
-      id: 2,
-      bank: "Global Bank",
-      number: "**** **** **** 5678",
-      holder: "John Doe",
-      expiry: "09/26",
-    },
-  ];
-
   const handleSettingsChange = (key, value) => {
     setSettings((prev) => ({
       ...prev,
@@ -159,8 +159,30 @@ const UserDashboard = () => {
   };
 
   const handleSupportOption = (option) => {
-    // Implement support option logic here
-    console.log(`Selected support option: ${option}`);
+    // التعامل مع خيارات الدعم المختلفة
+    switch (option) {
+      case "email":
+        window.location.href = "mailto:support@eventera.com";
+        break;
+      case "phone":
+        window.location.href = "tel:+1234567890";
+        break;
+      case "chat":
+        // فتح نافذة الدردشة
+        setShowChatSupport(true);
+        break;
+      default:
+        console.log("خيار دعم غير معروف");
+    }
+
+    // تسجيل طلب الدعم
+    const supportRequest = {
+      type: option,
+      timestamp: new Date().toISOString(),
+      userId: userInfo.id,
+    };
+
+    console.log(`تم بدء طلب الدعم عبر ${option}:`, supportRequest);
   };
 
   const handleEditClick = () => {
