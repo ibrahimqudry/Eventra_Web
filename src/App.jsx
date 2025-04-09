@@ -14,6 +14,9 @@ import EventDetails from "./Pages/EventDetails";
 import Notifications from "./Pages/Notifications";
 import SavedEvents from './Pages/SavedEvents';
 import Footer from "./componats/Footer";
+import CustomerReviews from "./Pages/PreviousEvents";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -32,8 +35,19 @@ function App() {
         <Route path="/event-details" element={<EventDetails />} />
         <Route path="/Notifications" element={<Notifications />} />
         <Route path="/SavedEvents" element={<SavedEvents />} />
+        <Route path="/previous" element={<CustomerReviews/>}/>
         <Route path="/Footer" element={<Footer />} />
       </Routes>
+      <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </BrowserRouter>
       </Provider>
   );

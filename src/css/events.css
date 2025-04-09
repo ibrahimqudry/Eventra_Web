@@ -9,7 +9,6 @@
     justify-content: center;
     text-align: center;
     color: white;
-
 }
 
 .events-hero-content {
@@ -104,7 +103,7 @@
     margin: 3rem auto;
     padding: 0 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(3, minmax(350px, 1fr));
     gap: 2rem;
 }
 
@@ -381,4 +380,14 @@
     .submit-btn {
         width: 100%;
     }
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
 }
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .events-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  

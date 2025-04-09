@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
 import Nav from "../componats/Nav";
 import Footer from "../componats/Footer";
+import { toast } from 'react-toastify';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleSaveEvent } from "../redux/savedEventsSlice";
 import "../css/events.css";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addEvent, removeEvent } from "../redux/savedEventsSlice";
+
 
 const Event = () => {
-  const dispatch = useDispatch();
-  const savedEvents = useSelector((state) => state.savedEvents.savedEvents)
-
 
   const [filters, setFilters] = useState({
     category: "",
@@ -58,34 +57,37 @@ const Event = () => {
   ];
 
   const filteredEvents = events.filter(event => {
-    const matchesSearch = event.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) || 
-                         event.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+    const matchesSearch = event.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
+      event.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
     const matchesCategory = !filters.category || event.category === filters.category;
     const matchesLocation = !filters.location || event.location.includes(filters.location);
-    const matchesDate = !filters.date || 
-                       (event.date.month.toLowerCase().includes(filters.date.toLowerCase()) || 
-                        event.date.day.includes(filters.date));
-    
+    const matchesDate = !filters.date ||
+      (event.date.month.toLowerCase().includes(filters.date.toLowerCase()) ||
+        event.date.day.includes(filters.date));
+
     return matchesSearch && matchesCategory && matchesLocation && matchesDate;
   });
 
-  // const handleBookmark = (event) => {
-  //   const isSaved = savedEvents.some(savedEvent => savedEvent.id === event.id);
-  //   if (isSaved) {
-  //     dispatch(removeEvent({ id: event.id }));
-  //   } else {
-  //     dispatch(addEvent(event));
-  //   }
-  // };
-  useEffect(() => {
-    events.forEach(event => {
-      dispatch(addEvent(event));
-    });
-  }, [dispatch]);
+  const dispatch = useDispatch();
+  const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
 
   const handleBookmark = (event) => {
-    dispatch(toggleSaveEvent(event));
+    const isSaved = savedEvents.some(e => e.id === event.id);
+    dispatch(toggleSaveEvent(event), []);
+
+    if (isSaved) {
+      toast.success(' Removed from Saved Events', {
+        icon: '🗑️',
+        ltr: true
+      });
+    } else {
+      toast.success('Added to Saved Events', {
+        icon: '🔖',
+        ltr: true
+      });
+    }
   };
+
 
   return (
     <>
@@ -105,17 +107,17 @@ const Event = () => {
       <section className="search-filter">
         <div className="search-bar">
           <i className="fas fa-search"></i>
-          <input 
-            type="text" 
-            placeholder="Search events..." 
+          <input
+            type="text"
+            placeholder="Search events..."
             value={filters.searchQuery}
-            onChange={(e) => setFilters({...filters, searchQuery: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
           />
         </div>
         <div className="filters">
-          <select 
+          <select
             value={filters.category}
-            onChange={(e) => setFilters({...filters, category: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
           >
             <option value="">All Categories</option>
             <option value="Technology">Technology</option>
@@ -124,7 +126,7 @@ const Event = () => {
           </select>
           <select
             value={filters.location}
-            onChange={(e) => setFilters({...filters, location: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, location: e.target.value })}
           >
             <option value="">All Locations</option>
             <option value="Cairo">Cairo</option>
@@ -133,7 +135,7 @@ const Event = () => {
           </select>
           <select
             value={filters.date}
-            onChange={(e) => setFilters({...filters, date: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, date: e.target.value })}
           >
             <option value="">All Dates</option>
             <option value="APR">April</option>
@@ -170,15 +172,18 @@ const Event = () => {
               <p className="event-description">{event.description}</p>
               <div className="event-footer">
                 <span className="price">{event.price}</span>
-                <Link to={`/event-details/${event.id}`}>
+                {/* <Link to={`/event-details/${event.id}`}> */}
+                <Link to={"/event-details"}>
                   <button className="register-btn">Learn More</button>
                 </Link>
-                <button 
-        className={`bookmark-btn ${savedEvents.some(e => e.id === event.id) ? 'saved' : ''}`}
-        onClick={() => handleBookmark(event)}
-      >
-        <i className="fas fa-bookmark"></i>
-      </button>
+
+                <span
+                  className={`bookmark-btn ${savedEvents.some(e => e.id === event.id) ? 'saved' : ''}`}
+                  onClick={() => { handleBookmark(event) }}
+                  aria-label={savedEvents.some(e => e.id === event.id) ? 'Remove from saved' : 'Save event'}
+                >
+                  <i className="fa-regular fa-bookmark"></i>
+                </span>
               </div>
             </div>
           </div>

@@ -3,6 +3,9 @@
     padding: 10px;
     padding-block: 70px;
     height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   .empty-container {
