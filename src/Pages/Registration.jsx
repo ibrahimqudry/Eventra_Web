@@ -4,7 +4,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { toast } from 'react-toastify';
-import { auth, db, storage } from '../firebase/config';
+import { auth, db } from '../firebase/config';
+import { uploadToCloudinary } from '../utils/cloudinary';
 
 const Registration = () => {
     const navigate = useNavigate();
@@ -42,12 +43,12 @@ const Registration = () => {
 
             let documentUrl = null;
 
+            // Upload document to Cloudinary if role is not attendee
             if (formData.role !== 'attendee' && formData.document) {
-                const storageRef = ref(storage, `verification/${userCredential.user.uid}`);
-                await uploadBytes(storageRef, formData.document);
-                documentUrl = await getDownloadURL(storageRef);
+                documentUrl = await uploadToCloudinary(formData.document);
             }
 
+            // Store user data in Firestore
             await setDoc(doc(db, 'users', userCredential.user.uid), {
                 fullName: formData.fullName,
                 email: formData.email,
@@ -65,7 +66,7 @@ const Registration = () => {
             } else if (formData.role === 'serviceOwner') {
                 navigate('/serviceOwnerDashboard');
             } else {
-                navigate('/'); // Attendee goes to home page
+                navigate('/');
             }
             
         } catch (error) {
