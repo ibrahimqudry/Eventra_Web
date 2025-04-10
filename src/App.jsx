@@ -15,6 +15,7 @@ import './App.css';
 
 // Core Pages
 import Home from './Pages/Home';
+import Login from './Pages/Login';
 import About from './Pages/About';
 import Contact from './Pages/Contact';
 import Createevent from './Pages/Createevent';
@@ -57,6 +58,7 @@ function App() {
           {/* Main Routes */}
           <Route path="/Nav" element={<Navbar />} />
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
