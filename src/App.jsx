@@ -56,14 +56,13 @@ function App() {
         <Route path="/generateQR" element={<GenerateQR />} />
         <Route path="/subscriber/:id" element={<SubscriberInfo />} />
 
+
+
         {/* EventManager Dashboard /> */}
         <Route path="/EventMDashbord" element={<EventMDashbord />} />
         <Route path='/Eventm' element={<EventM />} />
         <Route path='/orders' element={<Orderm />} />
         <Route path='/profile' element={<Profile />} />
-
-        {/* ServiceOwnerDashboard */}
-        {/* <Route path="/ServiceOwnerDashboard" element={<ServiceOwnerDashboard />} /> */}
 
 
         {/* UserDashboard */}
