@@ -288,13 +288,12 @@ const EventDetails = () => {
                 </div>
             </div>
 
-<<<<<<< HEAD
             {/* Tickets Section */}
             <div className="ed-tickets-section">
                 <h2>Choose Your Ticket</h2>
                 <div className="ed-tickets-grid">
-                          {/* Standard Ticket */}
-                <div className="ed-ticket">
+                    {/* Standard Ticket */}
+                    <div className="ed-ticket">
                         <div className="ed-ticket-header">
                             <div className="ed-ticket-type">Standard</div>
                             <div className="ed-ticket-price">
@@ -318,7 +317,7 @@ const EventDetails = () => {
                                 </div>
                             </div> */}
                             <ul className="ed-ticket-features">
-                            <li><i className="fas fa-check"></i> Full Conference Access</li>
+                                <li><i className="fas fa-check"></i> Full Conference Access</li>
                                 <li><i className="fas fa-check"></i> Workshop Materials</li>
                                 <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
                                 <li><i className="fas fa-times"></i> Networking Session</li>
@@ -331,10 +330,10 @@ const EventDetails = () => {
                             </button>
                         </div>
                         {/* <div className="ed-ticket-footer"> */}
-                            <div className="ed-barcode">
-                                {/* <div className="ed-barcode-lines"></div> */}
-                                <span className="ed-ticket-number">ST24-0001</span>
-                            </div>
+                        <div className="ed-barcode">
+                            {/* <div className="ed-barcode-lines"></div> */}
+                            <span className="ed-ticket-number">ST24-0001</span>
+                        </div>
                         {/* </div> */}
                     </div>
 
@@ -363,7 +362,7 @@ const EventDetails = () => {
                                 </div>
                             </div> */}
                             <ul className="ed-ticket-features">
-                            <li><i className="fas fa-check"></i> Full Conference Access</li>
+                                <li><i className="fas fa-check"></i> Full Conference Access</li>
                                 <li><i className="fas fa-check"></i> Workshop Materials</li>
                                 <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
                                 <li><i className="fas fa-check"></i> Networking Session</li>
@@ -376,10 +375,10 @@ const EventDetails = () => {
                             </button>
                         </div>
                         {/* <div className="ed-ticket-footer"> */}
-                            <div className="ed-barcode">
-                                {/* <div className="ed-barcode-lines"></div> */}
-                                <span className="ed-ticket-number">EB24-0001</span>
-                            </div>
+                        <div className="ed-barcode">
+                            {/* <div className="ed-barcode-lines"></div> */}
+                            <span className="ed-ticket-number">EB24-0001</span>
+                        </div>
                         {/* </div> */}
                     </div>
 
@@ -421,29 +420,24 @@ const EventDetails = () => {
                             </button>
                         </div>
                         {/* <div className="ed-ticket-footer"> */}
-                            <div className="ed-barcode">
-                                {/* <div className="ed-barcode-lines">
+                        <div className="ed-barcode">
+                            {/* <div className="ed-barcode-lines">
                                 </div> */}
-                                {/* <div className="" style={{fontSize: "100px"}}>
+                            {/* <div className="" style={{fontSize: "100px"}}>
                                 <i class="fas fa-qrcode"></i>
                                 </div> */}
-                                <span className="ed-ticket-number">VIP24-0001</span>
-                            </div>
+                            <span className="ed-ticket-number">VIP24-0001</span>
+                        </div>
                         {/* </div> */}
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        {/* </div > */}
+            {/* // </div> */}
 
-     <Footer />
+            <Footer />
     </>
   )
-=======
-            <Footer />
-        </>
-    )
->>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
 }
 
 export default EventDetails

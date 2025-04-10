@@ -15,30 +15,27 @@ import Footer from "./componats/Footer";
 import CustomerReviews from "./Pages/PreviousEvents";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SavedEvents from "./Pages/SavedEvents";
+import Nav from "./componats/Nav";
 
 function App() {
   return (
-<<<<<<< HEAD
-<<<<<<< HEAD
     <Provider store={store}>
-         <BrowserRouter>
-      <Routes>
-        <Route path="/Nav" element={<Navbar />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/Create" element={<Createevent />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/Servses" element={<Servses />} />
-        <Route path="/UserDashboard" element={<UserDashboard />} />
-        <Route path="/event-details" element={<EventDetails />} />
-        <Route path="/Notifications" element={<Notifications />} />
-        <Route path="/SavedEvents" element={<SavedEvents />} />
-        <Route path="/previous" element={<CustomerReviews/>}/>
-        <Route path="/Footer" element={<Footer />} />
-      </Routes>
-      <ToastContainer
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/Create" element={<Createevent />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/Servses" element={<Servses />} />
+          <Route path="/UserDashboard" element={<UserDashboard />} />
+          <Route path="/event-details" element={<EventDetails />} />
+          <Route path="/SavedEvents" element={<SavedEvents />} />
+          <Route path="/previous" element={<CustomerReviews />} />
+        </Routes>
+        <ToastContainer
           position="bottom-left"
           autoClose={3000}
           hideProgressBar={false}
@@ -48,32 +45,9 @@ function App() {
           draggable
           pauseOnHover
         />
-=======
-    <>
-=======
-    <Provider store={store}>
->>>>>>> ee12e4e6b754cb4ab1605fcb42481d8a6e5d75c8
-      <BrowserRouter>
-        <Routes>
-          <Route path="/Nav" element={<Navbar />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/user" element={<UserDashboard />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/signin" element={<Signin />} />
-          <Route path="/Create" element={<Createevent />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/event-details" element={<EventDetails />} />
-          <Route path="/Servses" element={<Servses />} />
-          <Route path="/Footer" element={<Footer />} />
-        </Routes>
-<<<<<<< HEAD
-        <Footer />
->>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
-=======
->>>>>>> ee12e4e6b754cb4ab1605fcb42481d8a6e5d75c8
       </BrowserRouter>
     </Provider>
+
   );
 }
 
