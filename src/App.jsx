@@ -27,6 +27,7 @@ import Notifications from './Pages/Notifications';
 import CheckoutPage from './Pages/CheckoutPage';
 import GenerateQR from './Pages/GenerateQR';
 import SubscriberInfo from './Pages/SubscriberInfo';
+import Registration from './Pages/Registration';
 
 // Event Manager Pages
 import EventMDashbord from './Pages/EventManagerDashboard';
@@ -56,6 +57,7 @@ function App() {
           {/* Main Routes */}
           <Route path="/Nav" element={<Navbar />} />
           <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Registration />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path='/Create' element={<Createevent />} />
@@ -65,15 +67,14 @@ function App() {
           <Route path="/generateQR" element={<GenerateQR />} />
           <Route path="/subscriber/:id" element={<SubscriberInfo />} />
 
-          {/* EventManager Dashboard /> */}
+          {/* EventManager Dashboard */}
           <Route path="/EventMDashbord" element={<EventMDashbord />} />
           <Route path='/Eventm' element={<EventM />} />
           <Route path='/orders' element={<Orderm />} />
           <Route path='/profile' element={<Profile />} />
 
-
           {/* UserDashboard */}
-          <Route path='/event-details' element={<EventDetails />} />
+          <Route path='/event-details/:eventId' element={<EventDetails />} />
           <Route path='/notifications' element={<Notifications />} />
           <Route path='/savedEvents' element={<SavedEvents />} />
           <Route path="/user" element={<UserDashboard />} />
@@ -82,11 +83,12 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
 
           {/* ServiceOwnerDashboard */}
-          <Route path="serviceOwnerDashboard" element={<SODashboard />} />
-          <Route path="ServiceOwnerDashboard/services" element={<SOServices />} />
-          <Route path="ServiceOwnerDashboard/profile" element={<SOProfile />} />
-          <Route path="ServiceOwnerDashboard/bookings" element={<SOBookings />} />
-
+          <Route path="/serviceOwnerDashboard">
+            <Route index element={<SODashboard />} />
+            <Route path="services" element={<SOServices />} />
+            <Route path="profile" element={<SOProfile />} />
+            <Route path="bookings" element={<SOBookings />} />
+          </Route>
         </Routes>
 
 
