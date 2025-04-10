@@ -153,49 +153,6 @@ const EventDetails = () => {
                     <div className="ed-tickets-section">
                         <h2>Choose Your Ticket</h2>
                         <div className="ed-tickets-grid">
-                            {/* Early Bird Ticket */}
-                            <div className="ed-ticket">
-                                <div className="ed-ticket-header">
-                                    <div className="ed-ticket-type">Early Bird</div>
-                                    <div className="ed-ticket-price">
-                                        <span className="ed-currency">$</span>
-                                        <span className="ed-amount">299</span>
-                                    </div>
-                                </div>
-                                <div className="ed-ticket-body">
-                                    <div className="ed-ticket-details">
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-calendar"></i>
-                                            <span>April 15, 2024</span>
-                                        </div>
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-map-marker-alt"></i>
-                                            <span>Cairo</span>
-                                        </div>
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-chair"></i>
-                                            <span>Premium Seating</span>
-                                        </div>
-                                    </div>
-                                    <ul className="ed-ticket-features">
-                                        <li><i className="fas fa-check"></i> Full Conference Access</li>
-                                        <li><i className="fas fa-check"></i> Workshop Materials</li>
-                                        <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
-                                        <li><i className="fas fa-check"></i> Networking Session</li>
-                                    </ul>
-                                    <button className="ed-ticket-button">
-                                        <span>Buy Now</span>
-                                        <i className="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                                {/* <div className="ed-ticket-footer"> */}
-                                <div className="ed-barcode">
-                                    {/* <div className="ed-barcode-lines"></div> */}
-                                    <span className="ed-ticket-number">EB24-0001</span>
-                                </div>
-                                {/* </div> */}
-                            </div>
-
                             {/* Standard Ticket */}
                             <div className="ed-ticket">
                                 <div className="ed-ticket-header">
@@ -206,25 +163,13 @@ const EventDetails = () => {
                                     </div>
                                 </div>
                                 <div className="ed-ticket-body">
-                                    <div className="ed-ticket-details">
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-calendar"></i>
-                                            <span>April 15, 2024</span>
-                                        </div>
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-map-marker-alt"></i>
-                                            <span>Cairo</span>
-                                        </div>
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-chair"></i>
-                                            <span>Standard Seating</span>
-                                        </div>
-                                    </div>
                                     <ul className="ed-ticket-features">
                                         <li><i className="fas fa-check"></i> Full Conference Access</li>
                                         <li><i className="fas fa-check"></i> Workshop Materials</li>
                                         <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
                                         <li><i className="fas fa-times"></i> Networking Session</li>
+                                        <li><i className="fas fa-times"></i> VIP Lounge Access</li>
+                                        <li><i className="fas fa-times"></i> Private Meeting Room</li>
                                     </ul>
                                     <button className="ed-ticket-button">
                                         <span>Buy Now</span>
@@ -239,6 +184,34 @@ const EventDetails = () => {
                                 {/* </div> */}
                             </div>
 
+                            {/* Early Bird Ticket */}
+                            <div className="ed-ticket">
+                                <div className="ed-ticket-header">
+                                    <div className="ed-ticket-type">Early Bird</div>
+                                    <div className="ed-ticket-price">
+                                        <span className="ed-currency">$</span>
+                                        <span className="ed-amount">299</span>
+                                    </div>
+                                </div>
+                                <div className="ed-ticket-body">
+                                    <ul className="ed-ticket-features">
+                                        <li><i className="fas fa-check"></i> Full Conference Access</li>
+                                        <li><i className="fas fa-check"></i> Workshop Materials</li>
+                                        <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
+                                        <li><i className="fas fa-check"></i> Networking Session</li>
+                                        <li><i className="fas fa-times"></i> VIP Lounge Access</li>
+                                        <li><i className="fas fa-times"></i> Private Meeting Room</li>
+                                    </ul>
+                                    <button className="ed-ticket-button">
+                                        <span>Buy Now</span>
+                                        <i className="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                                <div className="ed-barcode">
+                                    <span className="ed-ticket-number">EB24-0001</span>
+                                </div>
+                            </div>
+
                             {/* VIP Ticket */}
                             <div className="ed-ticket">
                                 <div className="ed-ticket-header">
@@ -249,20 +222,6 @@ const EventDetails = () => {
                                     </div>
                                 </div>
                                 <div className="ed-ticket-body">
-                                    <div className="ed-ticket-details">
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-calendar"></i>
-                                            <span>April 15, 2024</span>
-                                        </div>
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-map-marker-alt"></i>
-                                            <span>Cairo</span>
-                                        </div>
-                                        <div className="ed-detail-item">
-                                            <i className="fas fa-crown"></i>
-                                            <span>VIP Seating</span>
-                                        </div>
-                                    </div>
                                     <ul className="ed-ticket-features">
                                         <li><i className="fas fa-check"></i> Full Conference Access</li>
                                         <li><i className="fas fa-check"></i> Workshop Materials</li>
@@ -276,9 +235,7 @@ const EventDetails = () => {
                                         <i className="fas fa-arrow-right"></i>
                                     </button>
                                 </div>
-                                {/* <div className="ed-ticket-footer"> */}
                                 <div className="ed-barcode">
-                                    {/* <div className="ed-barcode-lines"></div> */}
                                     <span className="ed-ticket-number">VIP24-0001</span>
                                 </div>
                                 {/* </div> */}
@@ -287,6 +244,11 @@ const EventDetails = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Tickets Section */}
+
+            {/* </div > */}
+            {/* // </div> */}
 
             <Footer />
         </>

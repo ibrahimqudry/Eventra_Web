@@ -5,7 +5,7 @@ import "../css/home.css";
 
 const Home = () => {
   return (
-    <React.Fragment>
+    <>
       <Nav />
       <header className="hero">
         <div className="hero-content">
@@ -136,7 +136,8 @@ const Home = () => {
         </div>
       </section>
       <Footer />
-    </React.Fragment>
+    </>
+    
   )
 }
 

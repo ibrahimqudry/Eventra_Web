@@ -1,36 +1,54 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  savedEvents: [],
+// Load initial state from localStorage
+const loadFromLocalStorage = () => {
+  try {
+    const serializedState = localStorage.getItem('savedEvents');
+    return serializedState ? JSON.parse(serializedState) : { savedEvents: [] };
+  } catch (e) {
+    console.warn("Failed to load saved events from localStorage:", e);
+    return { savedEvents: [] };
+  }
 };
 
+// Save state to localStorage
+const saveToLocalStorage = (state) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem('savedEvents', serializedState);
+  } catch (e) {
+    console.warn("Failed to save events to localStorage:", e);
+  }
+};
+
+const initialState = loadFromLocalStorage();
+
 const savedEventsSlice = createSlice({
-  name: 'savedEvents',
+  name: "savedEvents",
   initialState,
   reducers: {
     addEvent: (state, action) => {
-      const eventExists = state.savedEvents.some(
-        (event) => event.id === action.payload.id
-      );
-      if (!eventExists) {
+      if (!state.savedEvents.some(event => event.id === action.payload.id)) {
         state.savedEvents.push(action.payload);
+        saveToLocalStorage(state);
       }
     },
     removeEvent: (state, action) => {
       state.savedEvents = state.savedEvents.filter(
-        (event) => event.id !== action.payload.id
+        event => event.id !== action.payload.id
       );
+      saveToLocalStorage(state);
     },
-  
     toggleSaveEvent: (state, action) => {
       const index = state.savedEvents.findIndex(
-        (event) => event.id === action.payload.id
+        event => event.id === action.payload.id
       );
-      if (index >= 0) {
-        state.savedEvents.splice(index, 1);
-      } else {
+      if (index === -1) {
         state.savedEvents.push(action.payload);
+      } else {
+        state.savedEvents.splice(index, 1);
       }
+      saveToLocalStorage(state);
     },
   },
 });

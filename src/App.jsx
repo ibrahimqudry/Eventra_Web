@@ -1,88 +1,107 @@
+// React and Routing
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Importing React and other necessary libraries
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
-import Home from './pages/Home'
-import About from './Pages/About'
-import Contact from './Pages/Contact'
-import Navbar from './components/Nav'
-import Createevent from './pages/Createevent'
-import Events from './pages/Events'
-import Services from './Pages/Services'
-import Footer from './components/Footer'
-import GenerateQR from './Pages/GenerateQR'
-import SubscriberInfo from './Pages/SubscriberInfo'
+// Redux
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 
-// Event Manager Dashboard
-import EventMDashbord from './Pages/EventManagerDashboard';
-import EventM from './pages/EventM';
-import Orderm from './pages/Ordersm';
-import Profile from './pages/Profile';
+// Toast Notifications
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+// Styles
+import './App.css';
 
-// UserDashboard
-import Notifications from './Pages/Notifications'
-import SavedEvents from './Pages/SavedEvents'
-import EventDetails from './Pages/EventDetails'
-import UserDashboard from './Pages/UserDashboard'
-
-// Paypal 
+// Core Pages
+import Home from './Pages/Home';
+import About from './Pages/About';
+import Contact from './Pages/Contact';
+import Createevent from './Pages/Createevent';
+import Events from './Pages/Events';
+import Services from './Pages/Services';
+import EventDetails from './Pages/EventDetails';
+import SavedEvents from './Pages/SavedEvents';
+import UserDashboard from './Pages/UserDashboard';
+import Notifications from './Pages/Notifications';
 import CheckoutPage from './Pages/CheckoutPage';
+import GenerateQR from './Pages/GenerateQR';
+import SubscriberInfo from './Pages/SubscriberInfo';
 
-// ServiceOwnerDashboard
-import SOBookings from './components/Bookings'
-import SOServices from './components/Services'
-import SOProfile from './components/Profile'
-import SODashboard from './components/Dashboard'
+// Event Manager Pages
+import EventMDashbord from './Pages/EventManagerDashboard';
+import EventM from './Pages/EventM';
+import Orderm from './Pages/Ordersm';
+import Profile from './Pages/Profile';
 
+// Service Owner Dashboard Components
+import SOBookings from './components/Bookings';
+import SOServices from './components/Services';
+import SOProfile from './components/Profile';
+import SODashboard from './components/Dashboard';
+
+// Shared Components
+import Navbar from './components/Nav';
+import Footer from './components/Footer';
 
 
 function App() {
 
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Main Routes */}
-        <Route path="/Nav" element={<Navbar />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path='/Create' element={<Createevent />} />
-        <Route path='/events' element={<Events />} />
-        <Route path='/services' element={<Services />} />
-        <Route path='/Footer' element={<Footer />} />
-        <Route path="/generateQR" element={<GenerateQR />} />
-        <Route path="/subscriber/:id" element={<SubscriberInfo />} />
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
 
-        {/* EventManager Dashboard /> */}
-        <Route path="/EventMDashbord" element={<EventMDashbord />} />
-        <Route path='/Eventm' element={<EventM />} />
-        <Route path='/orders' element={<Orderm />} />
-        <Route path='/profile' element={<Profile />} />
+          {/* Main Routes */}
+          <Route path="/Nav" element={<Navbar />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path='/Create' element={<Createevent />} />
+          <Route path='/events' element={<Events />} />
+          <Route path='/services' element={<Services />} />
+          <Route path='/Footer' element={<Footer />} />
+          <Route path="/generateQR" element={<GenerateQR />} />
+          <Route path="/subscriber/:id" element={<SubscriberInfo />} />
 
-        {/* ServiceOwnerDashboard */}
-        {/* <Route path="/ServiceOwnerDashboard" element={<ServiceOwnerDashboard />} /> */}
+          {/* EventManager Dashboard /> */}
+          <Route path="/EventMDashbord" element={<EventMDashbord />} />
+          <Route path='/Eventm' element={<EventM />} />
+          <Route path='/orders' element={<Orderm />} />
+          <Route path='/profile' element={<Profile />} />
 
 
-        {/* UserDashboard */}
-        <Route path='/event-details' element={<EventDetails />} />
-        <Route path='/notifications' element={<Notifications />} />
-        <Route path='/savedEvents' element={<SavedEvents />} />
-        <Route path="/user" element={<UserDashboard />} />
+          {/* UserDashboard */}
+          <Route path='/event-details' element={<EventDetails />} />
+          <Route path='/notifications' element={<Notifications />} />
+          <Route path='/savedEvents' element={<SavedEvents />} />
+          <Route path="/user" element={<UserDashboard />} />
 
-        {/* Paypal */}
-        <Route path="/checkout" element={<CheckoutPage />} />
+          {/* Paypal */}
+          <Route path="/checkout" element={<CheckoutPage />} />
 
-        {/* ServiceOwnerDashboard */}
-        <Route path="serviceOwnerDashboard" element={<SODashboard />} />
-        <Route path="ServiceOwnerDashboard/services" element={<SOServices />} />
-        <Route path="ServiceOwnerDashboard/profile" element={<SOProfile />} />
-        <Route path="ServiceOwnerDashboard/bookings" element={<SOBookings />} />
+          {/* ServiceOwnerDashboard */}
+          <Route path="serviceOwnerDashboard" element={<SODashboard />} />
+          <Route path="ServiceOwnerDashboard/services" element={<SOServices />} />
+          <Route path="ServiceOwnerDashboard/profile" element={<SOProfile />} />
+          <Route path="ServiceOwnerDashboard/bookings" element={<SOBookings />} />
 
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+
+
+        <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </BrowserRouter>
+    </Provider>
   )
 }
 
