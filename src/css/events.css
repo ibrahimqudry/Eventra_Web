@@ -352,6 +352,37 @@
 .submit-btn:hover {
     transform: translateY(-2px);
 }
+/* Bookmark Button Styles */
+.bookmark-btn {
+ 
+  background: white;
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.bookmark-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.bookmark-btn i {
+  font-size: 1.2rem;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.bookmark-btn.saved i {
+  color: var(--primary-color);
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

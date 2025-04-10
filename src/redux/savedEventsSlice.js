@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 // تحميل الحالة الأولية من localStorage إذا وجدت
 const loadFromLocalStorage = () => {
@@ -15,17 +15,30 @@ const loadFromLocalStorage = () => {
 const initialState = loadFromLocalStorage();
 
 const savedEventsSlice = createSlice({
-  name: 'savedEvents',
+  name: "savedEvents",
   initialState,
   reducers: {
+<<<<<<< HEAD
+=======
+    addEvent: (state, action) => {
+      if (!state.savedEvents.some((event) => event.id === action.payload.id)) {
+        state.savedEvents.push(action.payload);
+      }
+    },
+    removeEvent: (state, action) => {
+      state.savedEvents = state.savedEvents.filter(
+        (event) => event.id !== action.payload.id
+      );
+    },
+>>>>>>> ee12e4e6b754cb4ab1605fcb42481d8a6e5d75c8
     toggleSaveEvent: (state, action) => {
       const index = state.savedEvents.findIndex(
         (event) => event.id === action.payload.id
       );
-      if (index >= 0) {
-        state.savedEvents.splice(index, 1);
-      } else {
+      if (index === -1) {
         state.savedEvents.push(action.payload);
+      } else {
+        state.savedEvents.splice(index, 1);
       }
       
       // حفظ في localStorage بعد كل تغيير
@@ -39,5 +52,11 @@ const savedEventsSlice = createSlice({
   },
 });
 
+<<<<<<< HEAD
 export const { toggleSaveEvent } = savedEventsSlice.actions;
 export default savedEventsSlice.reducer;
+=======
+export const { addEvent, removeEvent, toggleSaveEvent } =
+  savedEventsSlice.actions;
+export default savedEventsSlice.reducer;
+>>>>>>> ee12e4e6b754cb4ab1605fcb42481d8a6e5d75c8

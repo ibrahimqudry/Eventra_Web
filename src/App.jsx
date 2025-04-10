@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
@@ -11,17 +11,14 @@ import Events from "./Pages/Events";
 import Servses from "./Pages/Servses";
 import UserDashboard from "./Pages/UserDashboard";
 import EventDetails from "./Pages/EventDetails";
-import Notifications from "./Pages/Notifications";
-import SavedEvents from './Pages/SavedEvents';
 import Footer from "./componats/Footer";
 import CustomerReviews from "./Pages/PreviousEvents";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-
-
   return (
+<<<<<<< HEAD
 <<<<<<< HEAD
     <Provider store={store}>
          <BrowserRouter>
@@ -53,6 +50,9 @@ function App() {
         />
 =======
     <>
+=======
+    <Provider store={store}>
+>>>>>>> ee12e4e6b754cb4ab1605fcb42481d8a6e5d75c8
       <BrowserRouter>
         <Routes>
           <Route path="/Nav" element={<Navbar />} />
@@ -61,19 +61,20 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/signin" element={<Signin />} />
-          <Route path='/Create' element={<Createevent />} />
-          <Route path='/events' element={<Events />} />
-          <Route path='/event-details' element={<EventDetails />} />
-          <Route path='/notifications' element={<Notifications />} />
-          <Route path='/Servses' element={<Servses />} />
-          <Route path='/Footer' element={<Footer />} />
+          <Route path="/Create" element={<Createevent />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/event-details" element={<EventDetails />} />
+          <Route path="/Servses" element={<Servses />} />
+          <Route path="/Footer" element={<Footer />} />
         </Routes>
+<<<<<<< HEAD
         <Footer />
 >>>>>>> 6eaae7e3c4bf78eb650a9f24161409162425f931
+=======
+>>>>>>> ee12e4e6b754cb4ab1605fcb42481d8a6e5d75c8
       </BrowserRouter>
-
-    </>
-  )
+    </Provider>
+  );
 }
 
 export default App;
