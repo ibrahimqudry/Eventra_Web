@@ -20,7 +20,6 @@ import About from './Pages/About';
 import Contact from './Pages/Contact';
 import Createevent from './Pages/Createevent';
 import Events from './Pages/Events';
-import Services from './Pages/Services';
 import EventDetails from './Pages/EventDetails';
 import SavedEvents from './Pages/SavedEvents';
 import UserDashboard from './Pages/UserDashboard';
@@ -45,6 +44,7 @@ import SODashboard from './components/Dashboard';
 // Shared Components
 import Navbar from './components/Nav';
 import Footer from './components/Footer';
+import Services from './Pages/services';
 
 
 function App() {
