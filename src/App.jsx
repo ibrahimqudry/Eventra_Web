@@ -36,10 +36,15 @@ import Orderm from './Pages/Ordersm';
 import Profile from './Pages/Profile';
 
 // Service Owner Dashboard Components
-import SOBookings from './components/Bookings';
-import SOServices from './components/Services';
-import SOProfile from './components/Profile';
-import SODashboard from './components/Dashboard';
+import SODashboard from './SODashboard/pages/Dashboard';
+import SOBookings from './SODashboard/pages/Bookings';
+import SOReviews from './SODashboard/pages/Reviews';
+import SOEarnings from './SODashboard/pages/Earnings';
+import SOProfile from './SODashboard/pages/Profile';
+import SOServices from './SODashboard/pages/Services';
+import ServiceForm from './SODashboard/pages/ServiceForm';
+import { Link } from 'react-router-dom';
+
 
 // Shared Components
 import Navbar from './components/Nav';
@@ -85,12 +90,28 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
 
           {/* ServiceOwnerDashboard */}
-          <Route path="/serviceOwnerDashboard">
-            <Route index element={<SODashboard />} />
-            <Route path="services" element={<SOServices />} />
-            <Route path="profile" element={<SOProfile />} />
-            <Route path="bookings" element={<SOBookings />} />
-          </Route>
+          {/* Main routes */}
+          <Route path="/sodashboard" element={<SODashboard />} />
+          <Route path="/soservices" element={<SOServices />} />
+          <Route path="/sobookings" element={<SOBookings />} />
+          <Route path="/soreviews" element={<SOReviews />} />
+          <Route path="/soearnings" element={<SOEarnings />} />
+          <Route path="/soprofile" element={<SOProfile />} />
+
+          {/* Service management routes */}
+          <Route path="/services/new" element={<ServiceForm />} />
+          <Route path="/services/edit/:id" element={<ServiceForm />} />
+
+          {/* 404 route */}
+          <Route
+            path="*"
+            element={
+              <div className="not-found">
+                <h1>404 - Page Not Found</h1>
+                <Link to="/dashboard">Return to Dashboard</Link>
+              </div>
+            }
+          />
         </Routes>
 
 
