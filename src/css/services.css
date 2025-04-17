@@ -321,6 +321,74 @@
   }
 
   .services-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+/* Add these new styles for better card alignment */
+.services-cards:has(.service-card:only-child) {
+    grid-template-columns: minmax(300px, 600px);
+    justify-content: center;
+}
+
+.services-cards:has(.service-card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, minmax(300px, 450px));
+    justify-content: center;
+}
+
+/* Optional: Enhance single card appearance */
+.services-cards .service-card:only-child {
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+  .services-cards {
     grid-template-columns: 1fr;
   }
+}
+
+.services-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+/* Styles for single card */
+.services-cards:has(.service-card:first-child:last-child) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.services-cards .service-card:first-child:last-child {
+    max-width: 400px;  /* Reduced from 500px */
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Styles for two cards */
+.services-cards:has(.service-card:nth-child(2):last-child) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;  /* Reduced from 900px */
+    margin: 0 auto;
+    gap: 2rem;  /* Reduced from 3rem */
+    padding: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .services-cards:has(.service-card:nth-child(2):last-child) {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .services-cards .service-card:first-child:last-child {
+        max-width: 90%;  /* Changed to percentage for better mobile response */
+        margin: 0 auto;
+    }
 }
