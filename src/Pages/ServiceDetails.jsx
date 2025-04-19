@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
@@ -9,6 +9,49 @@ import '../css/serviceDetails.css';
 
 const ServiceDetails = () => {
     const { id } = useParams();
+    const [rating, setRating] = useState(0);
+    const [reviewText, setReviewText] = useState('');
+    const [reviews, setReviews] = useState([
+        {
+            id: 1,
+            user: "John Doe",
+            avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+            rating: 5,
+            text: "Amazing service! Everything was perfect and exactly as described. Would definitely recommend!",
+            date: "2 days ago"
+        },
+        {
+            id: 2,
+            user: "Sarah Smith",
+            avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+            rating: 4,
+            text: "Great experience overall. The team was very professional and responsive.",
+            date: "1 week ago"
+        }
+    ]);
+
+    // Add handlers
+    const handleRatingClick = (selectedRating) => {
+        setRating(selectedRating);
+    };
+
+    const handleReviewSubmit = (e) => {
+        e.preventDefault();
+        if (rating === 0 || !reviewText.trim()) return;
+
+        const newReview = {
+            id: reviews.length + 1,
+            user: "Current User", // You can replace this with actual user data
+            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`,
+            rating: rating,
+            text: reviewText,
+            date: "Just now"
+        };
+
+        setReviews([newReview, ...reviews]);
+        setRating(0);
+        setReviewText('');
+    };
 
     const services = [
         {
@@ -78,29 +121,6 @@ const ServiceDetails = () => {
 
     const service = services.find(s => s.id === parseInt(id));
 
-    const inspirationImages = [
-        {
-            id: 1,
-            url: "https://images.unsplash.com/photo-1511578314322-379afb476865",
-            title: "Elegant Setup"
-        },
-        {
-            id: 2,
-            url: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
-            title: "Modern Design"
-        },
-        {
-            id: 3,
-            url: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a",
-            title: "Creative Layout"
-        },
-        {
-            id: 4,
-            url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
-            title: "Unique Experience"
-        }
-    ];
-
     const packages = [
         {
             id: 1,
@@ -140,70 +160,100 @@ const ServiceDetails = () => {
         }
     ];
 
+    if (!service) {
+        return <div>Service not found</div>;
+    }
+
+    const inspirationImages = [
+        {
+            id: 1,
+            url: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3",
+            title: "Elegant Wedding Setup"
+        },
+        {
+            id: 2,
+            url: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+            title: "Modern Venue Design"
+        },
+        {
+            id: 3,
+            url: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a",
+            title: "Creative Decorations"
+        },
+        {
+            id: 4,
+            url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
+            title: "Unique Experience"
+        },
+        {
+            id: 5,
+            url: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678",
+            title: "Special Moments"
+        }
+    ];
+
     const sliderSettings = {
-        dots: false,
-        arrows: false,
+        dots: true,
         infinite: true,
-        speed: 1000,
+        speed: 500,
         slidesToShow: 3,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 2000,
-        cssEase: "ease-out",
+        autoplaySpeed: 3000,
         centerMode: true,
-        centerPadding: "0px",
+        centerPadding: '60px',
         responsive: [
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 2
+                    slidesToShow: 2,
+                    centerPadding: '40px'
                 }
             },
             {
-                breakpoint: 600,
+                breakpoint: 768,
                 settings: {
-                    slidesToShow: 1
+                    slidesToShow: 1,
+                    centerPadding: '30px'
                 }
             }
         ]
     };
 
-    if (!service) {
-        return <div>Service not found</div>;
-    }
-
-    // Make sure the component is wrapped in the main container
     return (
         <>
             <Nav />
             <div className="service-details">
                 <div className="container">
+                    {/* Service Header Section */}
                     <div className="service-header">
                         <img src={service.image} alt={service.title} />
                         <div className="service-info">
-                            <h1>{service.title}</h1>
                             <div className="category">{service.category}</div>
+                            <h1>{service.title}</h1>
                             <p className="description">{service.description}</p>
                         </div>
                     </div>
 
-                    <div className="carousel-container">
-                        <div className="carousel-title">
+                    {/* Inspiration Gallery Section */}
+                    <div className="inspiration-section">
+                        <div className="inspiration-title">
                             <h2>Inspiration Gallery</h2>
-                            <span className="carousel-subtitle">Discover amazing possibilities</span>
+                            <span className="inspiration-subtitle">Discover amazing possibilities</span>
                         </div>
-                        <Slider {...sliderSettings}>
-                            {inspirationImages.map(image => (
-                                <div key={image.id} className="carousel-card">
-                                    <img src={image.url} alt={image.title} />
-                                    <div className="carousel-text">
+                        <div className="slider-container">
+                            <Slider {...sliderSettings}>
+                                {inspirationImages.map(image => (
+                                    <div key={image.id} className="slider-item">
+                                        <img src={image.url} alt={image.title} />
                                         <h3>{image.title}</h3>
                                     </div>
-                                </div>
-                            ))}
-                        </Slider>
+                                ))}
+                            </Slider>
+                        </div>
                     </div>
 
+                    {/* Packages Section */}
                     <div className="packages-section">
                         <h2>Available Packages</h2>
                         <div className="packages-grid">
@@ -219,6 +269,69 @@ const ServiceDetails = () => {
                                     <button className="book-now-btn">Book Now</button>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Reviews Section */}
+                    <div className="reviews-section">
+                        <h2>Customer Reviews</h2>
+                        <div className="reviews-container">
+                            <div className="review-form">
+                                <h3>Leave a Review</h3>
+                                <div className="rating-input">
+                                    <span>Your Rating:</span>
+                                    <div className="stars">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <button 
+                                                key={star} 
+                                                className={`star-btn ${star <= rating ? 'active' : ''}`}
+                                                onClick={() => handleRatingClick(star)}
+                                            >
+                                                ★
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <textarea 
+                                    placeholder="Share your experience..."
+                                    className="review-textarea"
+                                    value={reviewText}
+                                    onChange={(e) => setReviewText(e.target.value)}
+                                />
+                                <button 
+                                    className="submit-review-btn"
+                                    onClick={handleReviewSubmit}
+                                >
+                                    Submit Review
+                                </button>
+                            </div>
+                            
+                            <div className="reviews-list">
+                                {reviews.map(review => (
+                                    <div className="review-card" key={review.id}>
+                                        <div className="review-header">
+                                            <div className="reviewer-info">
+                                                <img src={review.avatar} alt={review.user} />
+                                                <div>
+                                                    <h4>{review.user}</h4>
+                                                    <span className="review-date">{review.date}</span>
+                                                </div>
+                                            </div>
+                                            <div className="rating">
+                                                {Array(5).fill('★').map((star, index) => (
+                                                    <span 
+                                                        key={index}
+                                                        style={{ color: index < review.rating ? '#f6e05e' : '#cbd5e0' }}
+                                                    >
+                                                        {star}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <p className="review-text">{review.text}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
