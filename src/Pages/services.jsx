@@ -3,6 +3,7 @@ import '../css/services.css';
 import Footer from '../components/Footer';
 import Nav from '../components/Nav';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 
 const Services = () => {
@@ -175,7 +176,12 @@ const Services = () => {
                                 <div className="card-content">
                                     <h3>{service.title}</h3>
                                     <p>{service.description}</p>
-                                    <a href="#" className="btn-secondary">Show Details</a>
+                                    <Link 
+                                        to={`/serviceDetails/${service.id}`} 
+                                        className="btn-secondary"
+                                    >
+                                        Show Details
+                                    </Link>
                                 </div>
                             </div>
                         ))}
