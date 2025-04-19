@@ -4,8 +4,8 @@ import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar";
 import "../css/services.css";
 
+import { uploadToCloudinary } from '../../utils/cloudinary';
 // Import Firestore functions and db instance
-// Update the imports at the top
 import { db, auth } from "../../firebase/config";
 import { collection, getDocs, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { toast } from 'react-hot-toast';
@@ -181,23 +181,39 @@ const Services = () => {
   // Handle edit form submission to update service in Firestore
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      const serviceDocRef = doc(db, "services", editFormData.id);
-      const updatedData = {
-        ...editFormData,
-        serviceOwnerId: auth.currentUser?.uid,
-        updatedAt: serverTimestamp()
-      };
+      const promise = toast.promise(
+        (async () => {
+          const serviceDocRef = doc(db, "services", editFormData.id);
+          const updatedData = {
+            ...editFormData,
+            serviceOwnerId: auth.currentUser?.uid,
+            updatedAt: serverTimestamp()
+          };
 
-      await updateDoc(serviceDocRef, updatedData);
-      console.log("Service updated successfully");
-      // Update local state after a successful update
-      const updatedServices = services.map((s) =>
-        s.id === editFormData.id ? editFormData : s
+          await updateDoc(serviceDocRef, updatedData);
+          
+          // Update local state after successful update
+          const updatedServices = services.map((s) =>
+            s.id === editFormData.id ? editFormData : s
+          );
+          setServices(updatedServices);
+          setFilteredServices(updatedServices);
+          
+          // Close modal
+          setEditModalOpen(false);
+          setEditFormData(null);
+        })(),
+        {
+          loading: 'Updating service...',
+          success: 'Service updated successfully!',
+          error: 'Failed to update service'
+        }
       );
-      setServices(updatedServices);
-      setFilteredServices(updatedServices);
-      setEditModalOpen(false);
+
+      await promise;
+
     } catch (error) {
       console.error("Error updating service:", error);
     }
@@ -370,6 +386,45 @@ const Services = () => {
                 />
               </div>
 
+              {/* Add Image Upload UI */}
+              <div className="form-group">
+                <label htmlFor="edit-image">Service Image</label>
+                <div className="image-upload-container">
+                  {editFormData.image && (
+                    <div className="image-preview">
+                      <img 
+                        src={editFormData.image} 
+                        alt="Service preview" 
+                        style={{ maxWidth: '200px', marginTop: '10px' }} 
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    id="edit-image"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        try {
+                          toast.loading('Uploading image...', { id: 'imageToast' });
+                          const imageUrl = await uploadToCloudinary(file);
+                          setEditFormData(prev => ({
+                            ...prev,
+                            image: imageUrl
+                          }));
+                          toast.success('Image uploaded successfully!', { id: 'imageToast' });
+                        } catch (error) {
+                          console.error('Error uploading image:', error);
+                          toast.error('Failed to upload image', { id: 'imageToast' });
+                        }
+                      }
+                    }}
+                    className="file-input"
+                  />
+                </div>
+              </div>
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="edit-price">Price</label>
@@ -401,7 +456,7 @@ const Services = () => {
                 </div>
               </div>
 
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label htmlFor="edit-image">Image URL</label>
                 <input
                   type="url"
@@ -412,7 +467,7 @@ const Services = () => {
                   placeholder="Enter image URL"
                   required
                 />
-              </div>
+              </div> */}
 
               {/* Service Packages Section in Edit Form */}
               <div className="form-group">
