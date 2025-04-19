@@ -4,13 +4,14 @@ import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar";
 import "../css/services.css";
 
+import { uploadToCloudinary } from '../../utils/cloudinary';
 // Import Firestore functions and db instance
-// Update the import statement at the top
 import { db, auth } from "../../firebase/config";
-import { collection, getDocs, doc, updateDoc, getFirestore } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { toast } from 'react-hot-toast';
 
-const ServiceCard = ({ service, onEdit }) => {
-  const { image, category, status, name, rating, reviews, bookings, price, unit } = service;
+const ServiceCard = ({ service, onEdit, onDelete }) => {
+  const { id, image, category, status, name, rating, reviews, bookings, price, unit } = service;
   return (
     <div className="service-card">
       <div className="service-image">
@@ -23,9 +24,7 @@ const ServiceCard = ({ service, onEdit }) => {
         <div className="service-stats">
           <div className="stat">
             <i className="fas fa-star"></i>
-            <span>
-              {rating} ({reviews} reviews)
-            </span>
+            <span>{rating} ({reviews} reviews)</span>
           </div>
           <div className="stat">
             <i className="fas fa-calendar-check"></i>
@@ -43,8 +42,12 @@ const ServiceCard = ({ service, onEdit }) => {
           <button className="btn-icon" title="Preview">
             <i className="fas fa-eye"></i>
           </button>
-          <button className="btn-icon" title={status === "Draft" ? "Delete" : "Archive"}>
-            <i className={`fas ${status === "Draft" ? "fa-trash" : "fa-archive"}`}></i>
+          <button
+            className="btn-icon"
+            title="Delete"
+            onClick={() => onDelete(id)}
+          >
+            <i className="fas fa-trash"></i>
           </button>
         </div>
       </div>
@@ -178,25 +181,61 @@ const Services = () => {
   // Handle edit form submission to update service in Firestore
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    
     try {
-      const serviceDocRef = doc(db, "services", editFormData.id);
-      const updatedData = {
-        ...editFormData,
-        serviceOwnerId: auth.currentUser?.uid,
-        updatedAt: serverTimestamp()
-      };
-      
-      await updateDoc(serviceDocRef, updatedData);
-      console.log("Service updated successfully");
-      // Update local state after a successful update
-      const updatedServices = services.map((s) =>
-        s.id === editFormData.id ? editFormData : s
+      const promise = toast.promise(
+        (async () => {
+          const serviceDocRef = doc(db, "services", editFormData.id);
+          const updatedData = {
+            ...editFormData,
+            serviceOwnerId: auth.currentUser?.uid,
+            updatedAt: serverTimestamp()
+          };
+
+          await updateDoc(serviceDocRef, updatedData);
+          
+          // Update local state after successful update
+          const updatedServices = services.map((s) =>
+            s.id === editFormData.id ? editFormData : s
+          );
+          setServices(updatedServices);
+          setFilteredServices(updatedServices);
+          
+          // Close modal
+          setEditModalOpen(false);
+          setEditFormData(null);
+        })(),
+        {
+          loading: 'Updating service...',
+          success: 'Service updated successfully!',
+          error: 'Failed to update service'
+        }
       );
-      setServices(updatedServices);
-      setFilteredServices(updatedServices);
-      setEditModalOpen(false);
+
+      await promise;
+
     } catch (error) {
       console.error("Error updating service:", error);
+    }
+  };
+
+
+  const handleDeleteService = async (serviceId) => {
+    if (window.confirm('Are you sure you want to delete this service?')) {
+      try {
+        toast.loading('Deleting service...', { id: 'deleteToast' });
+        const serviceRef = doc(db, 'services', serviceId);
+        await deleteDoc(serviceRef);
+
+        // Update both services and filtered services states
+        setServices(prev => prev.filter(service => service.id !== serviceId));
+        setFilteredServices(prev => prev.filter(service => service.id !== serviceId));
+
+        toast.success('Service deleted successfully!', { id: 'deleteToast' });
+      } catch (error) {
+        console.error('Error deleting service:', error);
+        toast.error('Failed to delete service', { id: 'deleteToast' });
+      }
     }
   };
 
@@ -269,6 +308,7 @@ const Services = () => {
                   key={service.id}
                   service={service}
                   onEdit={handleEditClick}
+                  onDelete={handleDeleteService}
                 />
               ))
             ) : (
@@ -346,6 +386,45 @@ const Services = () => {
                 />
               </div>
 
+              {/* Add Image Upload UI */}
+              <div className="form-group">
+                <label htmlFor="edit-image">Service Image</label>
+                <div className="image-upload-container">
+                  {editFormData.image && (
+                    <div className="image-preview">
+                      <img 
+                        src={editFormData.image} 
+                        alt="Service preview" 
+                        style={{ maxWidth: '200px', marginTop: '10px' }} 
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    id="edit-image"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        try {
+                          toast.loading('Uploading image...', { id: 'imageToast' });
+                          const imageUrl = await uploadToCloudinary(file);
+                          setEditFormData(prev => ({
+                            ...prev,
+                            image: imageUrl
+                          }));
+                          toast.success('Image uploaded successfully!', { id: 'imageToast' });
+                        } catch (error) {
+                          console.error('Error uploading image:', error);
+                          toast.error('Failed to upload image', { id: 'imageToast' });
+                        }
+                      }
+                    }}
+                    className="file-input"
+                  />
+                </div>
+              </div>
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="edit-price">Price</label>
@@ -377,7 +456,7 @@ const Services = () => {
                 </div>
               </div>
 
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label htmlFor="edit-image">Image URL</label>
                 <input
                   type="url"
@@ -388,7 +467,7 @@ const Services = () => {
                   placeholder="Enter image URL"
                   required
                 />
-              </div>
+              </div> */}
 
               {/* Service Packages Section in Edit Form */}
               <div className="form-group">
@@ -447,5 +526,6 @@ const Services = () => {
     </div>
   );
 };
+
 
 export default Services;
