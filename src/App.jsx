@@ -50,6 +50,7 @@ import { Link } from 'react-router-dom';
 import Navbar from './components/Nav';
 import Footer from './components/Footer';
 import Services from './Pages/services';
+import ServiceDetails from './Pages/Servicedetails';
 
 
 function App() {
@@ -97,6 +98,7 @@ function App() {
           <Route path="/soreviews" element={<SOReviews />} />
           <Route path="/soearnings" element={<SOEarnings />} />
           <Route path="/soprofile" element={<SOProfile />} />
+          <Route path="/servicedetails" element={<ServiceDetails />} />
 
           {/* Service management routes */}
           <Route path="/services/new" element={<ServiceForm />} />
