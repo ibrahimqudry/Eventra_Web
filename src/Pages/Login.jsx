@@ -1,45 +1,52 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { auth, db } from '../firebase/config';
+import '../css/Login.css';
+
+// Zod schema for form validation
+const schema = z.object({
+    email: z.string().email('Invalid email address').min(1, 'Email is required'),
+    password: z.string()
+        .min(8, 'Password must be at least 8 characters')
+        .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+        .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+        .regex(/[0-9]/, 'Password must contain at least one number')
+        .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
+});
 
 const Login = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            email: '',
+            password: '',
+        }
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (data) => {
         try {
             const userCredential = await signInWithEmailAndPassword(
                 auth,
-                formData.email,
-                formData.password
+                data.email,
+                data.password
             );
 
-            // Get user role from Firestore
             const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
             const userData = userDoc.data();
 
-            // Redirect based on user role
             if (userData.role === 'eventManager') {
                 navigate('/EventMDashbord');
             } else if (userData.role === 'serviceOwner') {
                 navigate('/serviceOwnerDashboard');
             } else if (userData.role === 'attendee') {
-                navigate('/'); // Changed to navigate to home page
+                navigate('/');
             }
 
             toast.success('Login successful!');
@@ -49,59 +56,71 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full bg-white rounded-xl shadow-2xl p-8 space-y-8">
-                <div>
-                    <h2 className="text-center text-3xl font-extrabold text-indigo-900">
-                        Welcome Back
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Sign in to your Eventra account
-                    </p>
+        <div className="login-container">
+            {/* Left Section - Promotional Content */}
+            <div className="promotional-section">
+                <h1>Wlecome Back To Eventra</h1>
+                <div className="promotional-image">
+                    <img
+                        src="https://via.placeholder.com/400x300"
+                        alt="Illustration"
+                    />
                 </div>
+            </div>
 
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="space-y-5">
-                        <div>
+            {/* Right Section - Form */}
+            <div className="form-section">
+                <div className="form-container">
+                    <h2>Sign In</h2>
+                    <form onSubmit={handleSubmit(onSubmit)} className="form">
+                        {/* Email */}
+                        <div className="form-group">
                             <input
-                                name="email"
+                                {...register('email')}
                                 type="email"
-                                required
-                                className="block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out"
-                                placeholder="Email address"
-                                onChange={handleInputChange}
+                                placeholder="Email Address"
+                                className={`input-field ${errors.email ? 'error' : ''}`}
                             />
+                            {errors.email && (
+                                <p className="error-message">{errors.email.message}</p>
+                            )}
                         </div>
-                        <div>
-                            <input
-                                name="password"
-                                type="password"
-                                required
-                                className="block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out"
-                                placeholder="Password"
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </div>
 
-                    <div>
+                        {/* Password */}
+                        <div className="form-group">
+                            <input
+                                {...register('password')}
+                                type="password"
+                                placeholder="Password"
+                                className={`input-field ${errors.password ? 'error' : ''}`}
+                            />
+                            {errors.password && (
+                                <p className="error-message">{errors.password.message}</p>
+                            )}
+                        </div>
+
+                        {/* Forgot Password Link */}
+                        <div className="forgot-password">
+                            <Link to="/forgot-password">Forgot password?</Link>
+                        </div>
+
+                        {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:-translate-y-0.5"
+                            className="submit-button"
                         >
                             Sign In
                         </button>
-                    </div>
 
-                    <div className="text-center">
-                        <p className="text-sm text-gray-600">
+                        {/* Register Link */}
+                        <p className="register-link">
                             Don't have an account?{' '}
-                            <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                            <Link to="/register" className="register-text">
                                 Register here
                             </Link>
                         </p>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     );

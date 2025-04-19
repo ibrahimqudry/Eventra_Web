@@ -6,8 +6,20 @@ import "../css/serviceform.css";
 // Import Firestore functions and your db instance
 import { db } from "../../firebase/config";
 import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import Sidebar from "../components/Sidebar";
+import axios from "axios";
+import { Toaster, toast } from 'react-hot-toast';
+
+// Add this import at the top with other imports
+import { uploadToCloudinary } from '../../utils/cloudinary';
+
 
 const ServiceForm = () => {
+  // Add these state variables for image handling
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = !!id;
@@ -32,6 +44,35 @@ const ServiceForm = () => {
     price: "",
     duration: "",
   });
+
+  // Generic change handler for input fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Image upload handler
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+
+    try {
+      setUploading(true);
+      const imageUrl = await uploadToCloudinary(file);
+      setFormData(prev => ({
+        ...prev,
+        image: imageUrl
+      }));
+      setUploading(false);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setUploading(false);
+    }
+  };
 
   // Handler to add a new package into the packages array
   const handleAddPackage = () => {
@@ -66,7 +107,10 @@ const ServiceForm = () => {
   // Handler for form submission to add/update service in Firestore
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
+      toast.loading('Saving service...', { id: 'serviceToast' });
+      
       const serviceData = {
         ...formData,
         updatedAt: serverTimestamp(),
@@ -75,86 +119,43 @@ const ServiceForm = () => {
       if (isEditing) {
         const serviceDocRef = doc(db, "services", id);
         await updateDoc(serviceDocRef, serviceData);
-        console.log("Service updated successfully");
+        toast.success('Service updated successfully!', { id: 'serviceToast' });
       } else {
         const servicesRef = collection(db, "services");
-        const docRef = await addDoc(servicesRef, {
+        await addDoc(servicesRef, {
           ...serviceData,
           createdAt: serverTimestamp(),
         });
-        console.log("Service added with ID:", docRef.id);
+        toast.success('Service added successfully!', { id: 'serviceToast' });
+        
+        // Clear form data
+        setFormData({
+          name: "",
+          category: "",
+          description: "",
+          price: "",
+          unit: "day",
+          image: "",
+          status: "available",
+          packages: [],
+        });
+        setImagePreview(null);
       }
-      navigate("/soservices");
+      
+      setTimeout(() => {
+        navigate("/soservices");
+      }, 1000);
+      
     } catch (error) {
       console.error("Error adding/updating service:", error);
+      toast.error('Failed to save service', { id: 'serviceToast' });
     }
-  };
-
-  // Generic change handler for input fields
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
   };
 
   return (
     <div className="service-form-page">
-      <aside className="sidebar">
-        <div className="sidebar-header">
-          <div className="logo">
-            <img src="/assets/logo.jpeg" alt="Eventera Logo" />
-            <span>Eventera</span>
-          </div>
-        </div>
-        <nav className="sidebar-nav">
-          <ul>
-            <li>
-              <Link to="/dashboard">
-                <i className="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-              </Link>
-            </li>
-            <li className="active">
-              <Link to="/services">
-                <i className="fas fa-concierge-bell"></i>
-                <span>Services</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/bookings">
-                <i className="fas fa-calendar-check"></i>
-                <span>Bookings</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/reviews">
-                <i className="fas fa-star"></i>
-                <span>Reviews</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/earnings">
-                <i className="fas fa-wallet"></i>
-                <span>Earnings</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/profile">
-                <i className="fas fa-user"></i>
-                <span>Profile</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/">
-                <i className="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+      <Toaster position="top-right" />
+      <Sidebar />
 
       <main className="main-content">
         <TopBar />
@@ -247,16 +248,32 @@ const ServiceForm = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="image">Image URL</label>
-              <input
-                type="url"
-                id="image"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="Enter image URL"
-                required
-              />
+              <label htmlFor="image">Service Image</label>
+              <div className="image-upload-container">
+                {imagePreview && (
+                  <div className="image-preview">
+                    <img src={imagePreview} alt="Preview" />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="image-input"
+                  required={!isEditing}
+                />
+                <label htmlFor="image" className="image-upload-label">
+                  {uploading ? (
+                    <span>Uploading...</span>
+                  ) : (
+                    <>
+                      <i className="fas fa-cloud-upload-alt"></i>
+                      <span>Choose an image</span>
+                    </>
+                  )}
+                </label>
+              </div>
             </div>
 
             {/* Service Packages Section */}
@@ -299,7 +316,7 @@ const ServiceForm = () => {
               <button
                 type="button"
                 className="btn-secondary"
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/soservices")}
               >
                 Cancel
               </button>
@@ -388,3 +405,6 @@ const ServiceForm = () => {
 };
 
 export default ServiceForm;
+
+
+

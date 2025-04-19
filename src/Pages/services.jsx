@@ -4,6 +4,8 @@ import Nav from '../components/Nav';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/services.css';
+import { Link } from 'react-router-dom';
+
 
 const Services = () => {
     const [searchQuery, setSearchQuery] = useState('');

@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../css/topbar.css";
+
 const TopBar = () => {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+  }, []);
+
   return (
     <nav className="top-nav">
       <div className="search-bar">
@@ -14,10 +24,10 @@ const TopBar = () => {
         </div>
         <div className="profile-menu">
           <img
-            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            src={userData?.profileImage || "https://via.placeholder.com/256"}
             alt="Profile"
           />
-          <span>Ahmed Hassan</span>
+          <span>{userData?.fullName || "Loading..."}</span>
         </div>
       </div>
     </nav>

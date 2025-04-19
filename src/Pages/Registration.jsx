@@ -1,197 +1,325 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { toast } from 'react-toastify';
 import { auth, db } from '../firebase/config';
 import { uploadToCloudinary } from '../utils/cloudinary';
+import '../css/Registration.css';
+
+// Interests list
+const interests = [
+    "Music & Concerts", "Business & Networking", "Tech & Innovation",
+    "Arts & Culture", "Food & Drink", "Health & Wellness",
+    "Sports & Fitness", "Education & Workshops", "Charity & Causes",
+    "Festivals & Fairs", "Parties & Nightlife", "Travel & Outdoor",
+    "Family & Kids", "Fashion & Beauty", "Spirituality & Religion",
+    "Film & Media", "Theater & Performing Arts", "Gaming & Esports",
+    "Literature & Books", "Finance & Investment"
+];
+
+// Zod schema for form validation
+// Update the document validation in the schema
+const schema = z.object({
+    fullName: z.string().min(1, 'Full name is required'),
+    email: z.string().email('Invalid email address').min(1, 'Email is required'),
+    password: z.string()
+        .min(8, 'Password must be at least 8 characters')
+        .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+        .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+        .regex(/[0-9]/, 'Password must contain at least one number')
+        .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
+    age: z.number()
+        .min(18, 'You must be at least 18 years old')
+        .refine(val => Number.isInteger(val), 'Age must be a whole number'),
+    role: z.enum(['attendee', 'eventManager', 'serviceOwner']),
+    document: z.any()
+        .optional()
+        .superRefine((val, ctx) => {
+            const formData = ctx.path[0];
+            const role = formData?.role;
+            
+            // Skip validation for attendees or if role is not yet selected
+            if (!role || role === 'attendee') {
+                return true;
+            }
+            
+            // For event managers and service owners, require document
+            if (!val || !val.length) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Document is required for Event Managers and Service Owners',
+                });
+            }
+        }),
+    interests: z.array(z.string()).min(1, 'Select at least one interest'),
+    terms: z.literal(true, {
+        errorMap: () => ({ message: "You must accept the terms and conditions" }),
+    }),
+    profileImage: z.any()
+        .refine(val => val.length > 0, 'Profile image is required'),
+});
 
 const Registration = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        fullName: '',
-        role: 'attendee',
-        document: null
+    const { register, handleSubmit, formState: { errors }, watch } = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            email: '',
+            password: '',
+            fullName: '',
+            age: 0,
+            role: 'attendee',
+            document: null,
+            interests: [],
+            terms: false
+        }
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
+    const role = watch('role');
+    const selectedInterests = watch('interests') || [];
 
-    const handleFileChange = (e) => {
-        setFormData(prev => ({
-            ...prev,
-            document: e.target.files[0]
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (data) => {
         try {
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
-                formData.email,
-                formData.password
+                data.email,
+                data.password
             );
 
-            let documentUrl = null;
-
-            // Upload document to Cloudinary if role is not attendee
-            if (formData.role !== 'attendee' && formData.document) {
-                documentUrl = await uploadToCloudinary(formData.document);
+            // Upload profile image
+            let profileImageUrl = null;
+            if (data.profileImage && data.profileImage[0]) {
+                profileImageUrl = await uploadToCloudinary(data.profileImage[0]);
             }
 
-            // Store user data in Firestore
-            await setDoc(doc(db, 'users', userCredential.user.uid), {
-                fullName: formData.fullName,
-                email: formData.email,
-                role: formData.role,
+            // Upload verification document if needed
+            let documentUrl = null;
+            if (data.role !== 'attendee' && data.document && data.document[0]) {
+                documentUrl = await uploadToCloudinary(data.document[0]);
+            }
+
+            const userData = {
+                fullName: data.fullName,
+                email: data.email,
+                age: data.age,
+                role: data.role,
+                profileImage: profileImageUrl,
                 verificationDocument: documentUrl,
-                verificationStatus: formData.role === 'attendee' ? 'verified' : 'pending',
-                createdAt: new Date().toISOString()
-            });
+                verificationStatus: data.role === 'attendee' ? 'verified' : 'pending',
+                interests: data.interests,
+                createdAt: new Date().toISOString(),
+                uid: userCredential.user.uid
+            };
+
+            // Save to Firestore
+            await setDoc(doc(db, 'users', userCredential.user.uid), userData);
+
+            // Save to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
 
             toast.success('Registration successful!');
-            
-            // Route based on role
-            if (formData.role === 'eventManager') {
+
+            if (data.role === 'eventManager') {
                 navigate('/EventMDashbord');
-            } else if (formData.role === 'serviceOwner') {
-                navigate('/serviceOwnerDashboard');
+            } else if (data.role === 'serviceOwner') {
+                navigate('/sodashboard');
             } else {
                 navigate('/');
             }
-            
         } catch (error) {
             toast.error(error.message);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full bg-white rounded-xl shadow-2xl p-8 space-y-8">
-                <div>
-                    <h2 className="text-center text-3xl font-extrabold text-indigo-900">
-                        Join Eventra
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Create your account to start your journey
-                    </p>
+        <div className="registration-container">
+            {/* Left Section - Promotional Content */}
+            <div className="promotional-section">
+                <h1>Eventra Where Every Moment Becomes a Memory.</h1>
+                <div className="promotional-image">
+                    <img
+                        src="https://storyset.com/illustration/forms/amico#A777E3FF&hide=&hide=complete"
+                        alt="Illustration" />
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="space-y-5">
-                        <div>
+            </div>
+
+            {/* Right Section - Form */}
+            <div className="form-section">
+                <div className="form-container">
+                    <h2>Create Account</h2>
+                    <form onSubmit={handleSubmit(onSubmit)} className="form">
+                        {/* Full Name */}
+                        <div className="form-group">
                             <input
-                                name="fullName"
+                                {...register('fullName')}
                                 type="text"
-                                required
-                                className="block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out"
                                 placeholder="Full Name"
-                                onChange={handleInputChange}
+                                className={`input-field ${errors.fullName ? 'error' : ''}`}
                             />
+                            {errors.fullName && (
+                                <p className="error-message">{errors.fullName.message}</p>
+                            )}
                         </div>
-                        <div>
+                        
+                        <div className="form-group">
+                            <label className="role-label">Profile Image</label>
                             <input
-                                name="email"
-                                type="email"
-                                required
-                                className="block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out"
-                                placeholder="Email address"
-                                onChange={handleInputChange}
+                                type="file"
+                                accept="image/*"
+                                {...register('profileImage')}
+                                className={`input-field ${errors.profileImage ? 'error' : ''}`}
                             />
-                        </div>
-                        <div>
-                            <input
-                                name="password"
-                                type="password"
-                                required
-                                className="block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150 ease-in-out"
-                                placeholder="Password"
-                                onChange={handleInputChange}
-                            />
+                            {errors.profileImage && (
+                                <p className="error-message">{errors.profileImage.message}</p>
+                            )}
                         </div>
 
-                        <div className="bg-white rounded-lg p-4 border border-gray-200">
-                            <label className="text-indigo-900 font-semibold mb-3 block">Choose your role:</label>
-                            <div className="space-y-3">
-                                <label className="flex items-center p-2 rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer">
+                        {/* Email */}
+                        <div className="form-group">
+                            <input
+                                {...register('email')}
+                                type="email"
+                                placeholder="Email Address"
+                                className={`input-field ${errors.email ? 'error' : ''}`}
+                            />
+                            {errors.email && (
+                                <p className="error-message">{errors.email.message}</p>
+                            )}
+                        </div>
+
+                        {/* Password */}
+                        <div className="form-group">
+                            <input
+                                {...register('password')}
+                                type="password"
+                                placeholder="Password"
+                                className={`input-field ${errors.password ? 'error' : ''}`}
+                            />
+                            {errors.password && (
+                                <p className="error-message">{errors.password.message}</p>
+                            )}
+                        </div>
+
+                        {/* Age */}
+                        <div className="form-group">
+                            <input
+                                {...register('age', { valueAsNumber: true })}
+                                type="number"
+                                placeholder="Age"
+                                min="12"
+                                className={`input-field ${errors.age ? 'error' : ''}`}
+                            />
+                            {errors.age && (
+                                <p className="error-message">{errors.age.message}</p>
+                            )}
+                        </div>
+
+                        {/* Role Selection */}
+                        <div className="form-group">
+                            <label className="role-label">Choose your role:</label>
+                            <div className="role-options">
+                                <label className="role-option">
                                     <input
                                         type="radio"
-                                        name="role"
                                         value="attendee"
-                                        checked={formData.role === 'attendee'}
-                                        onChange={handleInputChange}
-                                        className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                        {...register('role')}
                                     />
-                                    <span className="ml-3 text-gray-700">Attendee</span>
+                                    <span>Attendee</span>
                                 </label>
-                                <label className="flex items-center p-2 rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer">
+                                <label className="role-option">
                                     <input
                                         type="radio"
-                                        name="role"
                                         value="eventManager"
-                                        checked={formData.role === 'eventManager'}
-                                        onChange={handleInputChange}
-                                        className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                        {...register('role')}
                                     />
-                                    <span className="ml-3 text-gray-700">Event Manager</span>
+                                    <span>Event Manager</span>
                                 </label>
-                                <label className="flex items-center p-2 rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer">
+                                <label className="role-option">
                                     <input
                                         type="radio"
-                                        name="role"
                                         value="serviceOwner"
-                                        checked={formData.role === 'serviceOwner'}
-                                        onChange={handleInputChange}
-                                        className="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                        {...register('role')}
                                     />
-                                    <span className="ml-3 text-gray-700">Service Owner</span>
+                                    <span>Service Owner</span>
                                 </label>
                             </div>
                         </div>
 
-                        {formData.role !== 'attendee' && (
-                            <div className="bg-white rounded-lg p-4 border border-gray-200">
-                                <label className="text-indigo-900 font-semibold mb-2 block">
-                                    Verification Document
-                                </label>
+                        {/* Document Upload */}
+                        {role !== 'attendee' && (
+                            <div className="form-group">
+                                <label className="role-label">Verification Document (Proof of identity or business)</label>
                                 <input
                                     type="file"
-                                    onChange={handleFileChange}
-                                    required
-                                    className="block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-lg file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-indigo-100 file:text-indigo-700
-                    hover:file:bg-indigo-200 transition-colors
-                    cursor-pointer"
+                                    {...register('document')}
+                                    className={`input-field ${errors.document ? 'error' : ''}`}
                                 />
-                                <p className="mt-2 text-xs text-gray-500">
-                                    Please upload a valid document for verification
-                                </p>
+                                {errors.document && (
+                                    <p className="error-message">{errors.document.message}</p>
+                                )}
                             </div>
                         )}
-                    </div>
 
-                    <div>
+                        {/* Interests */}
+                        <div className="form-group">
+                            <label className="role-label">Select Your Interests:</label>
+                            <div className="interests-container">
+                                {interests.map((interest) => (
+                                    <label key={interest} className={`interest-option ${selectedInterests.includes(interest) ? 'selected' : ''}`}>
+                                        <input
+                                            type="checkbox"
+                                            value={interest}
+                                            {...register('interests')}
+                                            className="hidden-checkbox"
+                                        />
+                                        {interest}
+                                    </label>
+                                ))}
+                            </div>
+                            {errors.interests && (
+                                <p className="error-message">{errors.interests.message}</p>
+                            )}
+                        </div>
+
+                        {/* Terms Checkbox */}
+                        <div className="checkbox-container">
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                {...register('terms')}
+                                className={`terms-checkbox ${errors.terms ? 'error' : ''}`}
+                            />
+                            <label htmlFor="terms">I agree to the terms of service & privacy policy</label>
+                            {errors.terms && (
+                                <p className="error-message">{errors.terms.message}</p>
+                            )}
+                        </div>
+
+                        {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out transform hover:-translate-y-0.5"
+                            className="submit-button"
                         >
-                            Create Account
+                            Sign Up
                         </button>
-                    </div>
-                </form>
+
+                        {/* Sign In Link */}
+                        <p className="signin-link">
+                            Already have an account?{' '}
+                            <a href="/login">
+                                Sign in
+                            </a>
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     );
-}
+};
+
 export default Registration;
+
