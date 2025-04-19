@@ -167,7 +167,7 @@ body {
 .search-box input {
   flex: 1;
   border: none;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   border-radius: 9999px;
   font-size: 1rem;
   outline: none;
@@ -177,7 +177,7 @@ body {
   background: linear-gradient(135deg, #6366f1, #a855f7);
   color: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
@@ -398,7 +398,7 @@ body {
 .newsletter-form input {
   flex: 1;
   border: none;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   font-size: 1rem;
   border-radius: 9999px;
   outline: none;
@@ -408,7 +408,7 @@ body {
   background: linear-gradient(135deg, #6366f1, #a855f7);
   color: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   border-radius: 9999px;
   font-weight: 600;
   cursor: pointer;
