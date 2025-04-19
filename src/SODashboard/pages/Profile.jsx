@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar";
 import "../css/profile.css";
 
 const Profile = () => {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+  }, []);
+
   return (
     <div className="profile-container">
-        <Sidebar />
+      <Sidebar />
 
       <main className="main-content">
         <TopBar />
@@ -27,16 +36,16 @@ const Profile = () => {
             <div className="profile-info">
               <div className="profile-avatar">
                 <img
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt="Ahmed Hassan"
+                  src={userData?.profileImage || "https://via.placeholder.com/256"}
+                  alt={userData?.fullName}
                 />
                 <button className="edit-avatar">
                   <i className="fas fa-camera"></i>
                 </button>
               </div>
               <div className="profile-details">
-                <h1>Ahmed Hassan</h1>
-                <p>Wedding Hall & Event Venue Owner</p>
+                <h1>{userData?.fullName}</h1>
+                <p>{userData?.role === 'serviceOwner' ? 'Service Owner' : userData?.role}</p>
                 <div className="profile-stats">
                   <div className="stat">
                     <span className="stat-value">12</span>
@@ -61,12 +70,22 @@ const Profile = () => {
               <form className="profile-form">
                 <div className="form-row">
                   <div className="form-group">
-                    <label>First Name</label>
-                    <input type="text" defaultValue="Ahmed" />
+                    <label>Full Name</label>
+                    <input type="text" defaultValue={userData?.fullName} />
                   </div>
                   <div className="form-group">
-                    <label>Last Name</label>
-                    <input type="text" defaultValue="Hassan" />
+                    <label>Age</label>
+                    <input type="number" defaultValue={userData?.age} />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input type="email" defaultValue={userData?.email} />
+                  </div>
+                  <div className="form-group">
+                    <label>Role</label>
+                    <input type="text" defaultValue={userData?.role} readOnly />
                   </div>
                 </div>
                 <div className="form-row">
