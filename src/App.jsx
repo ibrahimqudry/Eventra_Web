@@ -122,8 +122,8 @@ function App() {
             }
           />
           
-          {/* Add this new route */}
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          {/* AdminDashboard route */}
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
 
 
