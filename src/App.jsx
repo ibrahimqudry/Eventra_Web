@@ -35,6 +35,7 @@ import EventMDashbord from './Pages/EventManagerDashboard';
 import EventM from './Pages/EventM';
 import Orderm from './Pages/Ordersm';
 import Profile from './Pages/Profile';
+import AdminDashboard from './Pages/AdminDashboard';
 
 // Service Owner Dashboard Components
 import SODashboard from './SODashboard/pages/Dashboard';
@@ -120,6 +121,9 @@ function App() {
               </div>
             }
           />
+          
+          {/* Add this new route */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Routes>
 
 
