@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import Nav from '../components/Nav';
 import { Link } from 'react-router-dom';
 
+
 const Services = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -175,11 +176,10 @@ const Services = () => {
                                     <h3>{service.title}</h3>
                                     <p>{service.description}</p>
                                     <Link 
-                                        to="/services-details" 
-                                        state={{ service }} 
+                                        to={`/serviceDetails/${service.id}`} 
                                         className="btn-secondary"
                                     >
-                                        View Details
+                                        Show Details
                                     </Link>
                                 </div>
                             </div>

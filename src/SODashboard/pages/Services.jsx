@@ -4,12 +4,14 @@ import TopBar from "../components/TopBar";
 import Sidebar from "../components/Sidebar";
 import "../css/services.css";
 
+import { uploadToCloudinary } from '../../utils/cloudinary';
 // Import Firestore functions and db instance
-import db from "../../firebase/config";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { db, auth } from "../../firebase/config";
+import { collection, getDocs, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { toast } from 'react-hot-toast';
 
-const ServiceCard = ({ service, onEdit }) => {
-  const { image, category, status, name, rating, reviews, bookings, price, unit } = service;
+const ServiceCard = ({ service, onEdit, onDelete }) => {
+  const { id, image, category, status, name, rating, reviews, bookings, price, unit } = service;
   return (
     <div className="service-card">
       <div className="service-image">
@@ -22,9 +24,7 @@ const ServiceCard = ({ service, onEdit }) => {
         <div className="service-stats">
           <div className="stat">
             <i className="fas fa-star"></i>
-            <span>
-              {rating} ({reviews} reviews)
-            </span>
+            <span>{rating} ({reviews} reviews)</span>
           </div>
           <div className="stat">
             <i className="fas fa-calendar-check"></i>
@@ -42,8 +42,12 @@ const ServiceCard = ({ service, onEdit }) => {
           <button className="btn-icon" title="Preview">
             <i className="fas fa-eye"></i>
           </button>
-          <button className="btn-icon" title={status === "Draft" ? "Delete" : "Archive"}>
-            <i className={`fas ${status === "Draft" ? "fa-trash" : "fa-archive"}`}></i>
+          <button
+            className="btn-icon"
+            title="Delete"
+            onClick={() => onDelete(id)}
+          >
+            <i className="fas fa-trash"></i>
           </button>
         </div>
       </div>
@@ -52,6 +56,54 @@ const ServiceCard = ({ service, onEdit }) => {
 };
 
 const Services = () => {
+
+  // Add this state for package features
+  const [packageFeatures, setPackageFeatures] = useState(['']);
+
+  // Add this function to handle features
+  const handleFeatureChange = (index, value) => {
+    const newFeatures = [...packageFeatures];
+    newFeatures[index] = value;
+    setPackageFeatures(newFeatures);
+  };
+
+  const addFeatureField = () => {
+    setPackageFeatures([...packageFeatures, '']);
+  };
+
+  const removeFeatureField = (index) => {
+    const newFeatures = packageFeatures.filter((_, i) => i !== index);
+    setPackageFeatures(newFeatures);
+  };
+
+  // Modify handleEditAddPackage
+  const handleEditAddPackage = () => {
+    const newPackage = {
+      ...editPackageData,
+      features: packageFeatures.filter(feature => feature.trim() !== '')
+    };
+
+    setEditFormData((prev) => ({
+      ...prev,
+      packages: [...(prev.packages || []), newPackage],
+    }));
+
+    // Reset forms
+    setEditPackageData({
+      name: "",
+      description: "",
+      price: "",
+      duration: "",
+    });
+    setPackageFeatures(['']);
+    setEditPackageModalOpen(false);
+  };
+
+  // Add this near your edit modal JSX
+
+
+
+
   // State for services
   const [services, setServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
@@ -71,8 +123,9 @@ const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const servicesCollection = collection(db, "services");
-        const querySnapshot = await getDocs(servicesCollection);
+        // Make sure we're using the initialized Firestore instance
+        const servicesRef = collection(db, "services");
+        const querySnapshot = await getDocs(servicesRef);
         const servicesArray = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -81,6 +134,7 @@ const Services = () => {
         setFilteredServices(servicesArray);
       } catch (error) {
         console.error("Error fetching services:", error);
+        toast.error("Failed to load services");
       }
     };
     fetchServices();
@@ -148,21 +202,6 @@ const Services = () => {
     }));
   };
 
-  // Handle package addition in edit form
-  const handleEditAddPackage = () => {
-    setEditFormData((prev) => ({
-      ...prev,
-      packages: [...(prev.packages || []), editPackageData],
-    }));
-    setEditPackageData({
-      name: "",
-      description: "",
-      price: "",
-      duration: "",
-    });
-    setEditPackageModalOpen(false);
-  };
-
   // State and handler for package modal in edit form
   const [editPackageModalOpen, setEditPackageModalOpen] = useState(false);
   const [editPackageData, setEditPackageData] = useState({
@@ -175,19 +214,61 @@ const Services = () => {
   // Handle edit form submission to update service in Firestore
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const serviceDocRef = doc(db, "services", editFormData.id);
-      await updateDoc(serviceDocRef, editFormData);
-      console.log("Service updated successfully");
-      // Update local state after a successful update
-      const updatedServices = services.map((s) =>
-        s.id === editFormData.id ? editFormData : s
+      const promise = toast.promise(
+        (async () => {
+          const serviceDocRef = doc(db, "services", editFormData.id);
+          const updatedData = {
+            ...editFormData,
+            serviceOwnerId: auth.currentUser?.uid,
+            updatedAt: serverTimestamp()
+          };
+
+          await updateDoc(serviceDocRef, updatedData);
+
+          // Update local state after successful update
+          const updatedServices = services.map((s) =>
+            s.id === editFormData.id ? editFormData : s
+          );
+          setServices(updatedServices);
+          setFilteredServices(updatedServices);
+
+          // Close modal
+          setEditModalOpen(false);
+          setEditFormData(null);
+        })(),
+        {
+          loading: 'Updating service...',
+          success: 'Service updated successfully!',
+          error: 'Failed to update service'
+        }
       );
-      setServices(updatedServices);
-      setFilteredServices(updatedServices);
-      setEditModalOpen(false);
+
+      await promise;
+
     } catch (error) {
       console.error("Error updating service:", error);
+    }
+  };
+
+
+  const handleDeleteService = async (serviceId) => {
+    if (window.confirm('Are you sure you want to delete this service?')) {
+      try {
+        toast.loading('Deleting service...', { id: 'deleteToast' });
+        const serviceRef = doc(db, 'services', serviceId);
+        await deleteDoc(serviceRef);
+
+        // Update both services and filtered services states
+        setServices(prev => prev.filter(service => service.id !== serviceId));
+        setFilteredServices(prev => prev.filter(service => service.id !== serviceId));
+
+        toast.success('Service deleted successfully!', { id: 'deleteToast' });
+      } catch (error) {
+        console.error('Error deleting service:', error);
+        toast.error('Failed to delete service', { id: 'deleteToast' });
+      }
     }
   };
 
@@ -260,6 +341,7 @@ const Services = () => {
                   key={service.id}
                   service={service}
                   onEdit={handleEditClick}
+                  onDelete={handleDeleteService}
                 />
               ))
             ) : (
@@ -337,6 +419,45 @@ const Services = () => {
                 />
               </div>
 
+              {/* Add Image Upload UI */}
+              <div className="form-group">
+                <label htmlFor="edit-image">Service Image</label>
+                <div className="image-upload-container">
+                  {editFormData.image && (
+                    <div className="image-preview">
+                      <img
+                        src={editFormData.image}
+                        alt="Service preview"
+                        style={{ maxWidth: '200px', marginTop: '10px' }}
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    id="edit-image"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        try {
+                          toast.loading('Uploading image...', { id: 'imageToast' });
+                          const imageUrl = await uploadToCloudinary(file);
+                          setEditFormData(prev => ({
+                            ...prev,
+                            image: imageUrl
+                          }));
+                          toast.success('Image uploaded successfully!', { id: 'imageToast' });
+                        } catch (error) {
+                          console.error('Error uploading image:', error);
+                          toast.error('Failed to upload image', { id: 'imageToast' });
+                        }
+                      }
+                    }}
+                    className="file-input"
+                  />
+                </div>
+              </div>
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="edit-price">Price</label>
@@ -368,7 +489,7 @@ const Services = () => {
                 </div>
               </div>
 
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label htmlFor="edit-image">Image URL</label>
                 <input
                   type="url"
@@ -379,7 +500,7 @@ const Services = () => {
                   placeholder="Enter image URL"
                   required
                 />
-              </div>
+              </div> */}
 
               {/* Service Packages Section in Edit Form */}
               <div className="form-group">
@@ -431,95 +552,13 @@ const Services = () => {
               </div>
             </form>
 
-            {/* Edit Package Modal */}
-            {editPackageModalOpen && (
-              <div className="modal-overlay">
-                <div
-                  className="package-modal"
-                  style={{ maxHeight: "90vh", overflowY: "auto", padding: "20px" }}
-                >
-                  <h3>Add New Package</h3>
-                  <div className="form-group">
-                    <label>Package Name</label>
-                    <input
-                      type="text"
-                      value={editPackageData.name}
-                      onChange={(e) =>
-                        setEditPackageData((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
-                      placeholder="Enter package name"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Description</label>
-                    <textarea
-                      value={editPackageData.description}
-                      onChange={(e) =>
-                        setEditPackageData((prev) => ({
-                          ...prev,
-                          description: e.target.value,
-                        }))
-                      }
-                      placeholder="Describe the package"
-                    />
-                  </div>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Price</label>
-                      <input
-                        type="number"
-                        value={editPackageData.price}
-                        onChange={(e) =>
-                          setEditPackageData((prev) => ({
-                            ...prev,
-                            price: e.target.value,
-                          }))
-                        }
-                        placeholder="Enter price"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Duration</label>
-                      <input
-                        type="text"
-                        value={editPackageData.duration}
-                        onChange={(e) =>
-                          setEditPackageData((prev) => ({
-                            ...prev,
-                            duration: e.target.value,
-                          }))
-                        }
-                        placeholder="e.g., 2 hours"
-                      />
-                    </div>
-                  </div>
-                  <div className="modal-actions">
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={() => setEditPackageModalOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-primary"
-                      onClick={handleEditAddPackage}
-                    >
-                      Add Package
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* End of Edit Package Modal */}
           </div>
         </div>
       )}
     </div>
   );
 };
+
 
 export default Services;
