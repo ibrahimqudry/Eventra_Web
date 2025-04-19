@@ -8,8 +8,18 @@ import { db } from "../../firebase/config";
 import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import Sidebar from "../components/Sidebar";
 import axios from "axios";
+import { Toaster, toast } from 'react-hot-toast';
+
+// Add this import at the top with other imports
+import { uploadToCloudinary } from '../../utils/cloudinary';
+
 
 const ServiceForm = () => {
+  // Add these state variables for image handling
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = !!id;
@@ -34,6 +44,35 @@ const ServiceForm = () => {
     price: "",
     duration: "",
   });
+
+  // Generic change handler for input fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Image upload handler
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+
+    try {
+      setUploading(true);
+      const imageUrl = await uploadToCloudinary(file);
+      setFormData(prev => ({
+        ...prev,
+        image: imageUrl
+      }));
+      setUploading(false);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      setUploading(false);
+    }
+  };
 
   // Handler to add a new package into the packages array
   const handleAddPackage = () => {
@@ -68,7 +107,10 @@ const ServiceForm = () => {
   // Handler for form submission to add/update service in Firestore
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
+      toast.loading('Saving service...', { id: 'serviceToast' });
+      
       const serviceData = {
         ...formData,
         updatedAt: serverTimestamp(),
@@ -77,68 +119,42 @@ const ServiceForm = () => {
       if (isEditing) {
         const serviceDocRef = doc(db, "services", id);
         await updateDoc(serviceDocRef, serviceData);
-        console.log("Service updated successfully");
+        toast.success('Service updated successfully!', { id: 'serviceToast' });
       } else {
         const servicesRef = collection(db, "services");
-        const docRef = await addDoc(servicesRef, {
+        await addDoc(servicesRef, {
           ...serviceData,
           createdAt: serverTimestamp(),
         });
-        console.log("Service added with ID:", docRef.id);
+        toast.success('Service added successfully!', { id: 'serviceToast' });
+        
+        // Clear form data
+        setFormData({
+          name: "",
+          category: "",
+          description: "",
+          price: "",
+          unit: "day",
+          image: "",
+          status: "available",
+          packages: [],
+        });
+        setImagePreview(null);
       }
-      navigate("/soservices");
+      
+      setTimeout(() => {
+        navigate("/soservices");
+      }, 1000);
+      
     } catch (error) {
       console.error("Error adding/updating service:", error);
+      toast.error('Failed to save service', { id: 'serviceToast' });
     }
   };
 
-  // Generic change handler for input fields
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
- 
-
-  // Add new state for image upload
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [uploading, setUploading] = useState(false);
-
-  // Add this function to handle image upload
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-
-    try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'eventra_preset');
-
-      const response = await axios.post(
-        'https://api.cloudinary.com/v1_1/dxqjyqz8p/image/upload',
-        formData
-      );
-
-      setFormData(prev => ({
-        ...prev,
-        image: response.data.secure_url
-      }));
-      setUploading(false);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      setUploading(false);
-    }
-  };
-
-  // Replace the existing image input with this
   return (
     <div className="service-form-page">
+      <Toaster position="top-right" />
       <Sidebar />
 
       <main className="main-content">
@@ -300,7 +316,7 @@ const ServiceForm = () => {
               <button
                 type="button"
                 className="btn-secondary"
-                onClick={() => navigate("/services")}
+                onClick={() => navigate("/soservices")}
               >
                 Cancel
               </button>
@@ -389,3 +405,6 @@ const ServiceForm = () => {
 };
 
 export default ServiceForm;
+
+
+

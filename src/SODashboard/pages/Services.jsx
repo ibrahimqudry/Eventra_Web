@@ -5,12 +5,13 @@ import Sidebar from "../components/Sidebar";
 import "../css/services.css";
 
 // Import Firestore functions and db instance
-// Update the import statement at the top
+// Update the imports at the top
 import { db, auth } from "../../firebase/config";
-import { collection, getDocs, doc, updateDoc, getFirestore } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { toast } from 'react-hot-toast';
 
-const ServiceCard = ({ service, onEdit }) => {
-  const { image, category, status, name, rating, reviews, bookings, price, unit } = service;
+const ServiceCard = ({ service, onEdit, onDelete }) => {
+  const { id, image, category, status, name, rating, reviews, bookings, price, unit } = service;
   return (
     <div className="service-card">
       <div className="service-image">
@@ -23,9 +24,7 @@ const ServiceCard = ({ service, onEdit }) => {
         <div className="service-stats">
           <div className="stat">
             <i className="fas fa-star"></i>
-            <span>
-              {rating} ({reviews} reviews)
-            </span>
+            <span>{rating} ({reviews} reviews)</span>
           </div>
           <div className="stat">
             <i className="fas fa-calendar-check"></i>
@@ -43,8 +42,12 @@ const ServiceCard = ({ service, onEdit }) => {
           <button className="btn-icon" title="Preview">
             <i className="fas fa-eye"></i>
           </button>
-          <button className="btn-icon" title={status === "Draft" ? "Delete" : "Archive"}>
-            <i className={`fas ${status === "Draft" ? "fa-trash" : "fa-archive"}`}></i>
+          <button
+            className="btn-icon"
+            title="Delete"
+            onClick={() => onDelete(id)}
+          >
+            <i className="fas fa-trash"></i>
           </button>
         </div>
       </div>
@@ -185,7 +188,7 @@ const Services = () => {
         serviceOwnerId: auth.currentUser?.uid,
         updatedAt: serverTimestamp()
       };
-      
+
       await updateDoc(serviceDocRef, updatedData);
       console.log("Service updated successfully");
       // Update local state after a successful update
@@ -197,6 +200,26 @@ const Services = () => {
       setEditModalOpen(false);
     } catch (error) {
       console.error("Error updating service:", error);
+    }
+  };
+
+
+  const handleDeleteService = async (serviceId) => {
+    if (window.confirm('Are you sure you want to delete this service?')) {
+      try {
+        toast.loading('Deleting service...', { id: 'deleteToast' });
+        const serviceRef = doc(db, 'services', serviceId);
+        await deleteDoc(serviceRef);
+
+        // Update both services and filtered services states
+        setServices(prev => prev.filter(service => service.id !== serviceId));
+        setFilteredServices(prev => prev.filter(service => service.id !== serviceId));
+
+        toast.success('Service deleted successfully!', { id: 'deleteToast' });
+      } catch (error) {
+        console.error('Error deleting service:', error);
+        toast.error('Failed to delete service', { id: 'deleteToast' });
+      }
     }
   };
 
@@ -269,6 +292,7 @@ const Services = () => {
                   key={service.id}
                   service={service}
                   onEdit={handleEditClick}
+                  onDelete={handleDeleteService}
                 />
               ))
             ) : (
@@ -447,5 +471,6 @@ const Services = () => {
     </div>
   );
 };
+
 
 export default Services;
