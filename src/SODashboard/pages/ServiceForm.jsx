@@ -4,8 +4,8 @@ import TopBar from "../components/TopBar";
 import "../css/serviceform.css";
 
 // Import Firestore functions and your db instance
-import db from "../../firebase/config";
-import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase/config";
+import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 
 const ServiceForm = () => {
   const { id } = useParams();
@@ -67,18 +67,24 @@ const ServiceForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const serviceData = {
+        ...formData,
+        updatedAt: serverTimestamp(),
+      };
+
       if (isEditing) {
-        // Update existing service document
         const serviceDocRef = doc(db, "services", id);
-        await updateDoc(serviceDocRef, formData);
+        await updateDoc(serviceDocRef, serviceData);
         console.log("Service updated successfully");
       } else {
-        // Create a new service document, including default status "available"
-        const servicesCollection = collection(db, "services");
-        const docRef = await addDoc(servicesCollection, formData);
+        const servicesRef = collection(db, "services");
+        const docRef = await addDoc(servicesRef, {
+          ...serviceData,
+          createdAt: serverTimestamp(),
+        });
         console.log("Service added with ID:", docRef.id);
       }
-      navigate("/services");
+      navigate("/soservices");
     } catch (error) {
       console.error("Error adding/updating service:", error);
     }

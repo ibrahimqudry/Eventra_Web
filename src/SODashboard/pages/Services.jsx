@@ -5,8 +5,9 @@ import Sidebar from "../components/Sidebar";
 import "../css/services.css";
 
 // Import Firestore functions and db instance
-import db from "../../firebase/config";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+// Update the import statement at the top
+import { db, auth } from "../../firebase/config";
+import { collection, getDocs, doc, updateDoc, getFirestore } from "firebase/firestore";
 
 const ServiceCard = ({ service, onEdit }) => {
   const { image, category, status, name, rating, reviews, bookings, price, unit } = service;
@@ -71,8 +72,9 @@ const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const servicesCollection = collection(db, "services");
-        const querySnapshot = await getDocs(servicesCollection);
+        // Make sure we're using the initialized Firestore instance
+        const servicesRef = collection(db, "services");
+        const querySnapshot = await getDocs(servicesRef);
         const servicesArray = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -81,6 +83,7 @@ const Services = () => {
         setFilteredServices(servicesArray);
       } catch (error) {
         console.error("Error fetching services:", error);
+        toast.error("Failed to load services");
       }
     };
     fetchServices();
@@ -177,7 +180,13 @@ const Services = () => {
     e.preventDefault();
     try {
       const serviceDocRef = doc(db, "services", editFormData.id);
-      await updateDoc(serviceDocRef, editFormData);
+      const updatedData = {
+        ...editFormData,
+        serviceOwnerId: auth.currentUser?.uid,
+        updatedAt: serverTimestamp()
+      };
+      
+      await updateDoc(serviceDocRef, updatedData);
       console.log("Service updated successfully");
       // Update local state after a successful update
       const updatedServices = services.map((s) =>
@@ -431,90 +440,7 @@ const Services = () => {
               </div>
             </form>
 
-            {/* Edit Package Modal */}
-            {editPackageModalOpen && (
-              <div className="modal-overlay">
-                <div
-                  className="package-modal"
-                  style={{ maxHeight: "90vh", overflowY: "auto", padding: "20px" }}
-                >
-                  <h3>Add New Package</h3>
-                  <div className="form-group">
-                    <label>Package Name</label>
-                    <input
-                      type="text"
-                      value={editPackageData.name}
-                      onChange={(e) =>
-                        setEditPackageData((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
-                      placeholder="Enter package name"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Description</label>
-                    <textarea
-                      value={editPackageData.description}
-                      onChange={(e) =>
-                        setEditPackageData((prev) => ({
-                          ...prev,
-                          description: e.target.value,
-                        }))
-                      }
-                      placeholder="Describe the package"
-                    />
-                  </div>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Price</label>
-                      <input
-                        type="number"
-                        value={editPackageData.price}
-                        onChange={(e) =>
-                          setEditPackageData((prev) => ({
-                            ...prev,
-                            price: e.target.value,
-                          }))
-                        }
-                        placeholder="Enter price"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Duration</label>
-                      <input
-                        type="text"
-                        value={editPackageData.duration}
-                        onChange={(e) =>
-                          setEditPackageData((prev) => ({
-                            ...prev,
-                            duration: e.target.value,
-                          }))
-                        }
-                        placeholder="e.g., 2 hours"
-                      />
-                    </div>
-                  </div>
-                  <div className="modal-actions">
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={() => setEditPackageModalOpen(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="btn-primary"
-                      onClick={handleEditAddPackage}
-                    >
-                      Add Package
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* End of Edit Package Modal */}
           </div>
         </div>
       )}
