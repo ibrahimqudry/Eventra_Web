@@ -12,16 +12,17 @@ import '../css/Registration.css';
 
 // Interests list
 const interests = [
-  "Music & Concerts", "Business & Networking", "Tech & Innovation", 
-  "Arts & Culture", "Food & Drink", "Health & Wellness", 
-  "Sports & Fitness", "Education & Workshops", "Charity & Causes",
-  "Festivals & Fairs", "Parties & Nightlife", "Travel & Outdoor",
-  "Family & Kids", "Fashion & Beauty", "Spirituality & Religion",
-  "Film & Media", "Theater & Performing Arts", "Gaming & Esports",
-  "Literature & Books", "Finance & Investment"
+    "Music & Concerts", "Business & Networking", "Tech & Innovation",
+    "Arts & Culture", "Food & Drink", "Health & Wellness",
+    "Sports & Fitness", "Education & Workshops", "Charity & Causes",
+    "Festivals & Fairs", "Parties & Nightlife", "Travel & Outdoor",
+    "Family & Kids", "Fashion & Beauty", "Spirituality & Religion",
+    "Film & Media", "Theater & Performing Arts", "Gaming & Esports",
+    "Literature & Books", "Finance & Investment"
 ];
 
 // Zod schema for form validation
+// Update the document validation in the schema
 const schema = z.object({
     fullName: z.string().min(1, 'Full name is required'),
     email: z.string().email('Invalid email address').min(1, 'Email is required'),
@@ -32,16 +33,34 @@ const schema = z.object({
         .regex(/[0-9]/, 'Password must contain at least one number')
         .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
     age: z.number()
-        .min(12, 'You must be at least 12 years old')
+        .min(18, 'You must be at least 18 years old')
         .refine(val => Number.isInteger(val), 'Age must be a whole number'),
     role: z.enum(['attendee', 'eventManager', 'serviceOwner']),
     document: z.any()
-        .refine(val => val.length > 0, 'Document is required')
-        .optional(),
+        .optional()
+        .superRefine((val, ctx) => {
+            const formData = ctx.path[0];
+            const role = formData?.role;
+            
+            // Skip validation for attendees or if role is not yet selected
+            if (!role || role === 'attendee') {
+                return true;
+            }
+            
+            // For event managers and service owners, require document
+            if (!val || !val.length) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Document is required for Event Managers and Service Owners',
+                });
+            }
+        }),
     interests: z.array(z.string()).min(1, 'Select at least one interest'),
     terms: z.literal(true, {
         errorMap: () => ({ message: "You must accept the terms and conditions" }),
     }),
+    profileImage: z.any()
+        .refine(val => val.length > 0, 'Profile image is required'),
 });
 
 const Registration = () => {
@@ -71,28 +90,43 @@ const Registration = () => {
                 data.password
             );
 
+            // Upload profile image
+            let profileImageUrl = null;
+            if (data.profileImage && data.profileImage[0]) {
+                profileImageUrl = await uploadToCloudinary(data.profileImage[0]);
+            }
+
+            // Upload verification document if needed
             let documentUrl = null;
             if (data.role !== 'attendee' && data.document && data.document[0]) {
                 documentUrl = await uploadToCloudinary(data.document[0]);
             }
 
-            await setDoc(doc(db, 'users', userCredential.user.uid), {
+            const userData = {
                 fullName: data.fullName,
                 email: data.email,
                 age: data.age,
                 role: data.role,
+                profileImage: profileImageUrl,
                 verificationDocument: documentUrl,
                 verificationStatus: data.role === 'attendee' ? 'verified' : 'pending',
                 interests: data.interests,
-                createdAt: new Date().toISOString()
-            });
+                createdAt: new Date().toISOString(),
+                uid: userCredential.user.uid
+            };
+
+            // Save to Firestore
+            await setDoc(doc(db, 'users', userCredential.user.uid), userData);
+
+            // Save to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
 
             toast.success('Registration successful!');
 
             if (data.role === 'eventManager') {
                 navigate('/EventMDashbord');
             } else if (data.role === 'serviceOwner') {
-                navigate('/serviceOwnerDashboard');
+                navigate('/sodashboard');
             } else {
                 navigate('/');
             }
@@ -109,7 +143,7 @@ const Registration = () => {
                 <div className="promotional-image">
                     <img
                         src="https://storyset.com/illustration/forms/amico#A777E3FF&hide=&hide=complete"
-                        alt="Illustration"/>
+                        alt="Illustration" />
                 </div>
             </div>
 
@@ -128,6 +162,19 @@ const Registration = () => {
                             />
                             {errors.fullName && (
                                 <p className="error-message">{errors.fullName.message}</p>
+                            )}
+                        </div>
+                        
+                        <div className="form-group">
+                            <label className="role-label">Profile Image</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                {...register('profileImage')}
+                                className={`input-field ${errors.profileImage ? 'error' : ''}`}
+                            />
+                            {errors.profileImage && (
+                                <p className="error-message">{errors.profileImage.message}</p>
                             )}
                         </div>
 
@@ -275,3 +322,4 @@ const Registration = () => {
 };
 
 export default Registration;
+
