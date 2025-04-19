@@ -125,6 +125,7 @@ const EventDetails = () => {
                     <div className="ed-previous-events">
                         <h2>Previous Events</h2>
                         <div className="ed-events-grid">
+                            <Link to={"/previous"} >
                             <div className="ed-event-card">
                                 <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Tech Summit 2023" />
                                 <div className="ed-overlay">
@@ -132,6 +133,8 @@ const EventDetails = () => {
                                     <p>A look back at last year's success</p>
                                 </div>
                             </div>
+                            </Link>
+                            <Link to={"/previous"} >
                             <div className="ed-event-card">
                                 <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80" alt="Tech Summit 2022" />
                                 <div className="ed-overlay">
@@ -139,6 +142,8 @@ const EventDetails = () => {
                                     <p>Innovation meets technology</p>
                                 </div>
                             </div>
+                            </Link>
+                            <Link to={"/previous"} >
                             <div className="ed-event-card">
                                 <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Tech Summit 2021" />
                                 <div className="ed-overlay">
@@ -146,6 +151,7 @@ const EventDetails = () => {
                                     <p>Where ideas come to life</p>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     </div>
 

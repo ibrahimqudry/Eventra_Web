@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/services.css';
 import Footer from '../components/Footer';
 import Nav from '../components/Nav';
+<<<<<<< HEAD
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+=======
+import { Link } from 'react-router-dom';
+>>>>>>> 2c0417aeac8c4f47fa7e1af77bda30b5e6da9ac1
 
 const Services = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -29,56 +33,56 @@ const Services = () => {
             id: 3,
             title: "Product Launch",
             description: "Make your product unforgettable! From concept to execution, we create buzz-worthy events that captivate audiences and leave a lasting impression. 🚀✨",
-            image: "../img/card3.webp",
+            image: "/img/card3.webp",
             category: "corporate"
         },
         {
             id: 4,
             title: "Conference Halls",
             description: "Host impactful events in style! State-of-the-art facilities, flexible setups, and seamless tech integration—perfect for meetings, seminars, and corporate gatherings. 🎤💼",
-            image: "../img/card4.jpg",
+            image: "/img/card4.jpg",
             category: "corporate"
         },
         {
             id: 5,
             title: "Award Ceremonies",
             description: "Celebrate excellence in style! From red-carpet glamour to elegant stages, we create unforgettable moments that honor achievements and inspire greatness. 🏆✨",
-            image: "../img/card5.webp",
+            image: "/img/card5.webp",
             category: "corporate"
         },
         {
             id: 6,
             title: "Photogrphy",
             description: "Capture the world through your unique perspective! Whether it's breathtaking landscapes, candid emotions, or artistic details, every shot tells a story. 🌟📸",
-            image: "../img/card6.jpg",
+            image: "/img/card6.jpg",
             category: "social"
         },
         {
             id: 7,
             title: "Events decorations",
             description: "Transform any space into a magical setting! From elegant floral arrangements to dazzling lighting, we create unforgettable atmospheres for every occasion. ✨🎉",
-            image: "../img/card7.jpg",
+            image: "/img/card7.jpg",
             category: "decor"
         },
         {
             id: 8,
             title: "Catering For Events",
             description: "Delight your guests with exquisite flavors! From gourmet dishes to custom menus, we craft unforgettable culinary experiences for every occasion. 🍴✨",
-            image: "../img/card8.jpg",
+            image: "/img/card8.jpg",
             category: "social"
         },
         {
             id: 9,
             title: "Music Concerts",
             description: "Feel the rhythm, live the moment! From electrifying performances to unforgettable acoustics, we bring the stage to life for every music lover. 🎶✨",
-            image: "../img/card10.jpg",
+            image: "/img/card10.jpg",
             category: "social"
         }
     ];
 
     const filteredServices = services.filter(service => {
         const matchesSearch = service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            service.description.toLowerCase().includes(searchQuery.toLowerCase());
+                              service.description.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = !selectedCategory || service.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
@@ -177,10 +181,18 @@ const Services = () => {
                                     <h3>{service.title}</h3>
                                     <p>{service.description}</p>
                                     <Link 
+<<<<<<< HEAD
                                         to={`/serviceDetails/${service.id}`} 
                                         className="btn-secondary"
                                     >
                                         Show Details
+=======
+                                        to="/services-details" 
+                                        state={{ service }} 
+                                        className="btn-secondary"
+                                    >
+                                        View Details
+>>>>>>> 2c0417aeac8c4f47fa7e1af77bda30b5e6da9ac1
                                     </Link>
                                 </div>
                             </div>

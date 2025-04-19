@@ -22,6 +22,7 @@ import Createevent from './Pages/Createevent';
 import Events from './Pages/Events';
 import EventDetails from './Pages/EventDetails';
 import SavedEvents from './Pages/SavedEvents';
+import PreviousEventPage from "./Pages/PreviousEventPage";
 import UserDashboard from './Pages/UserDashboard';
 import Notifications from './Pages/Notifications';
 import CheckoutPage from './Pages/CheckoutPage';
@@ -70,11 +71,16 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path='/Create' element={<Createevent />} />
-          <Route path='/events' element={<Events />} />
           <Route path='/services' element={<Services />} />
           <Route path='/Footer' element={<Footer />} />
           <Route path="/generateQR" element={<GenerateQR />} />
           <Route path="/subscriber/:id" element={<SubscriberInfo />} />
+
+          {/* Events Pages */}
+          <Route path='/events' element={<Events />} />
+          <Route path="/previous" element={<PreviousEventPage />} />
+          <Route path='/event-details/:eventId' element={<EventDetails />} />
+
 
           {/* EventManager Dashboard */}
           <Route path="/EventMDashbord" element={<EventMDashbord />} />
@@ -83,7 +89,6 @@ function App() {
           <Route path='/profile' element={<Profile />} />
 
           {/* UserDashboard */}
-          <Route path='/event-details/:eventId' element={<EventDetails />} />
           <Route path='/notifications' element={<Notifications />} />
           <Route path='/savedEvents' element={<SavedEvents />} />
           <Route path="/user" element={<UserDashboard />} />
