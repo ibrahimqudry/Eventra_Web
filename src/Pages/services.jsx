@@ -2,13 +2,8 @@ import React, { useState } from 'react';
 import '../css/services.css';
 import Footer from '../components/Footer';
 import Nav from '../components/Nav';
-<<<<<<< HEAD
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-=======
-import { Link } from 'react-router-dom';
->>>>>>> 2c0417aeac8c4f47fa7e1af77bda30b5e6da9ac1
 
 const Services = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -181,18 +176,10 @@ const Services = () => {
                                     <h3>{service.title}</h3>
                                     <p>{service.description}</p>
                                     <Link 
-<<<<<<< HEAD
                                         to={`/serviceDetails/${service.id}`} 
                                         className="btn-secondary"
                                     >
                                         Show Details
-=======
-                                        to="/services-details" 
-                                        state={{ service }} 
-                                        className="btn-secondary"
-                                    >
-                                        View Details
->>>>>>> 2c0417aeac8c4f47fa7e1af77bda30b5e6da9ac1
                                     </Link>
                                 </div>
                             </div>

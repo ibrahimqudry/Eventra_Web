@@ -56,6 +56,54 @@ const ServiceCard = ({ service, onEdit, onDelete }) => {
 };
 
 const Services = () => {
+
+  // Add this state for package features
+  const [packageFeatures, setPackageFeatures] = useState(['']);
+
+  // Add this function to handle features
+  const handleFeatureChange = (index, value) => {
+    const newFeatures = [...packageFeatures];
+    newFeatures[index] = value;
+    setPackageFeatures(newFeatures);
+  };
+
+  const addFeatureField = () => {
+    setPackageFeatures([...packageFeatures, '']);
+  };
+
+  const removeFeatureField = (index) => {
+    const newFeatures = packageFeatures.filter((_, i) => i !== index);
+    setPackageFeatures(newFeatures);
+  };
+
+  // Modify handleEditAddPackage
+  const handleEditAddPackage = () => {
+    const newPackage = {
+      ...editPackageData,
+      features: packageFeatures.filter(feature => feature.trim() !== '')
+    };
+
+    setEditFormData((prev) => ({
+      ...prev,
+      packages: [...(prev.packages || []), newPackage],
+    }));
+
+    // Reset forms
+    setEditPackageData({
+      name: "",
+      description: "",
+      price: "",
+      duration: "",
+    });
+    setPackageFeatures(['']);
+    setEditPackageModalOpen(false);
+  };
+
+  // Add this near your edit modal JSX
+
+
+
+
   // State for services
   const [services, setServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
@@ -154,21 +202,6 @@ const Services = () => {
     }));
   };
 
-  // Handle package addition in edit form
-  const handleEditAddPackage = () => {
-    setEditFormData((prev) => ({
-      ...prev,
-      packages: [...(prev.packages || []), editPackageData],
-    }));
-    setEditPackageData({
-      name: "",
-      description: "",
-      price: "",
-      duration: "",
-    });
-    setEditPackageModalOpen(false);
-  };
-
   // State and handler for package modal in edit form
   const [editPackageModalOpen, setEditPackageModalOpen] = useState(false);
   const [editPackageData, setEditPackageData] = useState({
@@ -181,7 +214,7 @@ const Services = () => {
   // Handle edit form submission to update service in Firestore
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const promise = toast.promise(
         (async () => {
@@ -193,14 +226,14 @@ const Services = () => {
           };
 
           await updateDoc(serviceDocRef, updatedData);
-          
+
           // Update local state after successful update
           const updatedServices = services.map((s) =>
             s.id === editFormData.id ? editFormData : s
           );
           setServices(updatedServices);
           setFilteredServices(updatedServices);
-          
+
           // Close modal
           setEditModalOpen(false);
           setEditFormData(null);
@@ -392,10 +425,10 @@ const Services = () => {
                 <div className="image-upload-container">
                   {editFormData.image && (
                     <div className="image-preview">
-                      <img 
-                        src={editFormData.image} 
-                        alt="Service preview" 
-                        style={{ maxWidth: '200px', marginTop: '10px' }} 
+                      <img
+                        src={editFormData.image}
+                        alt="Service preview"
+                        style={{ maxWidth: '200px', marginTop: '10px' }}
                       />
                     </div>
                   )}
