@@ -5,8 +5,7 @@ import Sidebar from "../components/Sidebar";
 import "../css/services.css";
 
 import { uploadToCloudinary } from '../../utils/cloudinary';
-// Import Firestore functions and db instance
-import { db, auth } from "../../firebase/config";
+import { auth, db } from "../../firebase/config";  // Make sure this is at the top
 import { collection, getDocs, doc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { toast } from 'react-hot-toast';
 
@@ -123,15 +122,27 @@ const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        // Make sure we're using the initialized Firestore instance
         const servicesRef = collection(db, "services");
         const querySnapshot = await getDocs(servicesRef);
         const servicesArray = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
+          serviceOwnerId: auth.currentUser?.uid,
+          serviceOwnerEmail: auth.currentUser?.email,
+          createdBy: {
+            uid: auth.currentUser?.uid,
+            email: auth.currentUser?.email,
+            name: auth.currentUser?.displayName
+          }
         }));
-        setServices(servicesArray);
-        setFilteredServices(servicesArray);
+        
+        // Filter services to only show the current user's services
+        const userServices = servicesArray.filter(
+          service => service.serviceOwnerId === auth.currentUser?.uid
+        );
+        
+        setServices(userServices);
+        setFilteredServices(userServices);
       } catch (error) {
         console.error("Error fetching services:", error);
         toast.error("Failed to load services");
@@ -221,20 +232,25 @@ const Services = () => {
           const serviceDocRef = doc(db, "services", editFormData.id);
           const updatedData = {
             ...editFormData,
-            serviceOwnerId: auth.currentUser?.uid,
-            updatedAt: serverTimestamp()
+            serviceOwnerId: auth.currentUser?.uid,  // Add the user ID
+            serviceOwnerEmail: auth.currentUser?.email,  // Add the user email
+            updatedAt: serverTimestamp(),
+            createdBy: {
+              uid: auth.currentUser?.uid,
+              email: auth.currentUser?.email,
+              name: auth.currentUser?.displayName
+            }
           };
 
           await updateDoc(serviceDocRef, updatedData);
 
           // Update local state after successful update
           const updatedServices = services.map((s) =>
-            s.id === editFormData.id ? editFormData : s
+            s.id === editFormData.id ? updatedData : s
           );
           setServices(updatedServices);
           setFilteredServices(updatedServices);
 
-          // Close modal
           setEditModalOpen(false);
           setEditFormData(null);
         })(),

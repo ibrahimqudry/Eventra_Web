@@ -14,6 +14,21 @@ const Profile = () => {
     }
   }, []);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = {
+      ...userData,
+      fullName: e.target.elements[0].value,
+      age: e.target.elements[1].value,
+      email: e.target.elements[2].value,
+      role: userData?.role, // Keep the existing role
+    };
+
+    localStorage.setItem('userData', JSON.stringify(formData));
+    setUserData(formData);
+    alert('Profile updated successfully!');
+  };
+
   return (
     <div className="profile-container">
       <Sidebar />
@@ -23,16 +38,6 @@ const Profile = () => {
 
         <div className="profile-content">
           <div className="profile-header">
-            <div className="profile-cover">
-              <img
-                src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-                alt="Cover Photo"
-              />
-              <button className="edit-cover">
-                <i className="fas fa-camera"></i>
-                Change Cover
-              </button>
-            </div>
             <div className="profile-info">
               <div className="profile-avatar">
                 <img
@@ -67,7 +72,7 @@ const Profile = () => {
           <div className="profile-body">
             <div className="profile-section">
               <h2>Personal Information</h2>
-              <form className="profile-form">
+              <form className="profile-form" onSubmit={handleSubmit}>
                 <div className="form-row">
                   <div className="form-group">
                     <label>Full Name</label>
@@ -88,26 +93,7 @@ const Profile = () => {
                     <input type="text" defaultValue={userData?.role} readOnly />
                   </div>
                 </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      defaultValue="ahmed.hassan@example.com"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Phone</label>
-                    <input type="tel" defaultValue="+20 123 456 7890" />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Bio</label>
-                  <textarea
-                    rows="4"
-                    defaultValue="Experienced event venue owner with over 10 years in the industry. Specializing in weddings, corporate events, and special occasions."
-                  />
-                </div>
+                {/* Bio section removed */}
                 <div className="form-actions">
                   <button type="submit" className="btn-primary">
                     Save Changes

@@ -114,7 +114,7 @@ const Bookings = () => {
 
           <div className="filters-section">
             <div className="filters-group">
-              <select 
+              <select
                 className="filter-select"
                 name="service"
                 value={filters.service}
@@ -125,7 +125,7 @@ const Bookings = () => {
                 <option value="Makeup">Makeup Service</option>
                 <option value="Photography">Photography</option>
               </select>
-              <select 
+              <select
                 className="filter-select"
                 name="status"
                 value={filters.status}
@@ -138,7 +138,7 @@ const Bookings = () => {
                 <option value="cancelled">Cancelled</option>
               </select>
             </div>
-            <button 
+            <button
               className="btn-filter"
               onClick={handleApplyFilters}
             >
