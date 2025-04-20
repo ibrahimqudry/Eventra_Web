@@ -72,36 +72,7 @@ const Createevent = () => {
     // Add new state for package benefits
     const [currentBenefits, setCurrentBenefits] = useState(['']);
 
-    // Add handler for package changes
-    // const handlePackageChange = (e, field) => {
-    //     const { value } = e.target;
-    //     setEventData(prev => ({
-    //         ...prev,
-    //         packages: [{
-    //             ...prev.packages[0],
-    //             [field]: value
-    //         }]
-    //     }));
-    // };
 
-    // Add handler for benefits
-    // Remove this function as it's no longer needed
-    // const handleBenefitChange = (index, value) => {
-    //     const newBenefits = [...currentBenefits];
-    //     newBenefits[index] = value;
-    //     setCurrentBenefits(newBenefits);
-    
-    //     setEventData(prev => ({
-    //         ...prev,
-    //         packages: [{
-    //             ...prev.packages[0],
-    //             benefits: newBenefits.filter(b => b.trim() !== '')
-    //         }]
-    //     }));
-    // };
-    
-    // Also remove this state as it's no longer needed
-    // const [currentBenefits, setCurrentBenefits] = useState(['']);
 
     // Add handler for previous events
     const [previousEvent, setPreviousEvent] = useState({
@@ -128,51 +99,7 @@ const Createevent = () => {
         });
     };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     setLoading(true);
 
-    //     try {
-    //         const userData = JSON.parse(localStorage.getItem('userData'));
-    //         const eventsCollectionRef = collection(db, 'events');
-    //         const newEventRef = doc(eventsCollectionRef);
-
-    //         const eventObject = {
-    //             id: newEventRef.id,
-    //             title: eventData.title.trim(),
-    //             category: eventData.category,
-    //             date: new Date(eventData.date).toISOString().split('T')[0],
-    //             time: eventData.time,
-    //             duration: eventData.duration,
-    //             location: {
-    //                 venue: eventData.location.venue.trim(),
-    //                 address: eventData.location.address.trim(),
-    //                 city: eventData.location.city.trim(),
-    //                 country: eventData.location.country.trim()
-    //             },
-    //             description: eventData.description.trim(),
-    //             capacity: parseInt(eventData.capacity, 10),
-    //             sliderImages: eventData.sliderImages,
-    //             sponsorLogos: eventData.sponsorLogos,
-    //             packages: eventData.packages,
-    //             previousEvents: eventData.previousEvents,
-    //             createdAt: serverTimestamp(),
-    //             status: 'pending',
-    //             eventManagerId: userData.uid,
-    //             eventManagerName: userData.fullName,
-    //             eventManagerEmail: userData.email
-    //         };
-
-    //         await setDoc(newEventRef, eventObject);
-    //         toast.success('Event created successfully!');
-    //         navigate('/EventMDashbord');
-    //     } catch (error) {
-    //         console.error('Error creating event:', error);
-    //         toast.error('Failed to create event: ' + error.message);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -495,7 +422,7 @@ const Createevent = () => {
                                                         handlePackageChange(packageIndex, 'benefits', newBenefits);
                                                     }}
                                                     placeholder="Enter benefit"
-                                                    // required
+                                                // required
                                                 />
                                                 {benefitIndex === pkg.benefits.length - 1 && (
                                                     <button
