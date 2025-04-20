@@ -80,7 +80,7 @@ function App() {
           {/* Events Pages */}
           <Route path='/events' element={<Events />} />
           <Route path="/previous" element={<PreviousEventPage />} />
-          <Route path='/event-details/:eventId' element={<EventDetails />} />
+          <Route path="/event-details/:id" element={<EventDetails />} />
 
 
           {/* EventManager Dashboard */}
