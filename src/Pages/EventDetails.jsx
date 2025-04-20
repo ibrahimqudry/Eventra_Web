@@ -5,7 +5,7 @@ import { db } from '../firebase/config';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import "../css/eventDetails.css";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const EventDetails = () => {
     const { id } = useParams();
@@ -157,15 +157,15 @@ const EventDetails = () => {
                                         </div>
                                         <div className="ed-ticket-body">
                                             <ul className="ed-ticket-features">
-                                                {pkg.features && Array.isArray(pkg.features) ? (
-                                                    pkg.features.map((feature, fIndex) => (
-                                                        <li key={fIndex}>
-                                                            <i className={`fas fa-${feature.included ? 'check' : 'times'}`}></i>
-                                                            {feature.name}
+                                                {pkg.benefits && Array.isArray(pkg.benefits) ? (
+                                                    pkg.benefits.map((benefit, bIndex) => (
+                                                        <li key={bIndex}>
+                                                            <i className="fas fa-check"></i>
+                                                            {benefit}
                                                         </li>
                                                     ))
                                                 ) : (
-                                                    <li>No features listed</li>
+                                                    <li>No benefits listed</li>
                                                 )}
                                             </ul>
                                             <button className="ed-ticket-button">
@@ -188,7 +188,48 @@ const EventDetails = () => {
                         </div>
                     </div>
 
-                    {/* Previous Events section remains the same */}
+                    {/* Sponsors Section */}
+                    {event.sponsorLogos && event.sponsorLogos.length > 0 && (
+                        <div className="ed-sponsors-section">
+                            <h2>Event Sponsors</h2>
+                            <div className="ed-sponsors-grid">
+                                {event.sponsorLogos.map((logo, index) => (
+                                    <div className="ed-sponsor" key={index}>
+                                        <img src={logo} alt={`Sponsor ${index + 1}`} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Previous Events Section */}
+                    {event.previousEvents && event.previousEvents.length > 0 && (
+                        <div className="ed-previous-events">
+                            <h2>Previous Events</h2>
+                            <div className="ed-events-grid">
+                                {event.previousEvents.map((prevEvent, index) => (
+                                    <Link
+                                        to="/previous"
+                                        onClick={() => {
+                                            localStorage.setItem('clickedPreviousEvent', JSON.stringify(prevEvent));
+                                        }}
+                                        key={index}
+                                    >
+                                        <div className="ed-event-card">
+                                            <img 
+                                                src={prevEvent.image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87"} 
+                                                alt={prevEvent.title} 
+                                            />
+                                            <div className="ed-overlay">
+                                                <h3>{prevEvent.title}</h3>
+                                                <p>{prevEvent.description || "Previous event"}</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <Footer />
