@@ -146,7 +146,7 @@ const UserDashboard = () => {
                 </div>
                 <div className="stat-info">
                   <h3>My Events</h3>
-                  <p className="stat-value">0 Upcoming</p>
+                  {/* <p className="stat-value">0 Upcoming</p> */}
                 </div>
               </div>
               <div className="eventra-stat-card">
@@ -155,17 +155,19 @@ const UserDashboard = () => {
                 </div>
                 <div className="stat-info">
                   <h3>My Tickets</h3>
-                  <p className="stat-value">0 Active</p>
+                  {/* <p className="stat-value">0 Active</p> */}
                 </div>
               </div>
               <div className="eventra-stat-card">
-                <div className="stat-icon">
-                  <Bookmark size={24} />
-                </div>
-                <div className="stat-info">
-                  <h3>Saved Events</h3>
-                  <p className="stat-value">0 Saved</p>
-                </div>
+                <Link to="/savedEvents" className="stat-link">
+                  <div className="stat-icon">
+                    <Bookmark size={24} />
+                  </div>
+                  <div className="stat-info">
+                    <h3>Saved Events</h3>
+                    {/* <p className="stat-value">0 Saved</p> */}
+                  </div>
+                </Link>
               </div>
             </div>
 

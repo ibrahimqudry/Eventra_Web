@@ -6,6 +6,8 @@ import { toggleSaveEvent } from "../redux/savedEventsSlice";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import "../css/events.css";
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 const Event = () => {
   const dispatch = useDispatch();
@@ -18,45 +20,47 @@ const Event = () => {
     searchQuery: "",
   });
 
-  const events = [
-    {
-      id: 1,
-      title: "Tech Summit 2024",
-      location: "Cairo International Convention Center",
-      time: "9:00 AM - 5:00 PM",
-      attendees: "500+ Attendees",
-      description: "Join the biggest tech conference of the year featuring industry leaders and innovators.",
-      image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-      date: { day: "15", month: "APR" },
-      category: "Technology",
-      price: "$299",
-    },
-    {
-      id: 2,
-      title: "Design Conference",
-      location: "Alexandria Arts Center",
-      time: "10:00 AM - 4:00 PM",
-      attendees: "300+ Attendees",
-      description: "Explore the latest trends in design with world-renowned designers and creative professionals.",
-      image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80",
-      date: { day: "20", month: "MAY" },
-      category: "Design",
-      price: "$199",
-    },
-    {
-      id: 3,
-      title: "Startup Weekend",
-      location: "Giza Innovation Hub",
-      time: "9:00 AM - 6:00 PM",
-      attendees: "200+ Attendees",
-      description: "Turn your idea into reality in 54 hours with mentors, investors, and fellow entrepreneurs.",
-      image: "https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-      date: { day: "10", month: "JUN" },
-      category: "Business",
-      price: "$149",
-    },
-  ];
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const eventsRef = collection(db, 'events');
+        const querySnapshot = await getDocs(eventsRef);
+        
+        const eventsData = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            title: data.title,
+            location: data.location.city,
+            time: data.time,
+            attendees: `${data.capacity} Attendees`,
+            description: data.description,
+            image: data.sliderImages?.[0] || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87',
+            date: {
+              day: new Date(data.date).getDate(),
+              month: new Date(data.date).toLocaleString('en-US', { month: 'short' }).toUpperCase()
+            },
+            category: data.category,
+            price: data.price || 'Free'
+          };
+        });
+
+        setEvents(eventsData);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        toast.error('Failed to fetch events');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // Remove the static events array and keep the filtering logic
   const filteredEvents = events.filter((event) => {
     const matchesSearch = event.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
       event.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
@@ -110,9 +114,26 @@ const Event = () => {
             onChange={(e) => setFilters({ ...filters, category: e.target.value })}
           >
             <option value="">All Categories</option>
-            <option value="Technology">Technology</option>
-            <option value="Design">Design</option>
-            <option value="Business">Business</option>
+            <option value="music">Music & Concerts</option>
+            <option value="business">Business & Networking</option>
+            <option value="tech">Tech & Innovation</option>
+            <option value="arts">Arts & Culture</option>
+            <option value="food">Food & Drink</option>
+            <option value="health">Health & Wellness</option>
+            <option value="sports">Sports & Fitness</option>
+            <option value="education">Education & Workshops</option>
+            <option value="charity">Charity & Causes</option>
+            <option value="festivals">Festivals & Fairs</option>
+            <option value="parties">Parties & Nightlife</option>
+            <option value="travel">Travel & Outdoor</option>
+            <option value="family">Family & Kids</option>
+            <option value="fashion">Fashion & Beauty</option>
+            <option value="spirituality">Spirituality & Religion</option>
+            <option value="film">Film & Media</option>
+            <option value="theater">Theater & Performing Arts</option>
+            <option value="gaming">Gaming & Esports</option>
+            <option value="literature">Literature & Books</option>
+            <option value="finance">Finance & Investment</option>
           </select>
           <select
             value={filters.location}
@@ -136,7 +157,9 @@ const Event = () => {
       </section>
 
       <section className="events-grid">
-        {filteredEvents.length > 0 ? (
+        {loading ? (
+          <div className="loading">Loading events...</div>
+        ) : filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
             <div className="event-card" key={event.id}>
               <div className="event-image">
@@ -145,7 +168,30 @@ const Event = () => {
                   <span className="day">{event.date.day}</span>
                   <span className="month">{event.date.month}</span>
                 </div>
-                <div className="event-category">{event.category}</div>
+                <div className="event-category">
+                    {{
+                        'music': 'Music & Concerts',
+                        'business': 'Business & Networking',
+                        'tech': 'Tech & Innovation',
+                        'arts': 'Arts & Culture',
+                        'food': 'Food & Drink',
+                        'health': 'Health & Wellness',
+                        'sports': 'Sports & Fitness',
+                        'education': 'Education & Workshops',
+                        'charity': 'Charity & Causes',
+                        'festivals': 'Festivals & Fairs',
+                        'parties': 'Parties & Nightlife',
+                        'travel': 'Travel & Outdoor',
+                        'family': 'Family & Kids',
+                        'fashion': 'Fashion & Beauty',
+                        'spirituality': 'Spirituality & Religion',
+                        'film': 'Film & Media',
+                        'theater': 'Theater & Performing Arts',
+                        'gaming': 'Gaming & Esports',
+                        'literature': 'Literature & Books',
+                        'finance': 'Finance & Investment'
+                    }[event.category] || event.category}
+                </div>
               </div>
               <div className="event-details">
                 <h3>{event.title}</h3>
@@ -156,7 +202,6 @@ const Event = () => {
                 </div>
                 <p className="event-description">{event.description}</p>
                 <div className="event-footer">
-                  <span className="price">{event.price}</span>
                   <Link to={`/event-details/${event.id}`}>
                     <button className="register-btn">Learn More</button>
                   </Link>

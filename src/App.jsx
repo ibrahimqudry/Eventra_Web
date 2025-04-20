@@ -54,6 +54,7 @@ import Footer from './components/Footer';
 import Services from './Pages/services';
 // Change this line
 import ServiceDetails from './Pages/ServiceDetails';
+import Previous from './Pages/Previous';
 
 
 function App() {
@@ -79,8 +80,9 @@ function App() {
 
           {/* Events Pages */}
           <Route path='/events' element={<Events />} />
-          <Route path="/previous" element={<PreviousEventPage />} />
-          <Route path='/event-details/:eventId' element={<EventDetails />} />
+          {/* <Route path="/previous" element={<PreviousEventPage />} /> */}
+          <Route path="/previous" element={<Previous />} />
+          <Route path="/event-details/:id" element={<EventDetails />} />
 
 
           {/* EventManager Dashboard */}

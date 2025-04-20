@@ -1,11 +1,43 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";  // Fix the import
+import { doc, getDoc } from "firebase/firestore";
+import { db } from '../firebase/config';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import "../css/eventDetails.css";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const EventDetails = () => {
+    const { id } = useParams();
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+        const fetchEventDetails = async () => {
+            if (!id) {
+                toast.error('Event ID not found');
+                return;
+            }
+
+            try {
+                const eventDoc = await getDoc(doc(db, 'events', id));
+                if (eventDoc.exists()) {
+                    setEvent({ id: eventDoc.id, ...eventDoc.data() });
+                } else {
+                    toast.error('Event not found');
+                }
+            } catch (error) {
+                console.error('Error fetching event:', error);
+                toast.error('Failed to load event details');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEventDetails();
+    }, [id]);
+
     const slides = [
         { src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", alt: "Tech Summit" },
         { src: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80", alt: "Conference" },
@@ -27,6 +59,14 @@ const EventDetails = () => {
         setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
     };
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (!event) {
+        return <div>Event not found</div>;
+    }
+
     return (
         <>
             <Nav />
@@ -39,12 +79,12 @@ const EventDetails = () => {
                             <i className="fas fa-chevron-left"></i>
                         </button>
                         <div className="ed-slides-wrapper">
-                            {slides.map((slide, index) => (
+                            {event.sliderImages?.map((image, index) => (
                                 <img
                                     key={index}
                                     className="ed-slide"
-                                    src={slide.src}
-                                    alt={slide.alt}
+                                    src={image}
+                                    alt={`${event.title} - Image ${index + 1}`}
                                     style={{ display: index === currentSlide ? 'block' : 'none' }}
                                 />
                             ))}
@@ -58,10 +98,10 @@ const EventDetails = () => {
                 {/* Event Details */}
                 <div className="ed-event-details">
                     <div className="ed-event-header">
-                        <h1>Tech Summit 2024</h1>
+                        <h1>{event.title}</h1>
                         <div className="ed-event-meta">
-                            <span className="ed-category">Technology</span>
-                            <span className="ed-status">Early Bird</span>
+                            <span className="ed-category">{event.category}</span>
+                            <span className="ed-status">{new Date(event.date) > new Date() ? 'Upcoming' : 'Past Event'}</span>
                         </div>
                     </div>
 
@@ -70,195 +110,131 @@ const EventDetails = () => {
                             <i className="fas fa-map-marker-alt"></i>
                             <div>
                                 <h4>Location</h4>
-                                <p>Cairo International Convention Center</p>
+                                <p>{event.location.city}, {event.location.venue}</p>
                             </div>
                         </div>
                         <div className="ed-info-item">
                             <i className="fas fa-calendar-alt"></i>
                             <div>
                                 <h4>Date</h4>
-                                <p>April 15, 2024</p>
+                                <p>{new Date(event.date).toLocaleDateString()}</p>
                             </div>
                         </div>
                         <div className="ed-info-item">
                             <i className="fas fa-clock"></i>
                             <div>
                                 <h4>Time</h4>
-                                <p>9:00 AM - 5:00 PM</p>
+                                <p>{event.time}</p>
                             </div>
                         </div>
                         <div className="ed-info-item">
                             <i className="fas fa-users"></i>
                             <div>
                                 <h4>Capacity</h4>
-                                <p>500 Attendees</p>
+                                <p>{event.capacity} Attendees</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="ed-event-description">
                         <h2>About The Event</h2>
-                        <p>Join us for the biggest tech conference of the year! Tech Summit 2024 brings together industry leaders, innovators, and tech enthusiasts for an unforgettable day of learning, networking, and inspiration.</p>
-                        <p>Experience keynote speeches from renowned speakers, interactive workshops, and cutting-edge product demonstrations. Whether you're a developer, entrepreneur, or tech enthusiast, this event is designed to help you stay ahead in the rapidly evolving tech landscape.</p>
-                    </div>
-
-                    {/* Sponsors Section */}
-                    <div className="ed-sponsors-section">
-                        <h2>Event Sponsors</h2>
-                        <div className="ed-sponsors-grid">
-                            <div className="ed-sponsor">
-                                <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sponsor 1" />
-                            </div>
-                            <div className="ed-sponsor">
-                                <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sponsor 2" />
-                            </div>
-                            <div className="ed-sponsor">
-                                <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sponsor 3" />
-                            </div>
-                            <div className="ed-sponsor">
-                                <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sponsor 4" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Previous Events */}
-                    <div className="ed-previous-events">
-                        <h2>Previous Events</h2>
-                        <div className="ed-events-grid">
-                            <Link to={"/previous"} >
-                            <div className="ed-event-card">
-                                <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Tech Summit 2023" />
-                                <div className="ed-overlay">
-                                    <h3>Tech Summit 2023</h3>
-                                    <p>A look back at last year's success</p>
-                                </div>
-                            </div>
-                            </Link>
-                            <Link to={"/previous"} >
-                            <div className="ed-event-card">
-                                <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80" alt="Tech Summit 2022" />
-                                <div className="ed-overlay">
-                                    <h3>Tech Summit 2022</h3>
-                                    <p>Innovation meets technology</p>
-                                </div>
-                            </div>
-                            </Link>
-                            <Link to={"/previous"} >
-                            <div className="ed-event-card">
-                                <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Tech Summit 2021" />
-                                <div className="ed-overlay">
-                                    <h3>Tech Summit 2021</h3>
-                                    <p>Where ideas come to life</p>
-                                </div>
-                            </div>
-                            </Link>
-                        </div>
+                        <p>{event.description}</p>
                     </div>
 
                     {/* Tickets Section */}
                     <div className="ed-tickets-section">
                         <h2>Choose Your Ticket</h2>
                         <div className="ed-tickets-grid">
-                            {/* Standard Ticket */}
-                            <div className="ed-ticket">
-                                <div className="ed-ticket-header">
-                                    <div className="ed-ticket-type">Standard</div>
-                                    <div className="ed-ticket-price">
-                                        <span className="ed-currency">$</span>
-                                        <span className="ed-amount">399</span>
+                            {event.packages && event.packages.length > 0 ? (
+                                event.packages.map((pkg, index) => (
+                                    <div className="ed-ticket" key={index}>
+                                        <div className="ed-ticket-header">
+                                            <div className="ed-ticket-type">{pkg.name}</div>
+                                            <div className="ed-ticket-price">
+                                                <span className="ed-currency">$</span>
+                                                <span className="ed-amount">{pkg.price}</span>
+                                            </div>
+                                        </div>
+                                        <div className="ed-ticket-body">
+                                            <ul className="ed-ticket-features">
+                                                {pkg.benefits && Array.isArray(pkg.benefits) ? (
+                                                    pkg.benefits.map((benefit, bIndex) => (
+                                                        <li key={bIndex}>
+                                                            <i className="fas fa-check"></i>
+                                                            {benefit}
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li>No benefits listed</li>
+                                                )}
+                                            </ul>
+                                            <button className="ed-ticket-button">
+                                                <span>Buy Now</span>
+                                                <i className="fas fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                        <div className="ed-barcode">
+                                            <span className="ed-ticket-number">
+                                                {pkg.name ? `${pkg.name.substring(0, 2).toUpperCase()}24-${String(index + 1).padStart(4, '0')}` : `TKT24-${String(index + 1).padStart(4, '0')}`}
+                                            </span>
+                                        </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="no-tickets">
+                                    <p>No tickets available for this event</p>
                                 </div>
-                                <div className="ed-ticket-body">
-                                    <ul className="ed-ticket-features">
-                                        <li><i className="fas fa-check"></i> Full Conference Access</li>
-                                        <li><i className="fas fa-check"></i> Workshop Materials</li>
-                                        <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
-                                        <li><i className="fas fa-times"></i> Networking Session</li>
-                                        <li><i className="fas fa-times"></i> VIP Lounge Access</li>
-                                        <li><i className="fas fa-times"></i> Private Meeting Room</li>
-                                    </ul>
-                                    <button className="ed-ticket-button">
-                                        <span>Buy Now</span>
-                                        <i className="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                                {/* <div className="ed-ticket-footer"> */}
-                                <div className="ed-barcode">
-                                    {/* <div className="ed-barcode-lines"></div> */}
-                                    <span className="ed-ticket-number">ST24-0001</span>
-                                </div>
-                                {/* </div> */}
-                            </div>
-
-                            {/* Early Bird Ticket */}
-                            <div className="ed-ticket">
-                                <div className="ed-ticket-header">
-                                    <div className="ed-ticket-type">Early Bird</div>
-                                    <div className="ed-ticket-price">
-                                        <span className="ed-currency">$</span>
-                                        <span className="ed-amount">299</span>
-                                    </div>
-                                </div>
-                                <div className="ed-ticket-body">
-                                    <ul className="ed-ticket-features">
-                                        <li><i className="fas fa-check"></i> Full Conference Access</li>
-                                        <li><i className="fas fa-check"></i> Workshop Materials</li>
-                                        <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
-                                        <li><i className="fas fa-check"></i> Networking Session</li>
-                                        <li><i className="fas fa-times"></i> VIP Lounge Access</li>
-                                        <li><i className="fas fa-times"></i> Private Meeting Room</li>
-                                    </ul>
-                                    <button className="ed-ticket-button">
-                                        <span>Buy Now</span>
-                                        <i className="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                                <div className="ed-barcode">
-                                    <span className="ed-ticket-number">EB24-0001</span>
-                                </div>
-                            </div>
-
-                            {/* VIP Ticket */}
-                            <div className="ed-ticket">
-                                <div className="ed-ticket-header">
-                                    <div className="ed-ticket-type">VIP</div>
-                                    <div className="ed-ticket-price">
-                                        <span className="ed-currency">$</span>
-                                        <span className="ed-amount">599</span>
-                                    </div>
-                                </div>
-                                <div className="ed-ticket-body">
-                                    <ul className="ed-ticket-features">
-                                        <li><i className="fas fa-check"></i> Full Conference Access</li>
-                                        <li><i className="fas fa-check"></i> Workshop Materials</li>
-                                        <li><i className="fas fa-check"></i> Lunch & Refreshments</li>
-                                        <li><i className="fas fa-check"></i> Networking Session</li>
-                                        <li><i className="fas fa-check"></i> VIP Lounge Access</li>
-                                        <li><i className="fas fa-check"></i> Private Meeting Room</li>
-                                    </ul>
-                                    <button className="ed-ticket-button">
-                                        <span>Buy Now</span>
-                                        <i className="fas fa-arrow-right"></i>
-                                    </button>
-                                </div>
-                                <div className="ed-barcode">
-                                    <span className="ed-ticket-number">VIP24-0001</span>
-                                </div>
-                                {/* </div> */}
-                            </div>
+                            )}
                         </div>
                     </div>
+
+                    {/* Sponsors Section */}
+                    {event.sponsorLogos && event.sponsorLogos.length > 0 && (
+                        <div className="ed-sponsors-section">
+                            <h2>Event Sponsors</h2>
+                            <div className="ed-sponsors-grid">
+                                {event.sponsorLogos.map((logo, index) => (
+                                    <div className="ed-sponsor" key={index}>
+                                        <img src={logo} alt={`Sponsor ${index + 1}`} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Previous Events Section */}
+                    {event.previousEvents && event.previousEvents.length > 0 && (
+                        <div className="ed-previous-events">
+                            <h2>Previous Events</h2>
+                            <div className="ed-events-grid">
+                                {event.previousEvents.map((prevEvent, index) => (
+                                    <Link
+                                        to="/previous"
+                                        onClick={() => {
+                                            localStorage.setItem('clickedPreviousEvent', JSON.stringify(prevEvent));
+                                        }}
+                                        key={index}
+                                    >
+                                        <div className="ed-event-card">
+                                            <img 
+                                                src={prevEvent.image || "https://images.unsplash.com/photo-1540575467063-178a50c2df87"} 
+                                                alt={prevEvent.title} 
+                                            />
+                                            <div className="ed-overlay">
+                                                <h3>{prevEvent.title}</h3>
+                                                <p>{prevEvent.description || "Previous event"}</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
-
-            {/* Tickets Section */}
-
-            {/* </div > */}
-            {/* // </div> */}
-
             <Footer />
         </>
-    )
-}
+    );
+};
 
-export default EventDetails
+export default EventDetails;

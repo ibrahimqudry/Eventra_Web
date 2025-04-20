@@ -224,10 +224,26 @@ const Createevent = () => {
                                     required
                                 >
                                     <option value="">Select Category</option>
-                                    <option value="tech">Technology</option>
-                                    <option value="business">Business</option>
+                                    <option value="music">Music & Concerts</option>
+                                    <option value="business">Business & Networking</option>
+                                    <option value="tech">Tech & Innovation</option>
                                     <option value="arts">Arts & Culture</option>
-                                    <option value="sports">Sports</option>
+                                    <option value="food">Food & Drink</option>
+                                    <option value="health">Health & Wellness</option>
+                                    <option value="sports">Sports & Fitness</option>
+                                    <option value="education">Education & Workshops</option>
+                                    <option value="charity">Charity & Causes</option>
+                                    <option value="festivals">Festivals & Fairs</option>
+                                    <option value="parties">Parties & Nightlife</option>
+                                    <option value="travel">Travel & Outdoor</option>
+                                    <option value="family">Family & Kids</option>
+                                    <option value="fashion">Fashion & Beauty</option>
+                                    <option value="spirituality">Spirituality & Religion</option>
+                                    <option value="film">Film & Media</option>
+                                    <option value="theater">Theater & Performing Arts</option>
+                                    <option value="gaming">Gaming & Esports</option>
+                                    <option value="literature">Literature & Books</option>
+                                    <option value="finance">Finance & Investment</option>
                                 </select>
                             </div>
                             <div className="form-row">
@@ -339,6 +355,52 @@ const Createevent = () => {
                             </div>
                         </div>
 
+                        <div className="form-section">
+                            <h2>Event Slider Images</h2>
+                            <div className="form-group">
+                                <label>Upload Slider Images (Recommended: 3-5 images)</label>
+                                <div className="image-upload-container">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onChange={async (e) => {
+                                            const files = Array.from(e.target.files);
+                                            setLoading(true);
+                                            try {
+                                                const uploadPromises = files.map(file => uploadToCloudinary(file));
+                                                const urls = await Promise.all(uploadPromises);
+                                                setEventData(prev => ({
+                                                    ...prev,
+                                                    sliderImages: [...prev.sliderImages, ...urls]
+                                                }));
+                                                toast.success('Slider images uploaded successfully');
+                                            } catch (error) {
+                                                toast.error('Failed to upload slider images');
+                                            } finally {
+                                                setLoading(false);
+                                            }
+                                        }}
+                                    />
+                                    <div className="upload-placeholder">
+                                        <i className="fas fa-cloud-upload-alt" />
+                                        <p>Upload slider images</p>
+                                    </div>
+                                </div>
+                                <div className="image-preview">
+                                    {eventData.sliderImages.map((url, index) => (
+                                        <img
+                                            key={index}
+                                            src={url}
+                                            alt={`Slider ${index + 1}`}
+                                            className="preview-image"
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Existing sponsors section */}
                         <div className="form-section">
                             <h2>Event Sponsors</h2>
                             <div className="form-group">
@@ -487,10 +549,26 @@ const Createevent = () => {
                                     onChange={(e) => setPreviousEvent({ ...previousEvent, category: e.target.value })}
                                 >
                                     <option value="">Select Category</option>
-                                    <option value="tech">Technology</option>
-                                    <option value="business">Business</option>
+                                    <option value="music">Music & Concerts</option>
+                                    <option value="business">Business & Networking</option>
+                                    <option value="tech">Tech & Innovation</option>
                                     <option value="arts">Arts & Culture</option>
-                                    <option value="sports">Sports</option>
+                                    <option value="food">Food & Drink</option>
+                                    <option value="health">Health & Wellness</option>
+                                    <option value="sports">Sports & Fitness</option>
+                                    <option value="education">Education & Workshops</option>
+                                    <option value="charity">Charity & Causes</option>
+                                    <option value="festivals">Festivals & Fairs</option>
+                                    <option value="parties">Parties & Nightlife</option>
+                                    <option value="travel">Travel & Outdoor</option>
+                                    <option value="family">Family & Kids</option>
+                                    <option value="fashion">Fashion & Beauty</option>
+                                    <option value="spirituality">Spirituality & Religion</option>
+                                    <option value="film">Film & Media</option>
+                                    <option value="theater">Theater & Performing Arts</option>
+                                    <option value="gaming">Gaming & Esports</option>
+                                    <option value="literature">Literature & Books</option>
+                                    <option value="finance">Finance & Investment</option>
                                 </select>
                                 <input
                                     type="text"
