@@ -12,7 +12,7 @@ function SideNav() {
       <div className="sidebar-header">
         <div className="logo">
           <img src="img/logo.jpeg" alt="Eventera Logo" />
-          <span>Eventera</span>
+          <span><Link to="/">Eventera</Link></span>
         </div>
       </div>
       <nav className="sidebar-nav">

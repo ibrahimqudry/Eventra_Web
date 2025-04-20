@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "../css/TopNav.css";
+
 function TopNav() {
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        const storedUserData = localStorage.getItem('userData');
+        if (storedUserData) {
+            setUserData(JSON.parse(storedUserData));
+        }
+    }, []);
+
     return (
         <nav className="top-nav">
             <div className="search-bar">
@@ -8,13 +18,16 @@ function TopNav() {
                 <input type="text" placeholder="Search..."/>
             </div>
             <div className="nav-right">
-                <div className="notifications">
+                {/* <div className="notifications">
                     <i className="fas fa-bell"></i>
                     <span className="badge">3</span>
-                </div>
+                </div> */}
                 <div className="profile-menu">
-                    <img src="img/john.avif" alt="Profile"/>
-                    <span>John Doe</span>
+                    <img 
+                        src={userData?.profileImage || "https://via.placeholder.com/40"} 
+                        alt="Profile"
+                    />
+                    <span>{userData?.fullName || "Guest"}</span>
                 </div>
             </div>
         </nav>
