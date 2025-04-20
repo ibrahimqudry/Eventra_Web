@@ -5,7 +5,7 @@
 }
 
 .promotional-section {
-    flex: 1;
+  /*  flex: 1; */
     background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     padding: 2rem;
@@ -31,17 +31,16 @@
 }
 
 .form-section {
-    flex: 1;
-    display: flex;
+    
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    
     background-color: #f8f9fa;
 }
 
 .form-container {
     width: 100%;
-    max-width: 700px;
+    
     background: white;
     padding: 2.5rem;
     border-radius: 15px;
