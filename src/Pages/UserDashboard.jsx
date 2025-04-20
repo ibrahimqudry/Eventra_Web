@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Bell,
   Calendar,
@@ -31,626 +31,226 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "../css/UserDashboard.css";
 import { updateProfile } from "../redux/authSlice";
+import { uploadToCloudinary } from '../utils/cloudinary';
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from '../firebase/config';
 
 const UserDashboard = () => {
-  const user = useSelector((state) => state.auth.user);
-  const [activeSection, setActiveSection] = useState("dashboard");
-  const [showNotifications, setShowNotifications] = useState(false);
+  // Add isEditing state
   const [isEditing, setIsEditing] = useState(false);
-  const profileImage =
-    user?.profileImage ||
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80";
-  const [userInfo, setUserInfo] = useState({
-    name: user ? `${user.firstName} ${user.lastName}` : "John Doe",
-    email: user?.email || "john@example.com",
-    phone: user?.phone || "+1 234 567 890",
-    address: user?.address || "123 Main St, New York, NY",
-    bio: user?.bio || "Event enthusiast and tech lover",
-  });
-  const fileInputRef = useRef(null);
-  const [settings, setSettings] = useState({
-    emailNotifications: true,
-    smsNotifications: false,
-    language: "en",
-    timeZone: "UTC",
-  });
-  const [, setShowChatSupport] = useState(false);
-  const dispatch = useDispatch();
 
-  const tickets = [
+  const [userData, setUserData] = useState(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([
     {
       id: 1,
-      eventName: "Tech Summit 2024",
-      ticketType: "VIP Pass",
-      date: "Apr 15, 2024",
-      qrCode:
-        "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=VIP123456",
-    },
-    {
-      id: 2,
-      eventName: "Design Conference",
-      ticketType: "Standard Pass",
-      date: "May 20, 2024",
-      qrCode:
-        "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=STD789012",
-    },
-  ];
-  const bankAccounts = [
-    {
-      id: 1,
-      bank: "Universal Bank",
-      number: "**** **** **** 1234",
-      holder: "John Doe",
-      expiry: "12/25",
-    },
-    {
-      id: 2,
-      bank: "Global Bank",
-      number: "**** **** **** 5678",
-      holder: "John Doe",
-      expiry: "09/26",
-    },
-  ];
-  const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
-
-  const notifications = [
-    {
-      id: 1,
-      title: "New Event Reminder",
-      message: "Tech Summit 2024 starts in 2 days",
-      time: "2 hours ago",
       type: "reminder",
+      title: "Upcoming Event",
+      message: "Your event starts in 2 hours",
+      time: "2 hours ago"
     },
     {
       id: 2,
-      title: "Ticket Confirmation",
-      message: "Your ticket for Design Conference has been confirmed",
-      time: "1 day ago",
       type: "confirmation",
-    },
-    {
-      id: 3,
-      title: "Special Offer",
-      message: "Early bird tickets available for Startup Weekend",
-      time: "2 days ago",
-      type: "offer",
-    },
-  ];
-
-  const scheduledEvents = [
-    {
-      id: 1,
-      name: "Tech Summit 2024",
-      date: { day: "15", month: "APR" },
-      location: "San Francisco",
-      time: "9:00 AM",
-    },
-    {
-      id: 2,
-      name: "Design Conference",
-      date: { day: "20", month: "MAY" },
-      location: "New York",
-      time: "10:00 AM",
-    },
-  ];
-
-  const handleSettingsChange = (key, value) => {
-    setSettings((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const handleLogout = () => {
-    // Implement logout logic here
-    console.log("Logging out...");
-  };
-
-  const handleAddEvent = () => {
-    // Implement add event logic here
-    console.log("Adding new event...");
-  };
-
-  const handleAddTicket = () => {
-    // Implement add ticket logic here
-    console.log("Adding new ticket...");
-  };
-
-  const handleAddBankAccount = () => {
-    // Implement add bank account logic here
-    console.log("Adding new bank account...");
-  };
-
-  const handleSupportOption = (option) => {
-    // التعامل مع خيارات الدعم المختلفة
-    switch (option) {
-      case "email":
-        window.location.href = "mailto:support@eventera.com";
-        break;
-      case "phone":
-        window.location.href = "tel:+1234567890";
-        break;
-      case "chat":
-        // فتح نافذة الدردشة
-        setShowChatSupport(true);
-        break;
-      default:
-        console.log("خيار دعم غير معروف");
+      title: "Booking Confirmed",
+      message: "Your ticket has been confirmed",
+      time: "1 day ago"
     }
+  ]);
 
-    // تسجيل طلب الدعم
-    const supportRequest = {
-      type: option,
-      timestamp: new Date().toISOString(),
-      userId: userInfo.id,
-    };
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+  }, []);
 
-    console.log(`تم بدء طلب الدعم عبر ${option}: supportRequest`);
-  };
+  // Update initial states with user data
+  const [userInfo, setUserInfo] = useState({
+    name: userData?.fullName || "Loading...",
+    email: userData?.email || "Loading...",
+    phone: userData?.phone || "Not set",
+    address: userData?.address || "Not set",
+    bio: userData?.bio || "No bio available",
+    age: userData?.age || "",
+  });
 
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
+  const profileImage = userData?.profileImage || "https://via.placeholder.com/256";
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        // Update the user's profile image in Redux
-        dispatch(updateProfile({ profileImage: base64String }));
-        // Update local state
-        setUserInfo((prev) => ({
-          ...prev,
-          profileImage: base64String,
-        }));
+
+  const handleSave = async () => {
+    try {
+      const updatedUserData = {
+        ...userData,
+        ...userInfo,
+        fullName: userInfo.name,
       };
-      reader.readAsDataURL(file);
+
+      // Update in Firebase
+      const userRef = doc(db, "users", userData.uid);
+      await updateDoc(userRef, {
+        fullName: userInfo.name,
+        phone: userInfo.phone,
+        age: userInfo.age,
+      });
+
+      // Update in localStorage
+      localStorage.setItem('userData', JSON.stringify(updatedUserData));
+      setUserData(updatedUserData);
+      setIsEditing(false);
+
+      // Show success message or notification
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
     }
   };
 
-  const handleInputChange = (field, value) => {
-    setUserInfo((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  // Update sidebar user info
+  const [activeSection, setActiveSection] = useState("dashboard");
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // Here you would typically make an API call to save the changes
-    console.log("Saving changes:", {
-      ...user,
-      ...userInfo,
-      firstName: userInfo.name.split(" ")[0],
-      lastName: userInfo.name.split(" ")[1] || "",
-    });
-  };
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const handleBookmark = (event) => {
-    // Here you would typically dispatch an action to remove the event from saved events
-    console.log("Removing event from saved events:", event);
+    try {
+      const imageUrl = await uploadToCloudinary(file);
+
+      const updatedUserData = {
+        ...userData,
+        profileImage: imageUrl
+      };
+
+      // Update in Firebase
+      const userRef = doc(db, "users", userData.uid);
+      await updateDoc(userRef, { profileImage: imageUrl });
+
+      // Update in localStorage
+      localStorage.setItem('userData', JSON.stringify(updatedUserData));
+      setUserData(updatedUserData);
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
 
   const renderContent = () => {
     switch (activeSection) {
       case "dashboard":
         return (
-          <>
-            <div className="eventra-account-section">
-              <div className="eventra-account-header">
-                <h2 className="eventra-account-title">Account Information</h2>
-                <button
-                  className="eventra-edit-btn"
-                  onClick={isEditing ? handleSave : handleEditClick}
-                >
-                  {isEditing ? <Save size={20} /> : <Edit size={20} />}
-                  {isEditing ? "Save Changes" : "Edit Profile"}
-                </button>
-              </div>
-              <div className="eventra-account-content">
-                <div className="eventra-profile-picture">
-                  <img
-                    src={user?.profileImage || profileImage}
-                    alt="Profile"
-                    className="eventra-profile-image"
-                    onClick={() => fileInputRef.current?.click()}
-                  />
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
-                    accept="image/*"
-                    style={{ display: "none" }}
-                  />
-                  {isEditing && (
-                    <button
-                      className="eventra-upload-btn"
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <Upload size={16} />
-                      Change Photo
-                    </button>
-                  )}
+          <div className="eventra-dashboard-content">
+            <div className="eventra-stats-grid">
+              <div className="eventra-stat-card">
+                <div className="stat-icon">
+                  <Calendar size={24} />
                 </div>
-                <div className="eventra-account-details">
-                  <div className="eventra-detail-group">
-                    <span className="eventra-detail-label">Full Name</span>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        className="eventra-detail-input"
-                        value={userInfo.name}
-                        onChange={(e) =>
-                          handleInputChange("name", e.target.value)
-                        }
-                      />
-                    ) : (
-                      <span className="eventra-detail-value">
-                        {userInfo.name}
-                      </span>
-                    )}
-                  </div>
-                  <div className="eventra-detail-group">
-                    <span className="eventra-detail-label">Email</span>
-                    {isEditing ? (
-                      <input
-                        type="email"
-                        className="eventra-detail-input"
-                        value={userInfo.email}
-                        onChange={(e) =>
-                          handleInputChange("email", e.target.value)
-                        }
-                      />
-                    ) : (
-                      <span className="eventra-detail-value">
-                        {userInfo.email}
-                      </span>
-                    )}
-                  </div>
-                  <div className="eventra-detail-group">
-                    <span className="eventra-detail-label">Phone</span>
-                    {isEditing ? (
-                      <input
-                        type="tel"
-                        className="eventra-detail-input"
-                        value={userInfo.phone}
-                        onChange={(e) =>
-                          handleInputChange("phone", e.target.value)
-                        }
-                      />
-                    ) : (
-                      <span className="eventra-detail-value">
-                        {userInfo.phone}
-                      </span>
-                    )}
-                  </div>
-                  <div className="eventra-detail-group">
-                    <span className="eventra-detail-label">Address</span>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        className="eventra-detail-input"
-                        value={userInfo.address}
-                        onChange={(e) =>
-                          handleInputChange("address", e.target.value)
-                        }
-                      />
-                    ) : (
-                      <span className="eventra-detail-value">
-                        {userInfo.address}
-                      </span>
-                    )}
-                  </div>
-                  <div
-                    className="eventra-detail-group"
-                    style={{ gridColumn: "1 / -1" }}
-                  >
-                    <span className="eventra-detail-label">Bio</span>
-                    {isEditing ? (
-                      <textarea
-                        className="eventra-detail-input"
-                        value={userInfo.bio}
-                        onChange={(e) =>
-                          handleInputChange("bio", e.target.value)
-                        }
-                        rows={3}
-                      />
-                    ) : (
-                      <span className="eventra-detail-value">
-                        {userInfo.bio}
-                      </span>
-                    )}
-                  </div>
+                <div className="stat-info">
+                  <h3>My Events</h3>
+                  <p className="stat-value">0 Upcoming</p>
+                </div>
+              </div>
+              <div className="eventra-stat-card">
+                <div className="stat-icon">
+                  <Ticket size={24} />
+                </div>
+                <div className="stat-info">
+                  <h3>My Tickets</h3>
+                  <p className="stat-value">0 Active</p>
+                </div>
+              </div>
+              <div className="eventra-stat-card">
+                <div className="stat-icon">
+                  <Bookmark size={24} />
+                </div>
+                <div className="stat-info">
+                  <h3>Saved Events</h3>
+                  <p className="stat-value">0 Saved</p>
                 </div>
               </div>
             </div>
-            <div className="eventra-dashboard-grid">
-              {/* Scheduled Events */}
-              <div className="eventra-dashboard-card">
-                <div className="eventra-card-header">
-                  <h3 className="eventra-card-title">Scheduled Events</h3>
-                  <button className="eventra-btn-icon" onClick={handleAddEvent}>
-                    <Plus size={20} />
-                  </button>
-                </div>
-                <div className="eventra-event-list">
-                  {scheduledEvents.map((event) => (
-                    <div key={event.id} className="eventra-event-item">
-                      <div className="eventra-event-date">
-                        <div className="eventra-event-date-day">
-                          {event.date.day}
-                        </div>
-                        <div className="eventra-event-date-month">
-                          {event.date.month}
-                        </div>
-                      </div>
-                      <div className="eventra-event-details">
-                        <h4>{event.name}</h4>
-                        <p>
-                          {event.location} • {event.time}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
-              {/* Your Tickets */}
-              <div className="eventra-dashboard-card">
-                <div className="eventra-card-header">
-                  <h3 className="eventra-card-title">Your Tickets</h3>
-                  <button
-                    className="eventra-btn-icon"
-                    onClick={handleAddTicket}
-                  >
-                    <Plus size={20} />
-                  </button>
-                </div>
-                <div className="eventra-ticket-list">
-                  {tickets.map((ticket) => (
-                    <div key={ticket.id} className="eventra-ticket-item">
-                      <div className="eventra-ticket-info">
-                        <h4>{ticket.eventName}</h4>
-                        <p>
-                          {ticket.ticketType} • {ticket.date}
-                        </p>
-                      </div>
-                      <div className="eventra-ticket-qr">
-                        <img src={ticket.qrCode} alt="QR Code" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bank Accounts */}
-              <div className="eventra-dashboard-card">
-                <div className="eventra-card-header">
-                  <h3 className="eventra-card-title">Bank Accounts</h3>
-                  <button
-                    className="eventra-btn-icon"
-                    onClick={handleAddBankAccount}
-                  >
-                    <Plus size={20} />
-                  </button>
-                </div>
-                <div className="eventra-bank-accounts">
-                  {bankAccounts.map((account) => (
-                    <div key={account.id} className="eventra-bank-card">
-                      <div className="eventra-bank-name">{account.bank}</div>
-                      <div className="eventra-card-number">
-                        {account.number}
-                      </div>
-                      <div className="eventra-card-holder">
-                        {account.holder}
-                      </div>
-                      <div className="eventra-card-expiry">
-                        Expires {account.expiry}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Support */}
-              <div className="eventra-dashboard-card">
-                <div className="eventra-card-header">
-                  <h3 className="eventra-card-title">Help & Support</h3>
-                </div>
-                <div className="eventra-support-options">
-                  <div
-                    className="eventra-support-option"
-                    onClick={() => handleSupportOption("email")}
-                  >
-                    <div className="eventra-support-icon">
-                      <Mail size={24} />
-                    </div>
-                    <h4>Email</h4>
-                  </div>
-                  <div
-                    className="eventra-support-option"
-                    onClick={() => handleSupportOption("phone")}
-                  >
-                    <div className="eventra-support-icon">
-                      <Phone size={24} />
-                    </div>
-                    <h4>Phone</h4>
-                  </div>
-                  <div
-                    className="eventra-support-option"
-                    onClick={() => handleSupportOption("chat")}
-                  >
-                    <div className="eventra-support-icon">
-                      <MessageCircle size={24} />
-                    </div>
-                    <h4>Chat</h4>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Links */}
-              <div className="eventra-dashboard-card">
-                <div className="eventra-card-header">
-                  <h3 className="eventra-card-title">Quick Links</h3>
-                </div>
-                <div className="eventra-quick-links">
-                  <Link to="/events" className="eventra-quick-link">
-                    <div className="eventra-quick-link-content">
-                      <Calendar size={24} />
-                      <div>
-                        <h4>Events</h4>
-                        <p>Browse and book events</p>
-                      </div>
-                    </div>
-                    <ArrowRight size={20} />
-                  </Link>
-                  <Link to="/Servses" className="eventra-quick-link">
-                    <div className="eventra-quick-link-content">
-                      <HelpCircle size={24} />
-                      <div>
-                        <h4>Services</h4>
-                        <p>Explore our services</p>
-                      </div>
-                    </div>
-                    <ArrowRight size={20} />
-                  </Link>
-                </div>
+            <div className="eventra-recent-activity">
+              <h2>Recent Activity</h2>
+              <div className="activity-list">
+                {/* Add your activity items here */}
               </div>
             </div>
-          </>
-        );
-
-      case "settings":
-        return (
-          <div className="eventra-dashboard-card">
-            <div className="eventra-card-header">
-              <h3 className="eventra-card-title">Settings</h3>
-            </div>
-            <form className="eventra-settings-form">
-              <div className="eventra-form-group">
-                <label>Email Notifications</label>
-                <div className="eventra-toggle-switch">
-                  <input
-                    type="checkbox"
-                    id="emailNotif"
-                    checked={settings.emailNotifications}
-                    onChange={(e) =>
-                      handleSettingsChange(
-                        "emailNotifications",
-                        e.target.checked
-                      )
-                    }
-                  />
-                  <label className="toggle-label" htmlFor="emailNotif">
-                    Receive email updates about your events
-                  </label>
-                </div>
-              </div>
-              <div className="eventra-form-group">
-                <label>SMS Notifications</label>
-                <div className="eventra-toggle-switch">
-                  <input
-                    type="checkbox"
-                    id="smsNotif"
-                    checked={settings.smsNotifications}
-                    onChange={(e) =>
-                      handleSettingsChange("smsNotifications", e.target.checked)
-                    }
-                  />
-                  <label className="toggle-label" htmlFor="smsNotif">
-                    Receive text messages for important updates
-                  </label>
-                </div>
-              </div>
-              <div className="eventra-form-group">
-                <label>Language</label>
-                <select
-                  value={settings.language}
-                  onChange={(e) =>
-                    handleSettingsChange("language", e.target.value)
-                  }
-                >
-                  <option value="en">English</option>
-                  <option value="ar">Arabic</option>
-                  <option value="fr">French</option>
-                </select>
-              </div>
-              <div className="eventra-form-group">
-                <label>Time Zone</label>
-                <select
-                  value={settings.timeZone}
-                  onChange={(e) =>
-                    handleSettingsChange("timeZone", e.target.value)
-                  }
-                >
-                  <option value="utc">UTC</option>
-                  <option value="est">EST</option>
-                  <option value="pst">PST</option>
-                </select>
-              </div>
-            </form>
           </div>
         );
 
-      case "saved-events":
+      // Update the settings section in renderContent
+      case "settings":
         return (
-          <div className="eventra-dashboard-card">
-            <div className="eventra-card-header">
-              <h3 className="eventra-card-title">Saved Events</h3>
-            </div>
-            <div className="eventra-saved-events">
-              {savedEvents && savedEvents.length > 0 ? (
-                savedEvents.map((event) => (
-                  <div key={event.id} className="eventra-saved-event">
-                    <div className="eventra-saved-event-image">
-                      <img src={event.image} alt={event.title} />
-                      <div className="eventra-saved-event-date">
-                        <span className="eventra-saved-event-day">
-                          {event.date.day}
-                        </span>
-                        <span className="eventra-saved-event-month">
-                          {event.date.month}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="eventra-saved-event-details">
-                      <h4>{event.title}</h4>
-                      <p className="eventra-saved-event-location">
-                        <i className="fas fa-map-marker-alt"></i>{" "}
-                        {event.location}
-                      </p>
-                      <p className="eventra-saved-event-time">
-                        <i className="fas fa-clock"></i> {event.time}
-                      </p>
-                      <div className="eventra-saved-event-actions">
-                        <Link
-                          to={`/event-details/${event.id}`}
-                          className="eventra-view-btn"
-                        >
-                          View Details
-                        </Link>
-                        <button
-                          className="eventra-remove-btn"
-                          onClick={() => handleBookmark(event)}
-                        >
-                          <Bookmark size={16} />
-                          Remove
-                        </button>
-                      </div>
-                    </div>
+          <div className="eventra-settings">
+            <h2>Account Settings</h2>
+            <div className="eventra-settings-form">
+              <div className="settings-section">
+                <div className="profile-photo-section">
+                  <img
+                    src={profileImage}
+                    alt="Profile"
+                    className="profile-photo"
+                  />
+                  <div className="photo-upload">
+                    <input
+                      type="file"
+                      id="photo-upload"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="photo-upload" className="upload-button">
+                      <Upload size={20} />
+                      Change Photo
+                    </label>
                   </div>
-                ))
-              ) : (
-                <div className="eventra-no-events">
-                  <Bookmark size={48} />
-                  <p>No saved events yet</p>
-                  <Link to="/events" className="eventra-browse-btn">
-                    Browse Events
-                  </Link>
                 </div>
-              )}
+                <h3>Personal Information</h3>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    value={userInfo.email}
+                    className="disabled-input"
+                    disabled
+                    style={{
+                      background: '#f5f5f5',
+                      cursor: 'not-allowed',
+                      opacity: 0.7
+                    }}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Full Name</label>
+                  <input
+                    type="text"
+                    value={userInfo.name}
+                    onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Age</label>
+                  <input
+                    type="number"
+                    min="13"
+                    max="120"
+                    value={userInfo.age}
+                    onChange={(e) => setUserInfo({ ...userInfo, age: e.target.value })}
+                    placeholder="Enter your age"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Phone</label>
+                  <input
+                    type="tel"
+                    value={userInfo.phone}
+                    onChange={(e) => setUserInfo({ ...userInfo, phone: e.target.value })}
+                  />
+                </div>
+                <button className="save-button" onClick={handleSave}>
+                  Save Changes
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -662,61 +262,41 @@ const UserDashboard = () => {
 
   return (
     <div className="eventra-dashboard">
-      {/* Sidebar */}
       <aside className="eventra-sidebar">
         <div className="eventra-user-profile">
-          <img
-            src={user?.profileImage || profileImage}
-            alt="User"
-            className="eventra-user-avatar"
-          />
+          <img src={profileImage} alt="User" className="eventra-user-avatar" />
           <div className="eventra-user-info">
-            <h3>{user ? `${user.firstName} ${user.lastName}` : "John Doe"}</h3>
-            <p>{user?.email || "john@example.com"}</p>
+            <h3>{userData?.fullName || "Loading..."}</h3>
+            <p>{userData?.email || "Loading..."}</p>
           </div>
         </div>
-
-        <nav>
+        <nav className="eventra-nav">
           <div className="eventra-nav-links">
-            <div
-              className={`eventra-nav-link ${
-                activeSection === "dashboard" ? "active" : ""
-              }`}
+            <button
+              className={`nav-link ${activeSection === "dashboard" ? "active" : ""}`}
               onClick={() => setActiveSection("dashboard")}
             >
               <Calendar size={20} />
               <span>Dashboard</span>
-            </div>
-            <div
-              className={`eventra-nav-link ${
-                activeSection === "saved-events" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("saved-events")}
-            >
-              <Bookmark size={20} />
-              <span>Saved Events</span>
-            </div>
-            <div
-              className={`eventra-nav-link ${
-                activeSection === "settings" ? "active" : ""
-              }`}
+            </button>
+            <button
+              className={`nav-link ${activeSection === "settings" ? "active" : ""}`}
               onClick={() => setActiveSection("settings")}
             >
               <SettingsIcon size={20} />
               <span>Settings</span>
-            </div>
-            <div className="eventra-nav-link" onClick={handleLogout}>
+            </button>
+            <button className="nav-link">
               <LogOut size={20} />
               <span>Logout</span>
-            </div>
+            </button>
           </div>
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="eventra-main-content">
         <div className="eventra-header">
-          <h1>Welcome back, {user?.firstName || "User"}!</h1>
+          <h1>Welcome back, {userData?.fullName?.split(' ')[0] || "User"}!</h1>
           <div className="eventra-notifications-dropdown">
             <button
               className="eventra-notifications-btn"
@@ -749,8 +329,8 @@ const UserDashboard = () => {
                             notification.type === "reminder"
                               ? "var(--primary-color)"
                               : notification.type === "confirmation"
-                              ? "var(--success-color)"
-                              : "var(--warning-color)",
+                                ? "var(--success-color)"
+                                : "var(--warning-color)",
                         }}
                       >
                         {notification.type === "reminder" ? (
@@ -781,3 +361,4 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
+

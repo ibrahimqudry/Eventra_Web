@@ -41,10 +41,13 @@ const Login = () => {
             const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
             const userData = userDoc.data();
 
+            // Store user data in localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+
             if (userData.role === 'eventManager') {
                 navigate('/EventMDashbord');
             } else if (userData.role === 'serviceOwner') {
-                navigate('/serviceOwnerDashboard');
+                navigate('/sodashboard');
             } else if (userData.role === 'attendee') {
                 navigate('/');
             }
