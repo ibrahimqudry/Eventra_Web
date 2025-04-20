@@ -39,7 +39,30 @@ const SavedEvents = () => {
                     <span className="day">{event.date.day}</span>
                     <span className="month">{event.date.month}</span>
                   </div>
-                  <div className="event-category">{event.category}</div>
+                  <div className="event-category">
+                    {{
+                      'music': 'Music & Concerts',
+                      'business': 'Business & Networking',
+                      'tech': 'Tech & Innovation',
+                      'arts': 'Arts & Culture',
+                      'food': 'Food & Drink',
+                      'health': 'Health & Wellness',
+                      'sports': 'Sports & Fitness',
+                      'education': 'Education & Workshops',
+                      'charity': 'Charity & Causes',
+                      'festivals': 'Festivals & Fairs',
+                      'parties': 'Parties & Nightlife',
+                      'travel': 'Travel & Outdoor',
+                      'family': 'Family & Kids',
+                      'fashion': 'Fashion & Beauty',
+                      'spirituality': 'Spirituality & Religion',
+                      'film': 'Film & Media',
+                      'theater': 'Theater & Performing Arts',
+                      'gaming': 'Gaming & Esports',
+                      'literature': 'Literature & Books',
+                      'finance': 'Finance & Investment'
+                    }[event.category] || event.category}
+                  </div>
                 </div>
                 <div className="event-details">
                   <h3>{event.title}</h3>
@@ -53,7 +76,7 @@ const SavedEvents = () => {
                   </div>
                   <p className="event-description">{event.description}</p>
                   <div className="event-footer">
-                    <span className="price">{event.price}</span>
+                    {/* <span className="price">{event.price}</span> */}
                     <Link to={`/event-details/${event.id}`}>
                       <button className="register-btn">Learn More</button>
                     </Link>
