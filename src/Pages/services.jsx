@@ -78,14 +78,14 @@ const Services = () => {
 
     const filteredServices = services.filter(service => {
         const matchesSearch = service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                              service.description.toLowerCase().includes(searchQuery.toLowerCase());
+            service.description.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesCategory = !selectedCategory || service.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
 
     return (
         <>
-            <Nav/>
+            <Nav />
             <section className="services-hero">
                 <div className="hero-slider">
                     <div className="slide active">
@@ -146,15 +146,15 @@ const Services = () => {
                     <div className="catalog-filters">
                         <div className="serch-box">
                             <i className="fas fa-search"></i>
-                            <input 
-                                type="text" 
-                                placeholder="Search services..." 
+                            <input
+                                type="text"
+                                placeholder="Search services..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                         <div className="category-filter">
-                            <select 
+                            <select
                                 value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
                             >
@@ -176,8 +176,8 @@ const Services = () => {
                                 <div className="card-content">
                                     <h3>{service.title}</h3>
                                     <p>{service.description}</p>
-                                    <Link 
-                                        to={`/serviceDetails/${service.id}`} 
+                                    <Link
+                                        to={`/serviceDetails/${service.id}`}
                                         className="btn-secondary"
                                     >
                                         Show Details
