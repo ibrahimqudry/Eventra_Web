@@ -33,7 +33,7 @@ const Profile = () => {
     <div className="profile-container">
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content-sod">
         <TopBar />
 
         <div className="profile-content">

@@ -10,7 +10,7 @@ const Earnings = () => {
     <div className="earnings-container">
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content-sod">
         <TopBar />
 
         <div className="earnings-content">
@@ -153,7 +153,7 @@ const Earnings = () => {
                     <td>Apr 15, 2024</td>
                     <td>$2,500</td>
                     <td>
-                      <span className="status-badge completed">Completed</span>
+                      <span className="status-badgeee completed">Completed</span>
                     </td>
                     <td>
                       <div className="actions">
@@ -192,7 +192,7 @@ const Earnings = () => {
                     <td>Apr 14, 2024</td>
                     <td>$350</td>
                     <td>
-                      <span className="status-badge pending">Pending</span>
+                      <span className="status-badgeee pending">Pending</span>
                     </td>
                     <td>
                       <div className="actions">
@@ -231,7 +231,7 @@ const Earnings = () => {
                     <td>Apr 13, 2024</td>
                     <td>$800</td>
                     <td>
-                      <span className="status-badge completed">Completed</span>
+                      <span className="status-badgeee completed">Completed</span>
                     </td>
                     <td>
                       <div className="actions">
