@@ -13,6 +13,108 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  color: #ddd;
+}
+
+.logo:hover {
+  background-color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 5px;
+}
+
+.logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo span {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  letter-spacing: 0.5px;
+}
+
+.logo span a {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+.saved-events-list {
+  margin-top: 16px;
+}
+
+.saved-event-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  margin-bottom: 12px;
+}
+
+.saved-event-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.saved-event-details {
+  flex: 1;
+}
+
+.saved-event-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+}
+
+.saved-event-details p {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.view-event-link {
+  font-size: 12px;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.view-all-link {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.no-saved-events {
+  text-align: center;
+  color: #6c757d;
+  padding: 16px;
+}
+
 .profile-photo-section {
   display: flex;
   flex-direction: column;
