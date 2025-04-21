@@ -8,6 +8,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { auth, db } from '../firebase/config';
 import '../css/Login.css';
+import Lottie from "lottie-react";
+import animationData from "../assets/login_animation.json";
 
 // Zod schema for form validation
 const schema = z.object({
@@ -66,17 +68,17 @@ const Login = () => {
 
     return (
         <div className="login-container">
-            {/* Left Section - Promotional Content */}
             <div className="promotional-section">
-                <h1>Wlecome Back To Eventra</h1>
+                <h2 style={{color: 'white'}}>Wlecome Back To Eventra</h2>
                 <div className="promotional-image">
-                    <img
-                        src="https://via.placeholder.com/400x300"
-                        alt="Illustration"
+                    <Lottie 
+                        animationData={animationData}
+                        style={{ width: "100%", height: "auto" }}
+                        loop={true}
+                        autoplay={true}
                     />
                 </div>
             </div>
-
             {/* Right Section - Form */}
             <div className="form-section">
                 <div className="form-container">
