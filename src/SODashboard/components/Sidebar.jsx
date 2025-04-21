@@ -1,9 +1,16 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/sidebar.css";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('userData');
+    navigate('/login');
+  };
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -68,10 +75,10 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/">
+            <button onClick={handleLogout} className="logout-button">
               <i className="fas fa-sign-out-alt"></i>
               <span>Logout</span>
-            </Link>
+            </button>
           </li>
         </ul>
       </nav>
