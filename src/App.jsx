@@ -116,12 +116,13 @@ function App() {
           <Route path='/notifications' element={<Notifications />} />
           <Route path='/savedEvents' element={<SavedEvents />} />
           <Route path="/user" element={<UserDashboard />} />
-
           {/* Paypal */}
           <Route path="/checkout" element={<CheckoutPage />} />
 
           {/* ServiceOwnerDashboard */}
           {/* Main routes */}
+
+          <Route path="//serviceDetails/:id" element={<ServiceDetails />} />
           <Route path="/sodashboard" element={
             <ProtectedRoute allowedStatuses={['approved']}>
               <SODashboard />
@@ -152,11 +153,7 @@ function App() {
               <SOProfile />
             </ProtectedRoute>
           } />
-          <Route path="/serviceDetails/:id" element={
-            <ProtectedRoute allowedStatuses={['approved']}>
-              <ServiceDetails />
-            </ProtectedRoute>
-          } />
+          
 
           {/* Service management routes */}
           <Route path="/services/new" element={
