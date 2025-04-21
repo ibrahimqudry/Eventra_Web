@@ -13,8 +13,14 @@ const Sidebar = () => {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div className="logo">
-          <img src="/assets/logo.jpeg" alt="Eventera Logo" />
-          <span>Eventera</span>
+          <div className="logo-icon">
+            <img src="/img/logo.jpeg" alt="" />
+          </div>
+          <span>
+            <Link to="/" className="active">
+              Eventra
+            </Link>
+          </span>
         </div>
       </div>
       <nav className="sidebar-nav">

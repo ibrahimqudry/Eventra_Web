@@ -168,7 +168,19 @@ const EventDetails = () => {
                                                     <li>No benefits listed</li>
                                                 )}
                                             </ul>
-                                            <button className="ed-ticket-button">
+                                            <button 
+                                                className="ed-ticket-button"
+                                                onClick={() => {
+                                                    localStorage.setItem('selectedTicket', JSON.stringify({
+                                                        eventId: event.id,
+                                                        eventTitle: event.title,
+                                                        package: pkg,
+                                                        eventDate: event.date,
+                                                        eventLocation: event.location
+                                                    }));
+                                                    window.location.href = '/checkout';
+                                                }}
+                                            >
                                                 <span>Buy Now</span>
                                                 <i className="fas fa-arrow-right"></i>
                                             </button>

@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import "../css/SideNav.css";
 
 function SideNav() {
-  const location = useLocation(); 
+  const location = useLocation();
 
   return (
     <aside className="sidebar">
@@ -42,7 +42,15 @@ function SideNav() {
             </Link>
           </li>
           <li className={location.pathname === "/logout" ? "active" : ""}>
-            <Link to="/logout">
+            <Link 
+              to="/login"
+              className="nav-link"
+              onClick={() => {
+                localStorage.removeItem('userData');
+                localStorage.removeItem('selectedTicket');
+                // Add any other items to clear here
+              }}
+            >
               <i className="fas fa-sign-out-alt"></i>
               <span>Logout</span>
             </Link>

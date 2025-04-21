@@ -33,6 +33,10 @@ import {
   
 } from "@mui/icons-material";
 import "../css/paymentpage.css";
+import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase/config';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentPage = ({ open = false, onClose }) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -49,8 +53,8 @@ const PaymentPage = ({ open = false, onClose }) => {
     expiry: "",
     cvv: "",
   });
-
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false); // Add this line
 
   const formatCardNumber = (value) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
@@ -133,11 +137,78 @@ const PaymentPage = ({ open = false, onClose }) => {
     setActiveStep((prev) => prev - 1);
   };
 
-  const handleSubmit = (e) => {
+  
+  
+  // Inside the PaymentPage component
+  const navigate = useNavigate();
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Handle payment submission
-      console.log("Payment submitted:", formData);
+      try {
+        setIsLoading(true);
+        
+        // Get data from localStorage
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        const ticketData = JSON.parse(localStorage.getItem('selectedTicket'));
+        
+        // Get event manager ID from the event
+        const eventDoc = await getDoc(doc(db, 'events', ticketData.eventId));
+        if (!eventDoc.exists()) {
+          throw new Error('Event not found');
+        }
+        const eventData = eventDoc.data();
+        
+        // Create order object
+        const order = {
+          customer: {
+            id: userData?.uid || '',
+            name: formData.fullName || '',
+            email: formData.email || '',
+            address: {
+              street: formData.address || '',
+              city: formData.city || '',
+              state: formData.state || '',
+              zip: formData.zipCode || ''
+            }
+          },
+          event: {
+            id: ticketData?.eventId || '',
+            title: ticketData?.eventTitle || '',
+            managerId: eventData?.managerId || '',
+            date: ticketData?.eventDate || '',
+            location: ticketData?.eventLocation || ''
+          },
+          ticket: {
+            type: ticketData?.package?.name || '',
+            price: ticketData?.package?.price || 0,
+            benefits: ticketData?.package?.benefits || []
+          },
+          payment: {
+            method: 'Credit Card',
+            cardLast4: formData?.cardNumber?.slice(-4) || '',
+            amount: ticketData?.package?.price || 0,
+            status: 'completed',
+            date: new Date().toISOString()
+          },
+          status: 'confirmed',
+          createdAt: new Date().toISOString()
+        };
+  
+        // Save to Firestore
+        const ordersCollection = collection(db, 'orders');
+        await addDoc(ordersCollection, order);
+        
+        // Show success and redirect
+        toast.success('Payment successful! Your order has been confirmed.');
+        navigate('/events');
+        
+      } catch (error) {
+        console.error('Error creating order:', error);
+        toast.error(`Payment failed: ${error.message}`);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
