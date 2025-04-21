@@ -9,6 +9,8 @@ import { toast } from 'react-toastify';
 import { auth, db } from '../firebase/config';
 import { uploadToCloudinary } from '../utils/cloudinary';
 import '../css/Registration.css';
+import Lottie from "lottie-react";
+import animationData from "../assets/register.json";
 
 // Interests list
 const interests = [
@@ -141,9 +143,12 @@ const Registration = () => {
             <div className="promotional-section">
                 <h1>Eventra Where Every Moment Becomes a Memory.</h1>
                 <div className="promotional-image">
-                    <img
-                        src="https://storyset.com/illustration/forms/amico#A777E3FF&hide=&hide=complete"
-                        alt="Illustration" />
+                    <Lottie 
+                        animationData={animationData}
+                        style={{ width: "100%", height: "auto" }}
+                        loop={true}
+                        autoplay={true}
+                    />
                 </div>
             </div>
 
