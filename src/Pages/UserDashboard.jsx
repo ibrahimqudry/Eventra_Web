@@ -1,4 +1,5 @@
 
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   Bell,
@@ -27,6 +28,7 @@ import {
   Save,
   ArrowRight,
   Bookmark,
+  Home,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -536,6 +538,7 @@ const UserDashboard = () => {
               <MessageSquare size={20} />
               <span>Reviews</span>
             </button>
+
             <button
               className={`nav-link ${
                 activeSection === "saved-events" ? "active" : ""
@@ -545,6 +548,14 @@ const UserDashboard = () => {
               <Bookmark size={20} />
               <span>Saved Events</span>
             </button>
+            <Link
+              to="/"
+              className={`nav-link ${activeSection === "home" ? "active" : ""}`}
+              onClick={() => setActiveSection("home")}
+            >
+              <Home size={20} />
+              <span>Home</span>
+            </Link>
             <button className="nav-link">
               <LogOut size={20} />
               <span>Logout</span>

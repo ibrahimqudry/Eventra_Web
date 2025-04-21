@@ -1,8 +1,4 @@
 
-
-
-
-
 .navbar {
     position: relative;
     width: 100%;
@@ -15,25 +11,25 @@
 }
 
 
-.logo {
+.logo-main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.logo-icon {
+.logo-icon-main {
     width: 40px;
     height: 40px;
     border-radius: 10px;
 }
 
-.logo-icon img {
+.logo-icon-main img {
     width: 40px;
     height: 40px;
     border-radius: 10px;
 }
 
-.logo span {
+.logo-main span {
     font-size: 1.5rem;
     font-weight: 700;
     background: linear-gradient(135deg, #6366f1, #a855f7);
@@ -44,6 +40,8 @@
 
 .nav-links {
     display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 2rem;
     list-style: none;
 }
