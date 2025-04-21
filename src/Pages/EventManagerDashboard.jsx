@@ -179,86 +179,53 @@ function EventMDashbord() {
             </div>
           </div>
 
-            <div className="content-section">
-              <div className="section-header">
-                <h2>Recent Events</h2>
-                <Link to="/Eventm" className="btn-link">
-                  View All
-                </Link>
-              </div>
-              <div className="table-responsive">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Event Name</th>
-                      <th>Date</th>
-                      <th>Location</th>
-                      <th>Attendees</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
+          <div className="content-section">
+            <div className="section-header">
+              <h2>Recent Events</h2>
+              <Link to="/Eventm" className="btn-link">
+                View All
+              </Link>
+            </div>
+            <div className="table-responsive">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Attendees</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {events.slice(0, 3).map(event => (
+                    <tr key={event.id}>
                       <td>
                         <div className="event-name">
-                          <img src="img/ev1.avif" alt="Tech Summit" />
-                          <span>Tech Summit 2024</span>
+                          <img src={event.image || 'img/ev1.avif'} alt={event.title} />
+                          <span>{event.title}</span>
                         </div>
                       </td>
-                      <td>Apr 15, 2024</td>
-                      <td>San Francisco</td>
-                      <td>500/600</td>
+                      <td>{new Date(event.date).toLocaleDateString()}</td>
                       <td>
-                        <span className="status-badgeee upcoming">Upcoming</span>
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          <button className="btn-icon" title="Edit">
-                            <i className="fas fa-edit"></i>
-                          </button>
-                          <button className="btn-icon" title="Delete">
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="event-name">
-                          <img src="img/ev2.avif" alt="Design Conference" />
-                          <span>Design Conference</span>
-                        </div>
-                      </td>
-                      <td>May 20, 2024</td>
-                      <td>New York</td>
-                      <td>300/300</td>
-                      <td>
-                        <span className="status-badgeee sold-out">Sold Out</span>
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          <button className="btn-icon" title="Edit">
-                            <i className="fas fa-edit"></i>
-                          </button>
-                          <button className="btn-icon" title="Delete">
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-
+                        {event.location?.venue && `${event.location.venue}, `}
+                        {event.location?.city && `${event.location.city}, `}
+                        {event.location?.country || 'N/A'}
                       </td>
                       <td>{event.capacity || 0}</td>
-                      <td>{getStatus(event)}</td>
+                      <td>
+                        <span className={`status-badge ${getStatus(event)}`}>
+                          {getStatus(event)}
+                        </span>
+                      </td>
                       <td>
                         <div className="action-buttons">
                           <button className="btn-icon" title="Edit">
                             <i className="fas fa-edit"></i>
                           </button>
                           <button
-                            className="btn-icon delete"
+                            className="btn-icon"
                             title="Delete"
                             onClick={() => handleDeleteEvent(event.id)}
                           >
@@ -272,92 +239,58 @@ function EventMDashbord() {
               </table>
             </div>
           </div>
+      {/* Recent Orders */}
+      <div className="content-section">
+        <div className="section-header">
+          <h2>Recent Orders</h2>
+          <Link to="/orders" className="btn-link">
+            View All
+          </Link>
+        </div>
+        <div className="table-responsive">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.slice(0, 3).map(order => (
+                <tr key={order.id}>
+                  <td>#{order.id.substring(0, 8)}</td>
+                  <td>
+                    <div className="customer-info">
+                      <img
+                        src={order.customer?.photoURL || 'img/per2.avif'}
+                        alt={order.customer?.name || 'Customer'}
+                      />
+                      <span>{order.customer?.name || 'Customer'}</span>
+                    </div>
+                  </td>
+                  <td>{order.event?.title || 'Event'}</td>
+                  <td>{new Date(order.payment?.date).toLocaleDateString()}</td>
+                  <td>${order.payment?.amount || 0}</td>
+                  <td>
+                    <span className={`status-badge ${order.status}`}>
+                      {order.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </main>
+</div>
 
-            {/* Recent Orders */}
-            <div className="content-section">
-              <div className="section-header">
-                <h2>Recent Orders</h2>
-                <Link to="/orders" className="btn-link">
-                  View All
-                </Link>
-              </div>
-              <div className="table-responsive">
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Order ID</th>
-                      <th>Customer</th>
-                      <th>Event</th>
-                      <th>Date</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>#ORD-001</td>
-                      <td>
-                        <div className="customer-info">
-                          <img src="img/per2.avif" alt="Sarah Johnson" />
-                          <span>Sarah Johnson</span>
-                        </div>
-                      </td>
-                      <td>Tech Summit 2024</td>
-                      <td>Mar 15, 2024</td>
-                      <td>$299</td>
-                      <td>
-                        <span className="status-badgeee completed">
-                          Completed
-                        </span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>#ORD-002</td>
-                      <td>
-                        <div className="customer-info">
-                          <img src="img/per1.avif" alt="Michael Chen" />
-                          <span>Michael Chen</span>
-                        </div>
-                      </td>
-                      <td>Design Conference</td>
-                      <td>Mar 14, 2024</td>
-                      <td>$199</td>
-                      <td>
-                        <span className="status-badgeee pending">Pending</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>#ORD-003</td>
-
-                      <td>
-                        <div className="customer-info">
-                          <img
-                            src={order.customer?.photoURL}
-                            alt={order.customer?.name}
-                          />
-                          <span>{order.customer?.name}</span>
-                        </div>
-                      </td>
-                      <td>Startup Weekend</td>
-                      <td>Mar 13, 2024</td>
-                      <td>$149</td>
-                      <td>
-                        <span className="status-badgeee completed">
-                          Completed
-                        </span>
-                      </td>
-
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </main>
-      </div>
-
-    </>
-  );
+</>
+);
 }
 
 // Helper

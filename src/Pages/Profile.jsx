@@ -4,45 +4,20 @@ import TopNav from '../components/TopNav';
 import "../css/Profile.css";
 
 function Profile() {
-    return (
-      <>
-        <div className="profile-container">
-          <SideNav />
+    const [userData, setUserData] = useState(null);
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        // ... other form fields
+    });
 
-        <main className="main-profile-content">
-          <TopNav />
-          <div className="profile-content">
-            <div className="profile-header-dash">
-              <div className="profile-cover">
-                <img src="img/ev1.avif" alt="Cover Photo" />
-                <button className="edit-cover"><i className="fas fa-camera"></i> Change Cover</button>
-              </div>
-              <div className="profile-info-dash">
-                <div className="profile-avatar-dash">
-                  <img src="img/john.avif" alt="John Doe" />
-                  <button className="edit-avatar"><i className="fas fa-camera"></i></button>
-                </div>
-                <div className="profile-details-dash">
-                  <h1>John Doe</h1>
-                  <p>Event Manager</p>
-                  <div className="profile-stats">
-                    <div className="stat">
-                      <span className="stat-value">24</span>
-                      <span className="stat-label">Events</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-value">1,234</span>
-                      <span className="stat-label">Attendees</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-value">4.8</span>
-                      <span className="stat-label">Rating</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+    useEffect(() => {
+        const storedUserData = localStorage.getItem('userData');
+        if (storedUserData) {
+            setUserData(JSON.parse(storedUserData));
+            setFormData(JSON.parse(storedUserData));
+        }
+    }, []);
 
     if (!userData) {
         return <div>Loading...</div>;
@@ -58,7 +33,6 @@ function Profile() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Update user data in localStorage
         const updatedUserData = {
             ...userData,
             ...formData
@@ -69,38 +43,36 @@ function Profile() {
     };
 
     return (
-        <>
-            <body>
-                <SideNav />
-                <main className="main-content">
-                    <TopNav />
-                    <div className="profile-content">
-                        <div className="profile-header">
-                            <div className="profile-cover">
-                                <img src={userData.coverPhoto || "img/ev1.avif"} alt="Cover Photo" />
-                                <button className="edit-cover"><i className="fas fa-camera"></i> Change Cover</button>
+        <div className="profile-container">
+            <SideNav />
+            <main className="main-profile-content">
+                <TopNav />
+                <div className="profile-content">
+                    <div className="profile-header">
+                        <div className="profile-cover">
+                            <img src={userData.coverPhoto || "img/ev1.avif"} alt="Cover Photo" />
+                            <button className="edit-cover"><i className="fas fa-camera"></i> Change Cover</button>
+                        </div>
+                        <div className="profile-info">
+                            <div className="profile-avatar">
+                                <img src={userData.profileImage || "img/john.avif"} alt={userData.fullName} />
+                                <button className="edit-avatar"><i className="fas fa-camera"></i></button>
                             </div>
-                            <div className="profile-info">
-                                <div className="profile-avatar">
-                                    <img src={userData.profileImage || "img/john.avif"} alt={userData.fullName} />
-                                    <button className="edit-avatar"><i className="fas fa-camera"></i></button>
-                                </div>
-                                <div className="profile-details">
-                                    <h1>{userData.fullName || 'User'}</h1>
-                                    <p>{userData.role || 'User'}</p>
-                                    <div className="profile-stats">
-                                        <div className="stat">
-                                            <span className="stat-value">{userData.eventsCount || 0}</span>
-                                            <span className="stat-label">Events</span>
-                                        </div>
-                                        <div className="stat">
-                                            <span className="stat-value">{userData.attendeesCount || 0}</span>
-                                            <span className="stat-label">Attendees</span>
-                                        </div>
-                                        <div className="stat">
-                                            <span className="stat-value">{userData.rating || 0}</span>
-                                            <span className="stat-label">Rating</span>
-                                        </div>
+                            <div className="profile-details">
+                                <h1>{userData.fullName || 'User'}</h1>
+                                <p>{userData.role || 'User'}</p>
+                                <div className="profile-stats">
+                                    <div className="stat">
+                                        <span className="stat-value">{userData.eventsCount || 0}</span>
+                                        <span className="stat-label">Events</span>
+                                    </div>
+                                    <div className="stat">
+                                        <span className="stat-value">{userData.attendeesCount || 0}</span>
+                                        <span className="stat-label">Attendees</span>
+                                    </div>
+                                    <div className="stat">
+                                        <span className="stat-value">{userData.rating || 0}</span>
+                                        <span className="stat-label">Rating</span>
                                     </div>
                                 </div>
                             </div>
@@ -244,18 +216,12 @@ function Profile() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <button className="btn-secondary">Connect</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </>
-  );
-
+                        </div>  {/* closes profile-body */}
+                    </div>  {/* closes profile-content */}
+                </div>  {/* closes profile-header */}
+            </main>  {/* closes main-profile-content */}
+        </div> 
+    );
 }
+
 export default Profile;

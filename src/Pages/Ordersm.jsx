@@ -191,76 +191,27 @@ function Ordersm() {
                                                         <span>{order.customer.email}</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>Tech Summit 2024</td>
-                                        <td>Mar 15, 2024</td>
-                                        <td>$299</td>
-                                        <td><span className="status-badgeee completed">Completed</span></td>
-                                        <td>
-                                            <div className="actions">
-                                                <button className="action-btn view" title="View">
-                                                    <i className="fas fa-eye"></i>
-                                                </button>
-                                                <button className="action-btn download" title="Download">
-                                                    <i className="fas fa-download"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#ORD002</td>
-                                        <td>
-                                            <div className="customer-info">
-                                                <img src="img/per2.avif" alt="Michael Chen" />
-                                                <div>
-                                                    <h4>Michael Chen</h4>
-                                                    <span>michael@example.com</span>
+                                            </td>
+                                            <td>{order.event?.title || 'Event'}</td>
+                                            <td>{new Date(order.date).toLocaleDateString()}</td>
+                                            <td>${order.ticket?.price || 0}</td>
+                                            <td>
+                                                <span className={`status-badge ${order.status}`}>
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div className="actions">
+                                                    <button className="action-btn view" title="View">
+                                                        <i className="fas fa-eye"></i>
+                                                    </button>
+                                                    <button className="action-btn download" title="Download">
+                                                        <i className="fas fa-download"></i>
+                                                    </button>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>Design Conference</td>
-                                        <td>Mar 14, 2024</td>
-                                        <td>$199</td>
-                                        <td><span className="status-badgeee pending">Pending</span></td>
-                                        <td>
-                                            <div className="actions">
-                                                <button className="action-btn view" title="View">
-                                                    <i className="fas fa-eye"></i>
-                                                </button>
-                                                <button className="action-btn download" title="Download">
-                                                    <i className="fas fa-download"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>#ORD003</td>
-                                        <td>
-                                            <div className="customer-info">
-                                                <img src="img/per3.avif" alt="Emily Davis" />
-                                                <div>
-                                                    <h4>Emily Davis</h4>
-                                                    <span>emily@example.com</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Startup Weekend</td>
-                                        <td>Mar 13, 2024</td>
-                                        <td>$149</td>
-                                        <td><span className="status-badgeee completed">Completed</span></td>
-                                        <td>
-                                            <div className="actions">
-                                                <button className="action-btn view" title="View">
-                                                    <i className="fas fa-eye"></i>
-                                                </button>
-                                                <button className="action-btn download" title="Download">
-                                                    <i className="fas fa-download"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
