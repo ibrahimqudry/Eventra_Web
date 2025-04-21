@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Box,
@@ -57,65 +57,85 @@ const CheckoutPage = ({ amount = 5.0 }) => {
     setIsCheckoutModalOpen(false);
     setIsPaypalModalOpen(true);
   };
+  // Add this at the top of your component
+  const [ticketData, setTicketData] = useState(null);
+
+  useEffect(() => {
+    const storedTicket = localStorage.getItem('selectedTicket');
+    if (storedTicket) {
+      setTicketData(JSON.parse(storedTicket));
+    }
+  }, []);
+
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Main Page Content */}
       <Box sx={{ textAlign: "center", mb: 4 }}>
-  <Typography variant="body1" color="text.secondary" sx={{ mb: 4, fontSize: '1.1rem' }}>
-    Review your order and proceed to payment
-  </Typography>
-</Box>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 4, fontSize: '1.1rem' }}>
+          Review your order and proceed to payment
+        </Typography>
+      </Box>
 
-{/* Payment Amount Display */}
-<Box
-  sx={{
-    backgroundColor: "#ffffff",
-    p: 3,
-    borderRadius: 3,
-    mb: 4,
-    textAlign: "center",
-    maxWidth: 320,
-    mx: "auto",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-    transition: "all 0.3s ease-in-out",
-    "&:hover": {
-      boxShadow: "0 6px 25px rgba(0,0,0,0.12)",
-    },
-  }}
->
-  <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-    Total Amount
-  </Typography>
-  <Typography variant="h4" sx={{ fontWeight: 700, color: "#2c3e50" }}>
-    ${amount.toFixed(2)}
-  </Typography>
-</Box>
+      {/* Payment Amount Display */}
 
-{/* Proceed Button */}
-<Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-  <Button
-    variant="contained"
-    size="large"
-    onClick={() => setIsCheckoutModalOpen(true)}
-    sx={{
-      px: 5,
-      py: 1.5,
-      fontSize: "1rem",
-      background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
-      boxShadow: "0 4px 10px rgba(33, 203, 243, 0.4)",
-      borderRadius: 2,
-      transition: "all 0.3s ease",
-      "&:hover": {
-        background: "linear-gradient(45deg, #1976D2 30%, #1CB5E0 90%)",
-        transform: "translateY(-2px)",
-        boxShadow: "0 6px 15px rgba(33, 203, 243, 0.5)",
-      },
-    }}
-  >
-    Proceed to Payment
-  </Button>
-</Box>
+      <Box
+        sx={{
+          backgroundColor: "#ffffff",
+          p: 3,
+          borderRadius: 3,
+          mb: 4,
+          textAlign: "center",
+          maxWidth: 320,
+          mx: "auto",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
+            boxShadow: "0 6px 25px rgba(0,0,0,0.12)",
+          },
+        }}
+      >
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+          {ticketData?.package?.name || 'Ticket'}
+        </Typography>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: "#2c3e50" }}>
+          ${ticketData?.package?.price ? ticketData.package.price.toFixed(2) : amount.toFixed(2)}
+        </Typography>
+        {ticketData?.eventTitle && (
+          <Typography variant="subtitle1" sx={{ mt: 2 }}>
+            {ticketData.eventTitle}
+          </Typography>
+        )}
+        {ticketData?.eventDate && (
+          <Typography variant="body2" color="text.secondary">
+            {new Date(ticketData.eventDate).toLocaleDateString()}
+          </Typography>
+        )}
+      </Box>
+      {/* Proceed Button */}
+      <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={() => setIsCheckoutModalOpen(true)}
+          sx={{
+            px: 5,
+            py: 1.5,
+            fontSize: "1rem",
+            background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+            boxShadow: "0 4px 10px rgba(33, 203, 243, 0.4)",
+            borderRadius: 2,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              background: "linear-gradient(45deg, #1976D2 30%, #1CB5E0 90%)",
+              transform: "translateY(-2px)",
+              boxShadow: "0 6px 15px rgba(33, 203, 243, 0.5)",
+            },
+          }}
+        >
+          Proceed to Payment
+        </Button>
+      </Box>
 
 
       {/* Payment Modal */}

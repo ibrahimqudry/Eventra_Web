@@ -1,10 +1,98 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import SideNav from '../components/SideNav';
 import TopNav from '../components/TopNav';
 import "../css/Ordersm.css";
-
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 function Ordersm() {
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({
+        totalOrders: 0,
+        revenue: 0,
+        customers: 0
+    });
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                setLoading(true);
+                
+                // Fetch all orders directly
+                const ordersQuery = query(collection(db, 'orders'));
+                const querySnapshot = await getDocs(ordersQuery);
+                console.log('Total orders found:', querySnapshot.size);
+
+                const ordersData = [];
+                let totalRevenue = 0;
+                const customerIds = new Set();
+
+                // First get all customer IDs from orders
+                const customerIdsArray = [];
+                querySnapshot.forEach((doc) => {
+                    const order = { id: doc.id, ...doc.data() };
+                    console.log('Order data:', order);
+                    console.log('Customer ID:', order.customer.id);
+                    customerIdsArray.push(order.customer.id);
+                });
+
+                console.log('All customer IDs:', customerIdsArray);
+
+                // Then fetch all customer data from users collection
+                const usersQuery = query(
+                    collection(db, 'users'),
+                    where('uid', 'in', customerIdsArray)
+                );
+                console.log('Users query:', usersQuery);
+                
+                const usersSnapshot = await getDocs(usersQuery);
+                console.log('Users snapshot:', usersSnapshot);
+                
+                const usersData = {};
+                usersSnapshot.forEach(doc => {
+                    console.log('User document:', doc.id, doc.data());
+                    usersData[doc.id] = doc.data();
+                });
+
+                console.log('Users data map:', usersData);
+
+                // Now process orders with complete customer data
+                querySnapshot.forEach((doc) => {
+                    const order = { id: doc.id, ...doc.data() };
+                    const customerData = usersData[order.customer.id] || {};
+                    ordersData.push({
+                        ...order,
+                        customer: {
+                            ...order.customer,
+                            photoURL: customerData.profileImage || 'img/per1.avif'
+                        }
+                    });
+                    totalRevenue += order.ticket.price;
+                    customerIds.add(order.customer.id);
+                });
+
+                setOrders(ordersData);
+                setStats({
+                    totalOrders: ordersData.length,
+                    revenue: totalRevenue,
+                    customers: customerIds.size
+                });
+
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
+    if (loading) {
+        return <div className="loading">Loading orders...</div>;
+    }
+
     return (
         <>
             <div className='ordersm-container'>
@@ -23,7 +111,7 @@ function Ordersm() {
                             </div>
                         </div>
 
-                        {/* Stats Cards */}
+                        {/* Updated Stats Cards */}
                         <div className="stats-grid">
                             <div className="stat-card">
                                 <div className="stat-icon">
@@ -31,8 +119,7 @@ function Ordersm() {
                                 </div>
                                 <div className="stat-details">
                                     <h3>Total Orders</h3>
-                                    <p className="stat-number">1,234</p>
-                                    <span className="stat-change positive">+15% from last month</span>
+                                    <p className="stat-number">{stats.totalOrders}</p>
                                 </div>
                             </div>
                             <div className="stat-card">
@@ -41,8 +128,7 @@ function Ordersm() {
                                 </div>
                                 <div className="stat-details">
                                     <h3>Revenue</h3>
-                                    <p className="stat-number">$45,678</p>
-                                    <span className="stat-change positive">+12% from last month</span>
+                                    <p className="stat-number">${stats.revenue.toFixed(2)}</p>
                                 </div>
                             </div>
                             <div className="stat-card">
@@ -51,18 +137,7 @@ function Ordersm() {
                                 </div>
                                 <div className="stat-details">
                                     <h3>Customers</h3>
-                                    <p className="stat-number">890</p>
-                                    <span className="stat-change positive">+8% from last month</span>
-                                </div>
-                            </div>
-                            <div className="stat-card">
-                                <div className="stat-icon">
-                                    <i className="fas fa-chart-line"></i>
-                                </div>
-                                <div className="stat-details">
-                                    <h3>Growth Rate</h3>
-                                    <p className="stat-number">12%</p>
-                                    <span className="stat-change positive">+2% from last month</span>
+                                    <p className="stat-number">{stats.customers}</p>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +165,7 @@ function Ordersm() {
                             </button>
                         </div>
 
-                        {/* Orders Table */}
+                        {/* Updated Orders Table */}
                         <div className="table-container">
                             <table className="orders-table">
                                 <thead>
@@ -105,14 +180,16 @@ function Ordersm() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>#ORD001</td>
-                                        <td>
-                                            <div className="customer-info">
-                                                <img src="img/per1.avif" alt="Sarah Johnson" />
-                                                <div>
-                                                    <h4>Sarah Johnson</h4>
-                                                    <span>sarah@example.com</span>
+                                    {orders.map((order) => (
+                                        <tr key={order.id}>
+                                            <td>#{order.id.substring(0, 6)}</td>
+                                            <td>
+                                                <div className="customer-info">
+                                                    <img src={order.customer.photoURL} alt={order.customer.name} />
+                                                    <div>
+                                                        <h4>{order.customer.name}</h4>
+                                                        <span>{order.customer.email}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -183,6 +260,7 @@ function Ordersm() {
                                             </div>
                                         </td>
                                     </tr>
+
                                 </tbody>
                             </table>
                         </div>

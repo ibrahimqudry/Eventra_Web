@@ -1,11 +1,105 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import SideNav from '../components/SideNav';
 import TopNav from '../components/TopNav';
 import "../css/EventManagerDashboard.css";
 import { Link } from 'react-router-dom';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  deleteDoc
+} from 'firebase/firestore';
+import { db } from '../firebase/config';
+import { toast } from 'react-toastify';
+
 function EventMDashbord() {
+  const [events, setEvents] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [customers, setCustomers] = useState({});
+  const [stats, setStats] = useState({ totalEvents: 0, totalAttendees: 0, totalRevenue: 0, avgRating: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (!userData?.uid) throw new Error('User not logged in');
+
+        // Fetch events
+        const eventsQuery = query(
+          collection(db, 'events'),
+          where('eventManagerId', '==', userData.uid)
+        );
+        const eventsSnap = await getDocs(eventsQuery);
+        const eventsData = eventsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setEvents(eventsData);
+
+        // Fetch orders
+        const ordersQuery = collection(db, 'orders');
+        const ordersSnap = await getDocs(ordersQuery);
+        const ordersRaw = ordersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // Collect customer IDs
+        const customerIds = ordersRaw.map(o => o.customer?.id).filter(Boolean);
+        let customerDataMap = {};
+        if (customerIds.length) {
+          const usersQuery = query(
+            collection(db, 'users'),
+            where('uid', 'in', customerIds)
+          );
+          const usersSnap = await getDocs(usersQuery);
+          usersSnap.docs.forEach(d => {
+            customerDataMap[d.id] = d.data();
+          });
+        }
+
+        // Build orders with customer info
+        const ordersFull = ordersRaw.map(o => ({
+          ...o,
+          customer: {
+            ...o.customer,
+            photoURL: customerDataMap[o.customer?.id]?.profileImage || 'img/per2.avif',
+            name: customerDataMap[o.customer?.id]?.name || 'Customer'
+          }
+        }));
+        setOrders(ordersFull);
+        setCustomers(customerDataMap);
+
+        // Stats
+        const totalEvents = eventsData.length;
+        const totalAttendees = ordersFull.reduce((sum, o) => sum + (o.attendees || 0), 0);
+        const totalRevenue = ordersFull.reduce((sum, o) => sum + (o.payment?.amount || 0), 0);
+        const avgRating = totalEvents ? (eventsData.reduce((sum, e) => sum + (e.avgRating || 0), 0) / totalEvents).toFixed(1) : 0;
+        setStats({ totalEvents, totalAttendees, totalRevenue, avgRating });
+      } catch (err) {
+        console.error(err);
+        toast.error('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleDeleteEvent = async (eventId) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    try {
+      await deleteDoc(doc(db, 'events', eventId));
+      setEvents(prev => prev.filter(e => e.id !== eventId));
+      toast.success('Event deleted successfully');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to delete event');
+    }
+  };
+
+  if (loading) return <div className="loading-spinner">Loading...</div>;
+
   return (
     <>
+
       <div className='envent-manader-dashboard'>
         <SideNav />
 
@@ -81,7 +175,9 @@ function EventMDashbord() {
                   </span>
                 </div>
               </div>
+
             </div>
+          </div>
 
             <div className="content-section">
               <div className="section-header">
@@ -152,33 +248,30 @@ function EventMDashbord() {
                       </td>
                     </tr>
                     <tr>
-                      <td>
-                        <div className="event-name">
-                          <img src="img/ev3.avif" alt="Startup Weekend" />
-                          <span>Startup Weekend</span>
-                        </div>
+
                       </td>
-                      <td>Jun 10, 2024</td>
-                      <td>London</td>
-                      <td>150/200</td>
-                      <td>
-                        <span className="status-badgeee active">Active</span>
-                      </td>
+                      <td>{event.capacity || 0}</td>
+                      <td>{getStatus(event)}</td>
                       <td>
                         <div className="action-buttons">
                           <button className="btn-icon" title="Edit">
                             <i className="fas fa-edit"></i>
                           </button>
-                          <button className="btn-icon" title="Delete">
+                          <button
+                            className="btn-icon delete"
+                            title="Delete"
+                            onClick={() => handleDeleteEvent(event.id)}
+                          >
                             <i className="fas fa-trash"></i>
                           </button>
                         </div>
                       </td>
                     </tr>
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          </div>
 
             {/* Recent Orders */}
             <div className="content-section">
@@ -235,10 +328,14 @@ function EventMDashbord() {
                     </tr>
                     <tr>
                       <td>#ORD-003</td>
+
                       <td>
                         <div className="customer-info">
-                          <img src="img/per3.avif" alt="Emily Davis" />
-                          <span>Emily Davis</span>
+                          <img
+                            src={order.customer?.photoURL}
+                            alt={order.customer?.name}
+                          />
+                          <span>{order.customer?.name}</span>
                         </div>
                       </td>
                       <td>Startup Weekend</td>
@@ -249,16 +346,27 @@ function EventMDashbord() {
                           Completed
                         </span>
                       </td>
+
                     </tr>
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </main>
       </div>
+
     </>
   );
+}
+
+// Helper
+function getStatus(event) {
+  const now = new Date();
+  const eventDate = new Date(event.date);
+  if (eventDate < now) return 'completed';
+  if (event.attendees >= event.capacity) return 'sold-out';
+  return 'upcoming';
 }
 
 export default EventMDashbord;

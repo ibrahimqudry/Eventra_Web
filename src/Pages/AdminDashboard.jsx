@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/adminDashboard.css';
+// import '../css/nav.css';
+import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase/config';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AdminDashboard = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -10,11 +15,21 @@ const AdminDashboard = () => {
 
     // Prepare for Firebase integration
     useEffect(() => {
-        const fetchRegistrations = async () => {
+        const fetchAllRegistrations = async () => {
             try {
                 setIsLoading(true);
-                // TODO: Replace with Firebase fetch
-                setRegistrations(mockRegistrations);
+                const q = query(collection(db, 'users'));
+                const querySnapshot = await getDocs(q);
+                
+                const allUsers = [];
+                querySnapshot.forEach((doc) => {
+                    allUsers.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                setRegistrations(allUsers);
             } catch (error) {
                 console.error('Error fetching registrations:', error);
             } finally {
@@ -22,71 +37,94 @@ const AdminDashboard = () => {
             }
         };
 
-        fetchRegistrations();
-    }, []);
+        fetchAllRegistrations();
+    }, [activeTab]); // Add activeTab as dependency
 
+    // Update the handleApprove function
     const handleApprove = async (userId) => {
         try {
-            // TODO: Replace with Firebase update
-            setRegistrations(prev => 
-                prev.map(reg => 
-                    reg.id === userId ? {...reg, status: 'approved'} : reg
+            const userRef = doc(db, 'users', userId);
+            await updateDoc(userRef, {
+                verificationStatus: 'approved',
+                status: 'approved',
+                verified: true
+            });
+
+            setRegistrations(prev =>
+                prev.map(reg =>
+                    reg.id === userId ? { ...reg, verificationStatus: 'approved' } : reg
                 )
             );
+            toast.success('User approved successfully!');
         } catch (error) {
             console.error('Error approving registration:', error);
-        }
-    };
-
-    const handleRestore = async (userId) => {
-        try {
-            // TODO: Replace with Firebase update
-            setRegistrations(prev => 
-                prev.map(reg => 
-                    reg.id === userId ? {...reg, status: 'pending'} : reg
-                )
-            );
-        } catch (error) {
-            console.error('Error restoring registration:', error);
-        }
-    };
-
-    const handleDelete = async (userId) => {
-        try {
-            // TODO: Replace with Firebase update
-            setRegistrations(prev => 
-                prev.map(reg => 
-                    reg.id === userId ? {...reg, status: 'deleted'} : reg
-                )
-            );
-        } catch (error) {
-            console.error('Error deleting registration:', error);
+            toast.error('Failed to approve user');
         }
     };
 
     const handleReject = async (userId) => {
         try {
-            // TODO: Replace with Firebase delete/update
-            setRegistrations(prev => 
-                prev.filter(reg => reg.id !== userId)
+            const userRef = doc(db, 'users', userId);
+            await updateDoc(userRef, {
+                verificationStatus: 'rejected',
+                status: 'rejected'
+            });
+
+            setRegistrations(prev =>
+                prev.map(reg =>
+                    reg.id === userId ? { ...reg, verificationStatus: 'rejected' } : reg
+                )
             );
+            toast.success('User rejected successfully!');
         } catch (error) {
             console.error('Error rejecting registration:', error);
+            toast.error('Failed to reject user');
         }
     };
 
     const getFilteredRegistrations = () => {
-        switch(activeTab) {
+        switch (activeTab) {
             case 'pending':
-                return registrations.filter(reg => reg.status === 'pending');
+                return registrations.filter(reg => reg.verificationStatus === 'pending');
             case 'approved':
-                return registrations.filter(reg => reg.status === 'approved');
+                return registrations.filter(reg => reg.verificationStatus === 'approved');
             case 'deleted':
-                return registrations.filter(reg => reg.status === 'deleted');
+                return registrations.filter(reg => reg.verificationStatus === 'rejected');
             default:
                 return registrations;
         }
     };
+
+    // Update the stats cards to use verificationStatus
+    <div className="dashboard-stats">
+        <div className="stat-card">
+            <div className="stat-icon">
+                <i className="fas fa-clock"></i>
+            </div>
+            <div className="stat-content">
+                <h3>Pending Registrations</h3>
+                <p>{registrations.filter(reg => reg.verificationStatus === 'pending').length}</p>
+            </div>
+        </div>
+        <div className="stat-card">
+            <div className="stat-icon">
+                <i className="fas fa-check-circle"></i>
+            </div>
+            <div className="stat-content">
+                <h3>Approved Registrations</h3>
+                <p>{registrations.filter(reg => reg.verificationStatus === 'approved').length}</p>
+            </div>
+        </div>
+        <div className="stat-card">
+            <div className="stat-icon">
+                <i className="fas fa-trash-alt"></i>
+            </div>
+            <div className="stat-content">
+                <h3>Rejected Registrations</h3>
+                <p>{registrations.filter(reg => reg.verificationStatus === 'rejected').length}</p>
+            </div>
+        </div>
+    </div>
 
     const filteredRegistrations = getFilteredRegistrations();
 
@@ -110,7 +148,7 @@ const AdminDashboard = () => {
                         <i className="fas fa-check-circle"></i> Approved Registrations
                     </Link>
                     <Link to="#" className={activeTab === 'deleted' ? 'active' : ''} onClick={() => setActiveTab('deleted')}>
-                        <i className="fas fa-trash-alt"></i> Deleted Registrations
+                        <i className="fas fa-trash-alt"></i> Rejected Registrations
                     </Link>
                 </nav>
             </div>
@@ -119,14 +157,14 @@ const AdminDashboard = () => {
                 <header className="dashboard-header">
                     <div className="header-content">
                         <h1>
-                            {activeTab === 'dashboard' ? 'All Registrations' : 
-                            activeTab === 'pending' ? 'Pending Registrations' : 
-                            activeTab === 'approved' ? 'Approved Registrations' :
-                            'Deleted Registrations'}
+                            {activeTab === 'dashboard' ? 'All Registrations' :
+                                activeTab === 'pending' ? 'Pending Registrations' :
+                                    activeTab === 'approved' ? 'Approved Registrations' :
+                                        'Rejected Registrations'}
                         </h1>
                         <div className="admin-profile">
                             <span>Admin</span>
-                            <img src="https://via.placeholder.com/40" alt="Admin" className="admin-avatar" />
+                            <img src="img/user.png" alt="Admin" className="admin-avatar" />
                         </div>
                     </div>
                 </header>
@@ -145,7 +183,7 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="stat-content">
                                     <h3>Pending Registrations</h3>
-                                    <p>{registrations.filter(reg => reg.status === 'pending').length}</p>
+                                    <p>{registrations.filter(reg => reg.verificationStatus === 'pending').length}</p>
                                 </div>
                             </div>
                             <div className="stat-card">
@@ -154,7 +192,7 @@ const AdminDashboard = () => {
                                 </div>
                                 <div className="stat-content">
                                     <h3>Approved Registrations</h3>
-                                    <p>{registrations.filter(reg => reg.status === 'approved').length}</p>
+                                    <p>{registrations.filter(reg => reg.verificationStatus === 'approved').length}</p>
                                 </div>
                             </div>
                             <div className="stat-card">
@@ -162,8 +200,8 @@ const AdminDashboard = () => {
                                     <i className="fas fa-trash-alt"></i>
                                 </div>
                                 <div className="stat-content">
-                                    <h3>Deleted Registrations</h3>
-                                    <p>{registrations.filter(reg => reg.status === 'deleted').length}</p>
+                                    <h3>Rejected Registrations</h3>
+                                    <p>{registrations.filter(reg => reg.verificationStatus === 'rejected').length}</p>
                                 </div>
                             </div>
                         </div>
@@ -177,29 +215,48 @@ const AdminDashboard = () => {
                             ) : (
                                 filteredRegistrations.map(registration => (
                                     <div key={registration.id} className="registration-card">
-                                        <div className="status-badge" data-status={registration.status}>
-                                            {registration.status}
+                                        <div className="status-badge" data-status={registration.verificationStatus}>
+                                            {registration.verificationStatus}
                                         </div>
                                         <div className="registration-info">
                                             <h3>{registration.name}</h3>
                                             <p><i className="fas fa-envelope"></i> {registration.email}</p>
-                                            <p><i className="fas fa-briefcase"></i> {registration.serviceType}</p>
-                                            <p><i className="fas fa-info-circle"></i> Status: {registration.status}</p>
-                                            <a href={registration.documentUrl} target="_blank" rel="noopener noreferrer">
+                                            <p><i className="fas fa-briefcase"></i> {registration.age}</p>
+                                            <p><i className="fas fa-user-tag"></i> {registration.role}</p>
+                                            <p><i className="fas fa-info-circle"></i> Status: {registration.verificationStatus}</p>
+                                            <a href={registration.verificationDocument} target="_blank" rel="noopener noreferrer">
                                                 <i className="fas fa-file-pdf"></i> View Document
                                             </a>
                                         </div>
-                                        {registration.status === 'pending' && (
+                                        {registration.verificationStatus === 'pending' ? (
                                             <div className="action-buttons">
-                                                <button className="approve-btn" onClick={() => handleApprove(registration.id)}>
+                                                <button
+                                                    className="approve-btn"
+                                                    onClick={() => handleApprove(registration.id)}
+                                                >
                                                     <i className="fas fa-check"></i> Approve
                                                 </button>
-                                                <button className="reject-btn" onClick={() => handleReject(registration.id)}>
+                                                <button
+                                                    className="reject-btn"
+                                                    onClick={() => handleReject(registration.id)}
+                                                >
                                                     <i className="fas fa-times"></i> Reject
                                                 </button>
                                             </div>
+                                        ) : (
+                                            <div className="status-message">
+                                                {registration.verificationStatus === 'approved' ? (
+                                                    <span className="approved-message">
+                                                        <i className="fas fa-check-circle"></i> Approved
+                                                    </span>
+                                                ) : (
+                                                    <span className="rejected-message">
+                                                        <i className="fas fa-times-circle"></i> Rejected
+                                                    </span>
+                                                )}
+                                            </div>
                                         )}
-                                        {registration.status === 'deleted' && (
+                                        {registration.verificationStatus === 'deleted' && (
                                             <div className="action-buttons">
                                                 <button className="approve-btn" onClick={() => handleApprove(registration.id)}>
                                                     <i className="fas fa-check"></i> Approve

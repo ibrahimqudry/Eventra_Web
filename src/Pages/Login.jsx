@@ -32,6 +32,12 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         try {
+            // Check for admin credentials
+            if (data.email === 'admin@eventra.com' && data.password === 'AdminEventra1+') {
+                navigate('/admin');
+                return;
+            }
+
             const userCredential = await signInWithEmailAndPassword(
                 auth,
                 data.email,

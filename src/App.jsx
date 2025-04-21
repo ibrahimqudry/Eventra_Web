@@ -55,6 +55,9 @@ import Services from './Pages/services';
 import ServiceDetails from './Pages/ServiceDetails';
 import Previous from './Pages/Previous';
 
+// Add this import at the top with other imports
+import ProtectedRoute from './components/ProtectedRoute';
+import Status from './Pages/Status';
 
 function App() {
 
@@ -74,7 +77,12 @@ function App() {
           <Route path='/Create' element={<Createevent />} />
           <Route path='/services' element={<Services />} />
           <Route path='/Footer' element={<Footer />} />
-        
+
+          <Route path="/generateQR" element={<GenerateQR />} />
+          <Route path="/subscriber/:id" element={<SubscriberInfo />} />
+          <Route path="/status" element={<Status />} />
+
+
 
           {/* Events Pages */}
           <Route path='/events' element={<Events />} />
@@ -84,31 +92,80 @@ function App() {
 
 
           {/* EventManager Dashboard */}
-          <Route path="/EventMDashbord" element={<EventMDashbord />} />
-          <Route path='/Eventm' element={<EventM />} />
-          <Route path='/orders' element={<Orderm />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path="/EventMDashbord" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <EventMDashbord />
+            </ProtectedRoute>
+          } />
+          <Route path='/Eventm' element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <EventM />
+            </ProtectedRoute>
+          } />
+          <Route path='/orders' element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <Orderm />
+            </ProtectedRoute>
+          } />
+          <Route path='/profile' element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <Profile />
+            </ProtectedRoute>
+          } />
 
           {/* UserDashboard */}
           
           <Route path="/user" element={<UserDashboard />} />
-
           {/* Paypal */}
           <Route path="/checkout" element={<CheckoutPage />} />
 
           {/* ServiceOwnerDashboard */}
           {/* Main routes */}
-          <Route path="/sodashboard" element={<SODashboard />} />
-          <Route path="/soservices" element={<SOServices />} />
-          <Route path="/sobookings" element={<SOBookings />} />
-          <Route path="/soreviews" element={<SOReviews />} />
-          <Route path="/soearnings" element={<SOEarnings />} />
-          <Route path="/soprofile" element={<SOProfile />} />
-          <Route path="/serviceDetails/:id" element={<ServiceDetails />} />
+
+          <Route path="//serviceDetails/:id" element={<ServiceDetails />} />
+          <Route path="/sodashboard" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <SODashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/soservices" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <SOServices />
+            </ProtectedRoute>
+          } />
+          <Route path="/sobookings" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <SOBookings />
+            </ProtectedRoute>
+          } />
+          <Route path="/soreviews" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <SOReviews />
+            </ProtectedRoute>
+          } />
+          <Route path="/soearnings" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <SOEarnings />
+            </ProtectedRoute>
+          } />
+          <Route path="/soprofile" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <SOProfile />
+            </ProtectedRoute>
+          } />
+          
 
           {/* Service management routes */}
-          <Route path="/services/new" element={<ServiceForm />} />
-          <Route path="/services/edit/:id" element={<ServiceForm />} />
+          <Route path="/services/new" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <ServiceForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/services/edit/:id" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <ServiceForm />
+            </ProtectedRoute>
+          } />
 
 
 

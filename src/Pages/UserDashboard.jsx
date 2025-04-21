@@ -37,6 +37,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 
 const UserDashboard = () => {
+
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -124,6 +125,7 @@ const UserDashboard = () => {
     }
   };
 
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -144,6 +146,13 @@ const UserDashboard = () => {
     } catch (error) {
       console.error("Error uploading image:", error);
     }
+  };
+  const handleRemove = (event) => {
+    dispatch(toggleSaveEvent(event));
+    toast.info('Event Removed Succefully', {
+      icon: '❌',
+      ltr: true
+    });
   };
 
   const handleSubmit = () => {
@@ -230,12 +239,13 @@ const UserDashboard = () => {
         return (
           <div className="eventra-dashboard-content">
             <div className="eventra-stats-grid">
-              <div className="eventra-stat-card">
+              {/* <div className="eventra-stat-card">
                 <div className="stat-icon">
                   <Calendar size={24} />
                 </div>
                 <div className="stat-info">
                   <h3>My Events</h3>
+
                 </div>
               </div>
               <div className="eventra-stat-card">
@@ -248,6 +258,7 @@ const UserDashboard = () => {
               </div>
               <div className="eventra-stat-card">
                 
+
                   <div className="stat-icon">
                     <Bookmark size={24} />
                   </div>
@@ -261,6 +272,7 @@ const UserDashboard = () => {
             <div className="eventra-recent-activity">
               <h2>Recent Activity</h2>
               <div className="activity-list"></div>
+
             </div>
           </div>
         );
@@ -296,7 +308,7 @@ const UserDashboard = () => {
                   <label>Email</label>
                   <input
                     type="email"
-                    value={userInfo.email}
+                    value={userData?.email || userInfo.email}
                     className="disabled-input"
                     disabled
                     style={{
@@ -314,6 +326,7 @@ const UserDashboard = () => {
                     onChange={(e) =>
                       setUserInfo({ ...userInfo, name: e.target.value })
                     }
+
                   />
                 </div>
                 <div className="form-group">
@@ -326,6 +339,7 @@ const UserDashboard = () => {
                     onChange={(e) =>
                       setUserInfo({ ...userInfo, age: e.target.value })
                     }
+
                     placeholder="Enter your age"
                   />
                 </div>
@@ -337,6 +351,7 @@ const UserDashboard = () => {
                     onChange={(e) =>
                       setUserInfo({ ...userInfo, phone: e.target.value })
                     }
+
                   />
                 </div>
                 <button className="save-button" onClick={handleSave}>
@@ -501,6 +516,53 @@ const UserDashboard = () => {
   return (
     <div className="eventra-dashboard">
       <aside className="eventra-sidebar">
+        <div className="logo" style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 15px',
+              borderRadius: '8px',
+              transition: 'all 0.3s ease',
+              ':hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)'
+              }
+            }}>
+              <div className="logo-icon" style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'white',
+                padding: '5px'
+              }}>
+                <img 
+                  src="/img/logo.jpeg" 
+                  alt="Eventra Logo" 
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain'
+                  }} 
+                />
+              </div>
+              <span style={{
+                fontSize: '1.2rem',
+                fontWeight: '600',
+                color: 'white',
+                letterSpacing: '0.5px'
+              }}>
+                <Link to="/" className="active" style={{
+                  textDecoration: 'none',
+                  color: 'inherit'
+                }}>
+                  Eventra
+                </Link>
+              </span>
+            </div>
+        <br />
         <div className="eventra-user-profile">
           <img src={profileImage} alt="User" className="eventra-user-avatar" />
           <div className="eventra-user-info">
@@ -510,6 +572,7 @@ const UserDashboard = () => {
         </div>
         <nav className="eventra-nav">
           <div className="eventra-nav-links">
+
             <button
               className={`nav-link ${
                 activeSection === "dashboard" ? "active" : ""
@@ -517,7 +580,7 @@ const UserDashboard = () => {
               onClick={() => setActiveSection("dashboard")}
             >
               <Calendar size={20} />
-              <span>Dashboard</span>
+              <span>Saved Events</span>
             </button>
             <button
               className={`nav-link ${
@@ -547,6 +610,7 @@ const UserDashboard = () => {
               <span>Saved Events</span>
             </button>
             <button className="nav-link">
+
               <LogOut size={20} />
               <span>Logout</span>
             </button>
@@ -621,3 +685,4 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
+
