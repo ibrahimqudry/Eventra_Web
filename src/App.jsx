@@ -21,13 +21,12 @@ import Contact from './Pages/Contact';
 import Createevent from './Pages/Createevent';
 import Events from './Pages/Events';
 import EventDetails from './Pages/EventDetails';
-import SavedEvents from './Pages/SavedEvents';
+
 import PreviousEventPage from "./Pages/PreviousEventPage";
 import UserDashboard from './Pages/UserDashboard';
-import Notifications from './Pages/Notifications';
 import CheckoutPage from './Pages/CheckoutPage';
-import GenerateQR from './Pages/GenerateQR';
-import SubscriberInfo from './Pages/SubscriberInfo';
+// import GenerateQR from './Pages/GenerateQR';
+// import SubscriberInfo from './Pages/SubscriberInfo';
 import Registration from './Pages/Registration';
 
 // Event Manager Pages
@@ -78,9 +77,11 @@ function App() {
           <Route path='/Create' element={<Createevent />} />
           <Route path='/services' element={<Services />} />
           <Route path='/Footer' element={<Footer />} />
+
           <Route path="/generateQR" element={<GenerateQR />} />
           <Route path="/subscriber/:id" element={<SubscriberInfo />} />
           <Route path="/status" element={<Status />} />
+
 
 
           {/* Events Pages */}
@@ -113,8 +114,7 @@ function App() {
           } />
 
           {/* UserDashboard */}
-          <Route path='/notifications' element={<Notifications />} />
-          <Route path='/savedEvents' element={<SavedEvents />} />
+          
           <Route path="/user" element={<UserDashboard />} />
           {/* Paypal */}
           <Route path="/checkout" element={<CheckoutPage />} />

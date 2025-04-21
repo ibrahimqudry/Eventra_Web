@@ -4,29 +4,45 @@ import TopNav from '../components/TopNav';
 import "../css/Profile.css";
 
 function Profile() {
-    const [userData, setUserData] = useState(null);
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        bio: ''
-    });
+    return (
+      <>
+        <div className="profile-container">
+          <SideNav />
 
-    useEffect(() => {
-        const storedUserData = localStorage.getItem('userData');
-        if (storedUserData) {
-            const parsedData = JSON.parse(storedUserData);
-            setUserData(parsedData);
-            setFormData({
-                firstName: parsedData.firstName || '',
-                lastName: parsedData.lastName || '',
-                email: parsedData.email || '',
-                phone: parsedData.phone || '',
-                bio: parsedData.bio || ''
-            });
-        }
-    }, []);
+        <main className="main-profile-content">
+          <TopNav />
+          <div className="profile-content">
+            <div className="profile-header-dash">
+              <div className="profile-cover">
+                <img src="img/ev1.avif" alt="Cover Photo" />
+                <button className="edit-cover"><i className="fas fa-camera"></i> Change Cover</button>
+              </div>
+              <div className="profile-info-dash">
+                <div className="profile-avatar-dash">
+                  <img src="img/john.avif" alt="John Doe" />
+                  <button className="edit-avatar"><i className="fas fa-camera"></i></button>
+                </div>
+                <div className="profile-details-dash">
+                  <h1>John Doe</h1>
+                  <p>Event Manager</p>
+                  <div className="profile-stats">
+                    <div className="stat">
+                      <span className="stat-value">24</span>
+                      <span className="stat-label">Events</span>
+                    </div>
+                    <div className="stat">
+                      <span className="stat-value">1,234</span>
+                      <span className="stat-label">Attendees</span>
+                    </div>
+                    <div className="stat">
+                      <span className="stat-value">4.8</span>
+                      <span className="stat-label">Rating</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
 
     if (!userData) {
         return <div>Loading...</div>;
@@ -230,9 +246,16 @@ function Profile() {
                             </div>
                         </div>
                     </div>
-                </main>
-            </body>
-        </>
-    );
+                    <button className="btn-secondary">Connect</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </>
+  );
+
 }
 export default Profile;

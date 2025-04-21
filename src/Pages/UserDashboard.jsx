@@ -1,3 +1,5 @@
+
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   Bell,
@@ -30,19 +32,13 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "../css/UserDashboard.css";
-// import "../css/nav.css";
-import { updateProfile } from "../redux/authSlice";
-import { uploadToCloudinary } from '../utils/cloudinary';
+import { uploadToCloudinary } from "../utils/cloudinary";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from '../firebase/config';
-import { toast } from 'react-toastify';
-import { toggleSaveEvent } from '../redux/savedEventsSlice';
+import { db } from "../firebase/config";
 
 const UserDashboard = () => {
-  const dispatch = useDispatch();
-  // Add isEditing state
-  const [isEditing, setIsEditing] = useState(false);
 
+  const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([
@@ -51,25 +47,46 @@ const UserDashboard = () => {
       type: "reminder",
       title: "Upcoming Event",
       message: "Your event starts in 2 hours",
-      time: "2 hours ago"
+      time: "2 hours ago",
     },
     {
       id: 2,
       type: "confirmation",
       title: "Booking Confirmed",
       message: "Your ticket has been confirmed",
-      time: "1 day ago"
-    }
+      time: "1 day ago",
+    },
   ]);
 
+  const [reviews, setReviews] = useState(() => {
+    const savedReviews = localStorage.getItem("eventReviews");
+    return savedReviews ? JSON.parse(savedReviews) : [];
+  });
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    comment: "",
+    rating: 0,
+  });
+  const [editId, setEditId] = useState(null);
+  const [lovedComments, setLovedComments] = useState(() => {
+    const savedLoves = localStorage.getItem("lovedComments");
+    return savedLoves ? JSON.parse(savedLoves) : {};
+  });
+
   useEffect(() => {
-    const storedUserData = localStorage.getItem('userData');
+    localStorage.setItem("eventReviews", JSON.stringify(reviews));
+    localStorage.setItem("lovedComments", JSON.stringify(lovedComments));
+  }, [reviews, lovedComments]);
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("userData");
     if (storedUserData) {
       setUserData(JSON.parse(storedUserData));
     }
   }, []);
 
-  // Update initial states with user data
   const [userInfo, setUserInfo] = useState({
     name: userData?.fullName || "Loading...",
     email: userData?.email || "Loading...",
@@ -79,8 +96,8 @@ const UserDashboard = () => {
     age: userData?.age || "",
   });
 
-  const profileImage = userData?.profileImage || "https://via.placeholder.com/256";
-
+  const profileImage =
+    userData?.profileImage || "https://via.placeholder.com/256";
 
   const handleSave = async () => {
     try {
@@ -90,7 +107,6 @@ const UserDashboard = () => {
         fullName: userInfo.name,
       };
 
-      // Update in Firebase
       const userRef = doc(db, "users", userData.uid);
       await updateDoc(userRef, {
         fullName: userInfo.name,
@@ -98,12 +114,10 @@ const UserDashboard = () => {
         age: userInfo.age,
       });
 
-      // Update in localStorage
-      localStorage.setItem('userData', JSON.stringify(updatedUserData));
+      localStorage.setItem("userData", JSON.stringify(updatedUserData));
       setUserData(updatedUserData);
       setIsEditing(false);
 
-      // Show success message or notification
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -111,11 +125,6 @@ const UserDashboard = () => {
     }
   };
 
-  // Add this line to get saved events from Redux
-  const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
-
-  // Update sidebar user info
-  const [activeSection, setActiveSection] = useState("dashboard");
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -126,15 +135,13 @@ const UserDashboard = () => {
 
       const updatedUserData = {
         ...userData,
-        profileImage: imageUrl
+        profileImage: imageUrl,
       };
 
-      // Update in Firebase
       const userRef = doc(db, "users", userData.uid);
       await updateDoc(userRef, { profileImage: imageUrl });
 
-      // Update in localStorage
-      localStorage.setItem('userData', JSON.stringify(updatedUserData));
+      localStorage.setItem("userData", JSON.stringify(updatedUserData));
       setUserData(updatedUserData);
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -148,6 +155,84 @@ const UserDashboard = () => {
     });
   };
 
+  const handleSubmit = () => {
+    if (!form.name || !form.comment) return;
+
+    if (editId !== null) {
+      setReviews(
+        reviews.map((r) =>
+          r.id === editId ? { ...form, id: editId, date: r.date } : r
+        )
+      );
+      setEditId(null);
+    } else {
+      setReviews([
+        {
+          ...form,
+          id: Date.now(),
+          date: new Date().toLocaleDateString(),
+          loves: 0,
+          replies: 0,
+        },
+        ...reviews,
+      ]);
+    }
+
+    setForm({ name: "", email: "", comment: "", rating: 0 });
+  };
+
+  const handleEdit = (id) => {
+    const review = reviews.find((r) => r.id === id);
+    setForm(review);
+    setEditId(id);
+  };
+
+  const handleDelete = (id) => {
+    setReviews(reviews.filter((r) => r.id !== id));
+  };
+
+  const handleLove = (id) => {
+    const userId =
+      localStorage.getItem("userId") ||
+      Math.random().toString(36).substring(2, 15);
+    localStorage.setItem("userId", userId);
+
+    setLovedComments((prev) => {
+      const newLoves = { ...prev };
+      if (!newLoves[id]) {
+        newLoves[id] = [];
+      }
+
+      if (newLoves[id].includes(userId)) {
+        newLoves[id] = newLoves[id].filter((u) => u !== userId);
+      } else {
+        newLoves[id] = [...newLoves[id], userId];
+      }
+
+      return newLoves;
+    });
+
+    setReviews(
+      reviews.map((review) => {
+        if (review.id === id) {
+          return {
+            ...review,
+            loves: lovedComments[id] ? lovedComments[id].length : 0,
+          };
+        }
+        return review;
+      })
+    );
+  };
+
+  const handleBookmark = (event) => {
+    console.log("Removing event from saved events:", event);
+  };
+
+  const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
+
+  const [activeSection, setActiveSection] = useState("dashboard");
+
   const renderContent = () => {
     switch (activeSection) {
       case "dashboard":
@@ -160,7 +245,7 @@ const UserDashboard = () => {
                 </div>
                 <div className="stat-info">
                   <h3>My Events</h3>
-                  <p className="stat-value">0 Upcoming</p>
+
                 </div>
               </div>
               <div className="eventra-stat-card">
@@ -169,104 +254,29 @@ const UserDashboard = () => {
                 </div>
                 <div className="stat-info">
                   <h3>My Tickets</h3>
-                  <p className="stat-value">0 Active</p>
                 </div>
-              </div> */}
-              {/* <div className="eventra-stat-card">
-                <Link to="/savedEvents" className="stat-link">
+              </div>
+              <div className="eventra-stat-card">
+                
+
                   <div className="stat-icon">
                     <Bookmark size={24} />
                   </div>
                   <div className="stat-info">
                     <h3>Saved Events</h3>
                   </div>
-                </Link>
-              </div> */}
+                
+              </div>
             </div>
 
             <div className="eventra-recent-activity">
-              <h2>Saved Events</h2>
-              <div className="saved-events-container">
-                {savedEvents?.length > 0 ? (
-                  <div className="events-grid">
-                    {savedEvents.slice(0, 3).map((event) => (
-                      <div className="event-card" key={event.id}>
-                        <div className="event-image">
-                          <img src={event.image} alt={event.title} />
-                          <div className="event-date">
-                            <span className="day">{event.date.day}</span>
-                            <span className="month">{event.date.month}</span>
-                          </div>
-                          <div className="event-category">
-                            {{
-                              'music': 'Music & Concerts',
-                              'business': 'Business & Networking',
-                              'tech': 'Tech & Innovation',
-                              'arts': 'Arts & Culture',
-                              'food': 'Food & Drink',
-                              'health': 'Health & Wellness',
-                              'sports': 'Sports & Fitness',
-                              'education': 'Education & Workshops',
-                              'charity': 'Charity & Causes',
-                              'festivals': 'Festivals & Fairs',
-                              'parties': 'Parties & Nightlife',
-                              'travel': 'Travel & Outdoor',
-                              'family': 'Family & Kids',
-                              'fashion': 'Fashion & Beauty',
-                              'spirituality': 'Spirituality & Religion',
-                              'film': 'Film & Media',
-                              'theater': 'Theater & Performing Arts',
-                              'gaming': 'Gaming & Esports',
-                              'literature': 'Literature & Books',
-                              'finance': 'Finance & Investment'
-                            }[event.category] || event.category}
-                          </div>
-                        </div>
-                        <div className="event-details">
-                          <h3>{event.title}</h3>
-                          <div className="event-info">
-                            <p>
-                              <i className="fas fa-map-marker-alt"></i> {event.location}
-                            </p>
-                            <p>
-                              <i className="fas fa-clock"></i> {event.time}
-                            </p>
-                          </div>
-                          <p className="event-description">{event.description}</p>
-                          <div className="event-footer">
-                            <Link to={`/event-details/${event.id}`}>
-                              <button className="register-btn">Learn More</button>
-                            </Link>
-                            <button
-                              className="bookmark-btn saved"
-                              onClick={() => handleRemove(event)}
-                            >
-                              <i className="fas fa-bookmark"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="no-events">
-                    <p>You haven't saved any events yet.</p>
-                    <Link to="/events">
-                      <button className="browse-btn">Browse Events</button>
-                    </Link>
-                  </div>
-                )}
-                {savedEvents?.length > 3 && (
-                  <Link to="/savedEvents" className="view-all-link">
-                    View All Saved Events ({savedEvents.length})
-                  </Link>
-                )}
-              </div>
+              <h2>Recent Activity</h2>
+              <div className="activity-list"></div>
+
             </div>
           </div>
         );
 
-      // Update the settings section in renderContent
       case "settings":
         return (
           <div className="eventra-settings">
@@ -285,7 +295,7 @@ const UserDashboard = () => {
                       id="photo-upload"
                       accept="image/*"
                       onChange={handleImageUpload}
-                      style={{ display: 'none' }}
+                      style={{ display: "none" }}
                     />
                     <label htmlFor="photo-upload" className="upload-button">
                       <Upload size={20} />
@@ -302,9 +312,9 @@ const UserDashboard = () => {
                     className="disabled-input"
                     disabled
                     style={{
-                      background: '#f5f5f5',
-                      cursor: 'not-allowed',
-                      opacity: 0.7
+                      background: "#f5f5f5",
+                      cursor: "not-allowed",
+                      opacity: 0.7,
                     }}
                   />
                 </div>
@@ -312,8 +322,11 @@ const UserDashboard = () => {
                   <label>Full Name</label>
                   <input
                     type="text"
-                    value={userData?.fullName || userInfo.name}
-                    onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
+                    value={userInfo.name}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, name: e.target.value })
+                    }
+
                   />
                 </div>
                 <div className="form-group">
@@ -322,8 +335,11 @@ const UserDashboard = () => {
                     type="number"
                     min="13"
                     max="120"
-                    value={userData?.age || userInfo.age}
-                    onChange={(e) => setUserInfo({ ...userInfo, age: e.target.value })}
+                    value={userInfo.age}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, age: e.target.value })
+                    }
+
                     placeholder="Enter your age"
                   />
                 </div>
@@ -331,14 +347,163 @@ const UserDashboard = () => {
                   <label>Phone</label>
                   <input
                     type="tel"
-                    value={userData?.phone || userInfo.phone}
-                    onChange={(e) => setUserInfo({ ...userInfo, phone: e.target.value })}
+                    value={userInfo.phone}
+                    onChange={(e) =>
+                      setUserInfo({ ...userInfo, phone: e.target.value })
+                    }
+
                   />
                 </div>
                 <button className="save-button" onClick={handleSave}>
                   Save Changes
                 </button>
               </div>
+            </div>
+          </div>
+        );
+
+      case "reviews":
+        return (
+          <div className="eventra-reviews-section">
+            <h2 className="eventra-reviews-title">Customer Reviews</h2>
+            {reviews.map((review) => (
+              <div className="eventra-review-card" key={review.id}>
+                <div className="eventra-review-header">
+                  <div>
+                    <h3>{review.name}</h3>
+                    <p className="eventra-review-date">{review.date}</p>
+                    <div className="eventra-stars">
+                      {[...Array(5)].map((_, i) => (
+                        <span key={i}>{i < review.rating ? "★" : "☆"}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="eventra-review-actions">
+                    <span
+                      className="eventra-love-icon"
+                      onClick={() => handleLove(review.id)}
+                      style={{
+                        color: lovedComments[review.id]?.includes(
+                          localStorage.getItem("userId")
+                        )
+                          ? "red"
+                          : "gray",
+                      }}
+                    >
+                      ❤️ {lovedComments[review.id]?.length || 0}
+                    </span>
+                    <button
+                      className="eventra-review-edit"
+                      onClick={() => handleEdit(review.id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="eventra-review-delete"
+                      onClick={() => handleDelete(review.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+                <p>{review.comment}</p>
+              </div>
+            ))}
+
+            <div className="eventra-form-card">
+              <h3>Submit Your Review</h3>
+              <div className="eventra-stars">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className="eventra-star-select"
+                    onClick={() => setForm({ ...form, rating: i + 1 })}
+                  >
+                    {i < form.rating ? "★" : "☆"}
+                  </span>
+                ))}
+              </div>
+              <input
+                type="text"
+                placeholder="Name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
+              <textarea
+                placeholder="Write your review..."
+                value={form.comment}
+                onChange={(e) => setForm({ ...form, comment: e.target.value })}
+              />
+              <button onClick={handleSubmit}>
+                {editId !== null ? "Update Review" : "Submit Review"}
+              </button>
+            </div>
+          </div>
+        );
+
+      case "saved-events":
+        return (
+          <div className="eventra-dashboard-card">
+            <div className="eventra-card-header">
+              <h3 className="eventra-card-title">Saved Events</h3>
+            </div>
+            <div className="eventra-saved-events">
+              {savedEvents && savedEvents.length > 0 ? (
+                savedEvents.map((event) => (
+                  <div key={event.id} className="eventra-saved-event">
+                    <div className="eventra-saved-event-image">
+                      <img src={event.image} alt={event.title} />
+                      <div className="eventra-saved-event-date">
+                        <span className="eventra-saved-event-day">
+                          {event.date.day}
+                        </span>
+                        <span className="eventra-saved-event-month">
+                          {event.date.month}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="eventra-saved-event-details">
+                      <h4>{event.title}</h4>
+                      <p className="eventra-saved-event-location">
+                        <i className="fas fa-map-marker-alt"></i>{" "}
+                        {event.location}
+                      </p>
+                      <p className="eventra-saved-event-time">
+                        <i className="fas fa-clock"></i> {event.time}
+                      </p>
+                      <div className="eventra-saved-event-actions">
+                        <Link
+                          to={`/event-details/${event.id}`}
+                          className="eventra-view-btn"
+                        >
+                          View Details
+                        </Link>
+                        <button
+                          className="eventra-remove-btn"
+                          onClick={() => handleBookmark(event)}
+                        >
+                          <Bookmark size={16} />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="eventra-no-events">
+                  <Bookmark size={48} />
+                  <p>No saved events yet</p>
+                  <Link to="/events" className="eventra-browse-btn">
+                    Browse Events
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -409,26 +574,43 @@ const UserDashboard = () => {
           <div className="eventra-nav-links">
 
             <button
-              className={`nav-link ${activeSection === "dashboard" ? "active" : ""}`}
+              className={`nav-link ${
+                activeSection === "dashboard" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("dashboard")}
             >
               <Calendar size={20} />
               <span>Saved Events</span>
             </button>
             <button
-              className={`nav-link ${activeSection === "settings" ? "active" : ""}`}
+              className={`nav-link ${
+                activeSection === "settings" ? "active" : ""
+              }`}
               onClick={() => setActiveSection("settings")}
             >
               <SettingsIcon size={20} />
               <span>Settings</span>
             </button>
             <button
-              className="nav-link"
-              onClick={() => {
-                localStorage.removeItem('userData');
-                window.location.href = '/login';
-              }}
+              className={`nav-link ${
+                activeSection === "reviews" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("reviews")}
             >
+              <MessageSquare size={20} />
+              <span>Reviews</span>
+            </button>
+            <button
+              className={`nav-link ${
+                activeSection === "saved-events" ? "active" : ""
+              }`}
+              onClick={() => setActiveSection("saved-events")}
+            >
+              <Bookmark size={20} />
+              <span>Saved Events</span>
+            </button>
+            <button className="nav-link">
+
               <LogOut size={20} />
               <span>Logout</span>
             </button>
@@ -438,7 +620,7 @@ const UserDashboard = () => {
 
       <main className="eventra-main-content">
         <div className="eventra-header">
-          <h1>Welcome back, {userData?.fullName?.split(' ')[0] || "User"}!</h1>
+          <h1>Welcome back, {userData?.fullName?.split(" ")[0] || "User"}!</h1>
           <div className="eventra-notifications-dropdown">
             <button
               className="eventra-notifications-btn"
@@ -471,8 +653,8 @@ const UserDashboard = () => {
                             notification.type === "reminder"
                               ? "var(--primary-color)"
                               : notification.type === "confirmation"
-                                ? "var(--success-color)"
-                                : "var(--warning-color)",
+                              ? "var(--success-color)"
+                              : "var(--warning-color)",
                         }}
                       >
                         {notification.type === "reminder" ? (
@@ -503,15 +685,4 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
-
-
-const handleRemove = (event) => {
-  dispatch(toggleSaveEvent(event));
-  toast.info('Event Removed Successfully', {
-    icon: '❌',
-    ltr: true
-  });
-};
-
-
 

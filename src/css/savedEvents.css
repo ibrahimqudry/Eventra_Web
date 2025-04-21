@@ -30,19 +30,19 @@
   transition: all 0.3s ease;
   border: none; /* Remove border from button */
 }
-
+/* 
 .fa-bookmark {
   font-size: 20px;
   color: #6366f1;
-  border: 2px solid #6366f1; /* Add border to icon */
+  border: 2px solid #6366f1; 
   border-radius: 50%;
-  width: 36px; /* Adjust size to account for border */
+  width: 36px; 
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-}
+} */
 
 .bookmark-btn.saved .fa-bookmark {
   background: #6366f1; 
