@@ -33,6 +33,7 @@ import "../css/UserDashboard.css";
 import { uploadToCloudinary } from "../utils/cloudinary";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { removeEvent } from '../redux/savedEventsSlice';
 
 const UserDashboard = () => {
   const [isEditing, setIsEditing] = useState(false);

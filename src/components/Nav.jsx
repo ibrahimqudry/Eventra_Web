@@ -86,7 +86,7 @@ const Nav = () => {
                   {userData.role === 'admin' && (
                     <Link to="/admin">Dashboard</Link>
                   )}
-                  <Link to="/soprofile">Profile</Link>
+                  <Link to="/user">Profile</Link>
                   <button 
                     className="logout-btn"
                     onClick={() => {
