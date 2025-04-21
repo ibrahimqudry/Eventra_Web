@@ -63,6 +63,12 @@ const Sidebar = () => {
           </li>
           <li>
             <Link to="/">
+              <i className="fas fa-home"></i>
+              <span>Home</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/">
               <i className="fas fa-sign-out-alt"></i>
               <span>Logout</span>
             </Link>
