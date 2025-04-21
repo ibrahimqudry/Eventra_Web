@@ -21,10 +21,9 @@ import Contact from './Pages/Contact';
 import Createevent from './Pages/Createevent';
 import Events from './Pages/Events';
 import EventDetails from './Pages/EventDetails';
-import SavedEvents from './Pages/SavedEvents';
+
 import PreviousEventPage from "./Pages/PreviousEventPage";
 import UserDashboard from './Pages/UserDashboard';
-import Notifications from './Pages/Notifications';
 import CheckoutPage from './Pages/CheckoutPage';
 import GenerateQR from './Pages/GenerateQR';
 import SubscriberInfo from './Pages/SubscriberInfo';
@@ -92,8 +91,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
 
           {/* UserDashboard */}
-          <Route path='/notifications' element={<Notifications />} />
-          <Route path='/savedEvents' element={<SavedEvents />} />
+          
           <Route path="/user" element={<UserDashboard />} />
 
           {/* Paypal */}

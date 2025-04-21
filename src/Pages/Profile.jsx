@@ -6,23 +6,23 @@ import "../css/Profile.css";
 function Profile() {
     return (
       <>
-        <body>
+        <div className="profile-container">
           <SideNav />
 
-        <main className="main-content">
+        <main className="main-profile-content">
           <TopNav />
           <div className="profile-content">
-            <div className="profile-header">
+            <div className="profile-header-dash">
               <div className="profile-cover">
                 <img src="img/ev1.avif" alt="Cover Photo" />
                 <button className="edit-cover"><i className="fas fa-camera"></i> Change Cover</button>
               </div>
-              <div className="profile-info">
-                <div className="profile-avatar">
+              <div className="profile-info-dash">
+                <div className="profile-avatar-dash">
                   <img src="img/john.avif" alt="John Doe" />
                   <button className="edit-avatar"><i className="fas fa-camera"></i></button>
                 </div>
-                <div className="profile-details">
+                <div className="profile-details-dash">
                   <h1>John Doe</h1>
                   <p>Event Manager</p>
                   <div className="profile-stats">
@@ -174,7 +174,7 @@ function Profile() {
             </div>
           </div>
         </main>
-      </body>
+      </div>
     </>
   );
 }

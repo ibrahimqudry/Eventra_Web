@@ -32,7 +32,6 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "../css/UserDashboard.css";
-import { updateProfile } from "../redux/authSlice";
 import { uploadToCloudinary } from "../utils/cloudinary";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";

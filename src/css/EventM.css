@@ -11,12 +11,17 @@
     --danger-color: #f44336;
     --border-color: #e5e7eb;
 }
-body {
+.eventm-container {
     margin: 0;
     padding: 0;
     font-family: 'Rubik', sans-serif;
     background-color: var(--bg-light);
     display: flex;
+}
+.main-content-eventm{
+        margin-left: 280px;
+            flex: 1;
+            min-height: 100vh;
 }
 .events-content {
     padding: 2rem;
@@ -34,7 +39,7 @@ body {
     color: var(--text-primary);
 }
 
-.btn-create {
+.btn-create-event {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     border: none;
@@ -47,8 +52,12 @@ body {
     gap: 0.5rem;
     transition: transform 0.3s ease;
 }
+.create-eventbtn{
+    color: #e5e7eb;
+    padding: 8px;
+}
 
-.btn-create:hover {
+.btn-create-event:hover {
     transform: translateY(-2px);
 }
 

@@ -7,9 +7,9 @@ import "../css/Ordersm.css";
 function Ordersm() {
     return (
         <>
-            <body>
+            <div className='ordersm-container'>
                 <SideNav />
-                <main className="main-content">
+                <main className="order-content">
                     <TopNav />
 
                     <div className="orders-content">
@@ -119,7 +119,7 @@ function Ordersm() {
                                         <td>Tech Summit 2024</td>
                                         <td>Mar 15, 2024</td>
                                         <td>$299</td>
-                                        <td><span className="status-badge completed">Completed</span></td>
+                                        <td><span className="status-badgeee completed">Completed</span></td>
                                         <td>
                                             <div className="actions">
                                                 <button className="action-btn view" title="View">
@@ -145,7 +145,7 @@ function Ordersm() {
                                         <td>Design Conference</td>
                                         <td>Mar 14, 2024</td>
                                         <td>$199</td>
-                                        <td><span className="status-badge pending">Pending</span></td>
+                                        <td><span className="status-badgeee pending">Pending</span></td>
                                         <td>
                                             <div className="actions">
                                                 <button className="action-btn view" title="View">
@@ -171,7 +171,7 @@ function Ordersm() {
                                         <td>Startup Weekend</td>
                                         <td>Mar 13, 2024</td>
                                         <td>$149</td>
-                                        <td><span className="status-badge completed">Completed</span></td>
+                                        <td><span className="status-badgeee completed">Completed</span></td>
                                         <td>
                                             <div className="actions">
                                                 <button className="action-btn view" title="View">
@@ -205,7 +205,7 @@ function Ordersm() {
 
                 </main>
 
-            </body>
+            </div>
 
 
         </>

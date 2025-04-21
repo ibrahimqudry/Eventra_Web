@@ -13,7 +13,7 @@ function TopNav() {
 
     return (
         <nav className="top-nav">
-            <div className="search-bar">
+            <div className="search-bar-topnav">
                 <i className="fas fa-search"></i>
                 <input type="text" placeholder="Search..."/>
             </div>

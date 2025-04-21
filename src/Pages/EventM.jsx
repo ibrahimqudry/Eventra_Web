@@ -4,7 +4,7 @@ import { db } from '../firebase/config';
 import SideNav from '../components/SideNav';
 import TopNav from '../components/TopNav';
 import "../css/EventM.css";
-import "../css/EventManagerDashboard.css";
+
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -60,15 +60,15 @@ function EventM() {
     };
 
     return (
-        <>
+        <div className="eventm-container">
             <SideNav />
-            <main className="main-content">
+            <main className="main-content-eventm">
                 <TopNav />
                 <div className="events-content">
                     <div className="page-header">
                         <h1>Events Management</h1>
-                        <button className="btn-create">
-                            <Link to="/Create" className="create-event-btn">
+                        <button className="btn-create-event">
+                            <Link to="/Create" className="create-eventbtn">
                                 <i className="fas fa-plus"></i> Create New Event
                             </Link>
                         </button>
@@ -148,7 +148,7 @@ function EventM() {
                     </div>
                 </div>
             </main>
-        </>
+        </div>
     );
 }
 

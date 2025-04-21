@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 function EventMDashbord() {
   return (
     <>
-      <body>
+      <div className='envent-manader-dashboard'>
         <SideNav />
 
-        <main className="main-content">
+        <main className="main-contentt">
           <TopNav />
           <div className="dashboard-content">
             <div className="stats-grid">
@@ -114,7 +114,7 @@ function EventMDashbord() {
                       <td>San Francisco</td>
                       <td>500/600</td>
                       <td>
-                        <span className="status-badge upcoming">Upcoming</span>
+                        <span className="status-badgeee upcoming">Upcoming</span>
                       </td>
                       <td>
                         <div className="action-buttons">
@@ -138,7 +138,7 @@ function EventMDashbord() {
                       <td>New York</td>
                       <td>300/300</td>
                       <td>
-                        <span className="status-badge sold-out">Sold Out</span>
+                        <span className="status-badgeee sold-out">Sold Out</span>
                       </td>
                       <td>
                         <div className="action-buttons">
@@ -162,7 +162,7 @@ function EventMDashbord() {
                       <td>London</td>
                       <td>150/200</td>
                       <td>
-                        <span className="status-badge active">Active</span>
+                        <span className="status-badgeee active">Active</span>
                       </td>
                       <td>
                         <div className="action-buttons">
@@ -213,7 +213,7 @@ function EventMDashbord() {
                       <td>Mar 15, 2024</td>
                       <td>$299</td>
                       <td>
-                        <span className="status-badge completed">
+                        <span className="status-badgeee completed">
                           Completed
                         </span>
                       </td>
@@ -230,7 +230,7 @@ function EventMDashbord() {
                       <td>Mar 14, 2024</td>
                       <td>$199</td>
                       <td>
-                        <span className="status-badge pending">Pending</span>
+                        <span className="status-badgeee pending">Pending</span>
                       </td>
                     </tr>
                     <tr>
@@ -245,7 +245,7 @@ function EventMDashbord() {
                       <td>Mar 13, 2024</td>
                       <td>$149</td>
                       <td>
-                        <span className="status-badge completed">
+                        <span className="status-badgeee completed">
                           Completed
                         </span>
                       </td>
@@ -256,7 +256,7 @@ function EventMDashbord() {
             </div>
           </div>
         </main>
-      </body>
+      </div>
     </>
   );
 }
