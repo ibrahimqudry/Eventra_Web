@@ -8,14 +8,14 @@ function SideNav() {
   const location = useLocation();
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="logo">
+    <aside className="sidebar-em">
+      <div className="sidebar-header-em">
+        <div className="logo-em">
           <img src="img/logo.jpeg" alt="Eventera Logo" />
           <span><Link to="/">Eventera</Link></span>
         </div>
       </div>
-      <nav className="sidebar-nav">
+      <nav className="sidebar-nav-em">
         <ul>
           <li className={location.pathname === "/EventMDashbord" ? "active" : ""}>
             <Link to="/EventMDashbord">

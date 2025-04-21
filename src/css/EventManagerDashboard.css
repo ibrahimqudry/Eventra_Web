@@ -11,7 +11,7 @@
     min-height: 100vh;
 }
 
-.dashboard-content {
+.dashboard-content-em  {
     padding: 2rem;
 }
 
@@ -70,7 +70,7 @@
 }
 
 /* Content Sections */
-.content-section {
+.content-section-em {
     background: var(--bg-white);
     border-radius: 1rem;
     padding: 1.5rem;
@@ -78,14 +78,14 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.section-header {
+.section-header-em {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
 
-.section-header h2 {
+.section-header-em h2 {
     font-size: 1.25rem;
     color: var(--text-primary);
     margin: 0;
@@ -103,17 +103,17 @@
 }
 
 /* Tables */
-.table-responsive {
+.table-responsive-em {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
 
-.data-table {
+.data-table-em {
     width: 100%;
     border-collapse: collapse;
 }
 
-.data-table th {
+.data-table-em th {
     background: var(--bg-light);
     padding: 1rem;
     text-align: left;
@@ -123,55 +123,55 @@
     /* display: flex; */
 }
 
-.data-table td {
+.data-table-em td {
     padding: 1rem;
     border-bottom: 1px solid var(--border-color);
     color: var(--text-primary);
 }
 
 .event-name,
-.customer-info {
+.customer-info-em {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 }
 
 .event-name img,
-.customer-info img {
+.customer-info-em img {
     width: 40px;
     height: 40px;
     border-radius: 8px;
     object-fit: cover;
 }
 
-.status-badgeee {
+.status-badgee {
     padding: 0.25rem 0.75rem;
     border-radius: 9999px;
     font-size: 0.875rem;
     font-weight: 500;
 }
 
-.status-badgeee.upcoming {
+.status-badgee.upcoming {
     background: rgba(99, 102, 241, 0.1);
     color: var(--primary-color);
 }
 
-.status-badgeee.active {
+.status-badgee.active {
     background: rgba(76, 175, 80, 0.1);
     color: var(--success-color);
 }
 
-.status-badgeee.sold-out {
+.status-badgee.sold-out {
     background: rgba(244, 67, 54, 0.1);
     color: var(--danger-color);
 }
 
-.status-badgeee.completed {
+.status-badgee.confirmed {
     background: rgba(76, 175, 80, 0.1);
     color: var(--success-color);
 }
 
-.status-badgeee.pending {
+.status-badgee.pending {
     background: rgba(255, 152, 0, 0.1);
     color: var(--warning-color);
 }

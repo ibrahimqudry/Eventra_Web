@@ -196,7 +196,7 @@ function Ordersm() {
                                             <td>{new Date(order.date).toLocaleDateString()}</td>
                                             <td>${order.ticket?.price || 0}</td>
                                             <td>
-                                                <span className={`status-badge ${order.status}`}>
+                                                <span className={`status-badgee ${order.status}`}>
                                                     {order.status}
                                                 </span>
                                             </td>
