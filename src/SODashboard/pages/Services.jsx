@@ -18,7 +18,7 @@ const ServiceCard = ({ service, onEdit, onDelete }) => {
         <span className="service-category">{category}</span>
         <span className={`service-status ${status.toLowerCase()}`}>{status}</span>
       </div>
-      <div className="service-details">
+      <div className="service-details-sod">
         <h3>{name}</h3>
         <div className="service-stats">
           <div className="stat">
@@ -292,7 +292,7 @@ const Services = () => {
     <div className="services-container">
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content-sod">
         <TopBar />
 
         <div className="services-content">

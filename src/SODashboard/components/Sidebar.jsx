@@ -10,9 +10,9 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="logo">
+    <aside className="sidebar-sod">
+      <div className="sidebar-header-sod">
+        <div className="logo-sod">
           <div className="logo-icon">
             <img src="/img/logo.jpeg" alt="" />
           </div>

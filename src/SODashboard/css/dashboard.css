@@ -193,17 +193,17 @@
     font-weight: 500;
 }
 
-.status-badge.confirmed {
+.status-badgeee.confirmed {
     background: rgba(76, 175, 80, 0.1);
     color: var(--success-color);
 }
 
-.status-badge.pending {
+.status-badgeee.pending {
     background: rgba(255, 152, 0, 0.1);
     color: var(--warning-color);
 }
 
-.status-badge.cancelled {
+.status-badgeee.cancelled {
     background: rgba(244, 67, 54, 0.1);
     color: var(--danger-color);
 }
