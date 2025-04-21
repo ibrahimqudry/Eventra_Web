@@ -288,7 +288,13 @@ const UserDashboard = () => {
               <SettingsIcon size={20} />
               <span>Settings</span>
             </button>
-            <button className="nav-link">
+            <button 
+              className="nav-link"
+              onClick={() => {
+                localStorage.removeItem('userData');
+                window.location.href = '/login';
+              }}
+            >
               <LogOut size={20} />
               <span>Logout</span>
             </button>
