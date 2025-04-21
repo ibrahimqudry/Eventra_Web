@@ -1,5 +1,6 @@
 import React from 'react'
 import Nav from '../components/Nav';
+import { BounceLoader } from "react-spinners";
 import Footer from '../components/Footer';
 import "../css/home.css";
 

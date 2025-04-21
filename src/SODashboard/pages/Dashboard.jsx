@@ -9,7 +9,7 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content-sod">
         <TopBar />
 
         <div className="dashboard-content">
@@ -94,7 +94,7 @@ const Dashboard = () => {
                                 </td>
                                 <td>Apr 15, 2024</td>
                                 <td>$2,500</td>
-                                <td><span className="status-badge confirmed">Confirmed</span></td>
+                                <td><span className="status-badgeee confirmed">Confirmed</span></td>
                                 <td>
                                     <div className="action-buttons">
                                         <button className="btn-icon" title="View Details"><i className="fas fa-eye"></i></button>
@@ -120,7 +120,7 @@ const Dashboard = () => {
                                 </td>
                                 <td>Apr 18, 2024</td>
                                 <td>$350</td>
-                                <td><span className="status-badge pending">Pending</span></td>
+                                <td><span className="status-badgeee pending">Pending</span></td>
                                 <td>
                                     <div className="action-buttons">
                                         <button className="btn-icon" title="View Details"><i className="fas fa-eye"></i></button>

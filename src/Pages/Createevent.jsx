@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, collection, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -6,12 +7,9 @@ import { uploadToCloudinary } from '../utils/cloudinary';
 import { toast } from 'react-toastify';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-// import "../css/events.css";
 import "../css/createevent.css";
 
-
 const Createevent = () => {
-
     const handleAddPackage = () => {
         if (eventData.packages.length < 3) {
             setEventData(prev => ({
@@ -34,7 +32,6 @@ const Createevent = () => {
         }
     };
 
-    // Also update the handlePackageChange function to handle multiple packages
     const handlePackageChange = (packageIndex, field, value) => {
         setEventData(prev => ({
             ...prev,
@@ -43,6 +40,7 @@ const Createevent = () => {
             )
         }));
     };
+
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [eventData, setEventData] = useState({
@@ -69,12 +67,8 @@ const Createevent = () => {
         previousEvents: []
     });
 
-    // Add new state for package benefits
     const [currentBenefits, setCurrentBenefits] = useState(['']);
 
-
-
-    // Add handler for previous events
     const [previousEvent, setPreviousEvent] = useState({
         title: '',
         category: '',
@@ -98,8 +92,6 @@ const Createevent = () => {
             attendees: ''
         });
     };
-
-
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
@@ -199,13 +191,13 @@ const Createevent = () => {
     return (
         <>
             <Nav />
-            <section className="create-event-section">
-                <div className="create-event-container">
-                    <h1>Create New Event</h1>
-                    <form className="create-event-form" onSubmit={handleSubmit}>
-                        <div className="form-section">
-                            <h2>Basic Information</h2>
-                            <div className="form-group">
+            <section className="event-creation-wrapper">
+                <div className="event-creation-container">
+                    <h1 className="event-creation-title">Create New Event</h1>
+                    <form className="event-form" onSubmit={handleSubmit}>
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Basic Information</h2>
+                            <div className="form-field">
                                 <label htmlFor="title">Event Title*</label>
                                 <input
                                     type="text"
@@ -215,7 +207,7 @@ const Createevent = () => {
                                     required
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="form-field">
                                 <label htmlFor="category">Category*</label>
                                 <select
                                     id="category"
@@ -247,7 +239,7 @@ const Createevent = () => {
                                 </select>
                             </div>
                             <div className="form-row">
-                                <div className="form-group">
+                                <div className="form-field">
                                     <label htmlFor="date">Date*</label>
                                     <input
                                         type="date"
@@ -257,7 +249,7 @@ const Createevent = () => {
                                         required
                                     />
                                 </div>
-                                <div className="form-group">
+                                <div className="form-field">
                                     <label htmlFor="time">Time*</label>
                                     <input
                                         type="time"
@@ -270,9 +262,9 @@ const Createevent = () => {
                             </div>
                         </div>
 
-                        <div className="form-section">
-                            <h2>Location</h2>
-                            <div className="form-group">
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Location</h2>
+                            <div className="form-field">
                                 <label htmlFor="venue">Venue Name*</label>
                                 <input
                                     type="text"
@@ -282,7 +274,7 @@ const Createevent = () => {
                                     required
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="form-field">
                                 <label htmlFor="address">Address*</label>
                                 <input
                                     type="text"
@@ -293,7 +285,7 @@ const Createevent = () => {
                                 />
                             </div>
                             <div className="form-row">
-                                <div className="form-group">
+                                <div className="form-field">
                                     <label htmlFor="city">City*</label>
                                     <input
                                         type="text"
@@ -303,7 +295,7 @@ const Createevent = () => {
                                         required
                                     />
                                 </div>
-                                <div className="form-group">
+                                <div className="form-field">
                                     <label htmlFor="country">Country*</label>
                                     <input
                                         type="text"
@@ -316,9 +308,9 @@ const Createevent = () => {
                             </div>
                         </div>
 
-                        <div className="form-section">
-                            <h2>Event Details</h2>
-                            <div className="form-group">
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Event Details</h2>
+                            <div className="form-field">
                                 <label htmlFor="description">Description*</label>
                                 <textarea
                                     id="description"
@@ -328,7 +320,7 @@ const Createevent = () => {
                                     required
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="form-field">
                                 <label htmlFor="capacity">Capacity*</label>
                                 <input
                                     type="number"
@@ -338,12 +330,11 @@ const Createevent = () => {
                                     required
                                 />
                             </div>
-
                         </div>
 
-                        <div className="form-section">
-                            <h2>Event Duration</h2>
-                            <div className="form-group">
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Event Duration</h2>
+                            <div className="form-field">
                                 <label htmlFor="duration">Duration (in hours)*</label>
                                 <input
                                     type="number"
@@ -355,11 +346,11 @@ const Createevent = () => {
                             </div>
                         </div>
 
-                        <div className="form-section">
-                            <h2>Event Slider Images</h2>
-                            <div className="form-group">
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Event Slider Images</h2>
+                            <div className="form-field">
                                 <label>Upload Slider Images (Recommended: 3-5 images)</label>
-                                <div className="image-upload-container">
+                                <div className="image-upload-box">
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -382,30 +373,29 @@ const Createevent = () => {
                                             }
                                         }}
                                     />
-                                    <div className="upload-placeholder">
+                                    <div className="upload-prompt">
                                         <i className="fas fa-cloud-upload-alt" />
                                         <p>Upload slider images</p>
                                     </div>
                                 </div>
-                                <div className="image-preview">
+                                <div className="image-gallery">
                                     {eventData.sliderImages.map((url, index) => (
                                         <img
                                             key={index}
                                             src={url}
                                             alt={`Slider ${index + 1}`}
-                                            className="preview-image"
+                                            className="preview-img"
                                         />
                                     ))}
                                 </div>
                             </div>
                         </div>
 
-                        {/* Existing sponsors section */}
-                        <div className="form-section">
-                            <h2>Event Sponsors</h2>
-                            <div className="form-group">
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Event Sponsors</h2>
+                            <div className="form-field">
                                 <label>Upload Sponsor Logos</label>
-                                <div className="image-upload-container">
+                                <div className="image-upload-box">
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -428,30 +418,30 @@ const Createevent = () => {
                                             }
                                         }}
                                     />
-                                    <div className="upload-placeholder">
+                                    <div className="upload-prompt">
                                         <i className="fas fa-cloud-upload-alt" />
                                         <p>Upload sponsor logos</p>
                                     </div>
                                 </div>
-                                <div className="image-preview">
+                                <div className="image-gallery">
                                     {eventData.sponsorLogos.map((url, index) => (
                                         <img
                                             key={index}
                                             src={url}
                                             alt={`Sponsor ${index + 1}`}
-                                            className="preview-image"
+                                            className="preview-img"
                                         />
                                     ))}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="form-section">
-                            <h2>Ticket Packages</h2>
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Ticket Packages</h2>
                             {eventData.packages.map((pkg, packageIndex) => (
-                                <div key={packageIndex} className="package-card">
+                                <div key={packageIndex} className="package-container">
                                     <h3>Package {packageIndex + 1}</h3>
-                                    <div className="form-group">
+                                    <div className="form-field">
                                         <label>Package Type</label>
                                         <select
                                             value={pkg.type}
@@ -462,7 +452,7 @@ const Createevent = () => {
                                             <option value="vip">VIP</option>
                                         </select>
                                     </div>
-                                    <div className="form-group">
+                                    <div className="form-field">
                                         <label>Price*</label>
                                         <input
                                             type="number"
@@ -471,10 +461,10 @@ const Createevent = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="form-group">
+                                    <div className="form-field">
                                         <label>Benefits*</label>
                                         {pkg.benefits.map((benefit, benefitIndex) => (
-                                            <div key={benefitIndex} className="benefit-input">
+                                            <div key={benefitIndex} className="benefit-row">
                                                 <input
                                                     type="text"
                                                     value={benefit}
@@ -484,11 +474,11 @@ const Createevent = () => {
                                                         handlePackageChange(packageIndex, 'benefits', newBenefits);
                                                     }}
                                                     placeholder="Enter benefit"
-                                                // required
                                                 />
                                                 {benefitIndex === pkg.benefits.length - 1 && (
                                                     <button
                                                         type="button"
+                                                        className="add-benefit-btn"
                                                         onClick={() => {
                                                             const newBenefits = [...pkg.benefits, ''];
                                                             handlePackageChange(packageIndex, 'benefits', newBenefits);
@@ -514,7 +504,7 @@ const Createevent = () => {
                             {eventData.packages.length < 3 && (
                                 <button
                                     type="button"
-                                    className="add-package-btn"
+                                    className="add-package-btn-create"
                                     onClick={handleAddPackage}
                                 >
                                     Add New Package
@@ -522,22 +512,22 @@ const Createevent = () => {
                             )}
                         </div>
 
-                        <div className="form-section">
-                            <h2>Previous Events (Optional)</h2>
+                        <div className="form-segment">
+                            <h2 className="form-segment-title">Previous Events (Optional)</h2>
                             {eventData.previousEvents.map((event, index) => (
-                                <div key={index} className="previous-event-card">
+                                <div key={index} className="previous-event-box">
                                     <h3>Previous Event {index + 1}</h3>
                                     <p>{event.title} - {event.category}</p>
                                     <p>{event.location} - {event.date}</p>
                                     <p>Attendees: {event.attendees}</p>
-                                    <div className="event-images">
+                                    <div className="event-image-gallery">
                                         {event.images.map((img, i) => (
                                             <img key={i} src={img} alt={`Event ${index + 1} image ${i + 1}`} />
                                         ))}
                                     </div>
                                 </div>
                             ))}
-                            <div className="add-previous-event">
+                            <div className="add-previous-event-form">
                                 <input
                                     type="text"
                                     placeholder="Event Title"
@@ -587,7 +577,7 @@ const Createevent = () => {
                                     value={previousEvent.attendees}
                                     onChange={(e) => setPreviousEvent({ ...previousEvent, attendees: e.target.value })}
                                 />
-                                <div className="image-upload-container">
+                                <div className="image-upload-box">
                                     <input
                                         type="file"
                                         accept="image/*"
@@ -606,7 +596,7 @@ const Createevent = () => {
                                             }
                                         }}
                                     />
-                                    <div className="upload-placeholder">
+                                    <div className="upload-prompt">
                                         <i className="fas fa-cloud-upload-alt" />
                                         <p>Upload event images</p>
                                     </div>
@@ -616,24 +606,23 @@ const Createevent = () => {
                                 </button>
                             </div>
                         </div>
-                        <div className="form-buttons">
+
+                        <div className="form-actions">
                             <button
                                 type="button"
-                                className="cancel-btn"
+                                className="cancel-action"
                                 onClick={() => navigate('/EventMDashbord')}
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="submit-btn"
+                                className="submit-action"
                                 disabled={loading}
                             >
                                 {loading ? 'Creating...' : 'Create Event'}
                             </button>
                         </div>
-
-
                     </form>
                 </div>
             </section>

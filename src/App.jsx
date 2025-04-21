@@ -25,8 +25,8 @@ import EventDetails from './Pages/EventDetails';
 import PreviousEventPage from "./Pages/PreviousEventPage";
 import UserDashboard from './Pages/UserDashboard';
 import CheckoutPage from './Pages/CheckoutPage';
-import GenerateQR from './Pages/GenerateQR';
-import SubscriberInfo from './Pages/SubscriberInfo';
+// import GenerateQR from './Pages/GenerateQR';
+// import SubscriberInfo from './Pages/SubscriberInfo';
 import Registration from './Pages/Registration';
 
 // Event Manager Pages
@@ -74,8 +74,7 @@ function App() {
           <Route path='/Create' element={<Createevent />} />
           <Route path='/services' element={<Services />} />
           <Route path='/Footer' element={<Footer />} />
-          <Route path="/generateQR" element={<GenerateQR />} />
-          <Route path="/subscriber/:id" element={<SubscriberInfo />} />
+        
 
           {/* Events Pages */}
           <Route path='/events' element={<Events />} />
