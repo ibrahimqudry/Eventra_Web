@@ -30,12 +30,16 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "../css/UserDashboard.css";
+// import "../css/nav.css";
 import { updateProfile } from "../redux/authSlice";
 import { uploadToCloudinary } from '../utils/cloudinary';
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from '../firebase/config';
+import { toast } from 'react-toastify';
+import { toggleSaveEvent } from '../redux/savedEventsSlice';
 
 const UserDashboard = () => {
+  const dispatch = useDispatch();
   // Add isEditing state
   const [isEditing, setIsEditing] = useState(false);
 
@@ -107,6 +111,9 @@ const UserDashboard = () => {
     }
   };
 
+  // Add this line to get saved events from Redux
+  const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
+
   // Update sidebar user info
   const [activeSection, setActiveSection] = useState("dashboard");
 
@@ -133,6 +140,13 @@ const UserDashboard = () => {
       console.error("Error uploading image:", error);
     }
   };
+  const handleRemove = (event) => {
+    dispatch(toggleSaveEvent(event));
+    toast.info('Event Removed Succefully', {
+      icon: '❌',
+      ltr: true
+    });
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -140,13 +154,13 @@ const UserDashboard = () => {
         return (
           <div className="eventra-dashboard-content">
             <div className="eventra-stats-grid">
-              <div className="eventra-stat-card">
+              {/* <div className="eventra-stat-card">
                 <div className="stat-icon">
                   <Calendar size={24} />
                 </div>
                 <div className="stat-info">
                   <h3>My Events</h3>
-                  {/* <p className="stat-value">0 Upcoming</p> */}
+                  <p className="stat-value">0 Upcoming</p>
                 </div>
               </div>
               <div className="eventra-stat-card">
@@ -155,26 +169,98 @@ const UserDashboard = () => {
                 </div>
                 <div className="stat-info">
                   <h3>My Tickets</h3>
-                  {/* <p className="stat-value">0 Active</p> */}
+                  <p className="stat-value">0 Active</p>
                 </div>
-              </div>
-              <div className="eventra-stat-card">
+              </div> */}
+              {/* <div className="eventra-stat-card">
                 <Link to="/savedEvents" className="stat-link">
                   <div className="stat-icon">
                     <Bookmark size={24} />
                   </div>
                   <div className="stat-info">
                     <h3>Saved Events</h3>
-                    {/* <p className="stat-value">0 Saved</p> */}
                   </div>
                 </Link>
-              </div>
+              </div> */}
             </div>
 
             <div className="eventra-recent-activity">
-              <h2>Recent Activity</h2>
-              <div className="activity-list">
-                {/* Add your activity items here */}
+              <h2>Saved Events</h2>
+              <div className="saved-events-container">
+                {savedEvents?.length > 0 ? (
+                  <div className="events-grid">
+                    {savedEvents.slice(0, 3).map((event) => (
+                      <div className="event-card" key={event.id}>
+                        <div className="event-image">
+                          <img src={event.image} alt={event.title} />
+                          <div className="event-date">
+                            <span className="day">{event.date.day}</span>
+                            <span className="month">{event.date.month}</span>
+                          </div>
+                          <div className="event-category">
+                            {{
+                              'music': 'Music & Concerts',
+                              'business': 'Business & Networking',
+                              'tech': 'Tech & Innovation',
+                              'arts': 'Arts & Culture',
+                              'food': 'Food & Drink',
+                              'health': 'Health & Wellness',
+                              'sports': 'Sports & Fitness',
+                              'education': 'Education & Workshops',
+                              'charity': 'Charity & Causes',
+                              'festivals': 'Festivals & Fairs',
+                              'parties': 'Parties & Nightlife',
+                              'travel': 'Travel & Outdoor',
+                              'family': 'Family & Kids',
+                              'fashion': 'Fashion & Beauty',
+                              'spirituality': 'Spirituality & Religion',
+                              'film': 'Film & Media',
+                              'theater': 'Theater & Performing Arts',
+                              'gaming': 'Gaming & Esports',
+                              'literature': 'Literature & Books',
+                              'finance': 'Finance & Investment'
+                            }[event.category] || event.category}
+                          </div>
+                        </div>
+                        <div className="event-details">
+                          <h3>{event.title}</h3>
+                          <div className="event-info">
+                            <p>
+                              <i className="fas fa-map-marker-alt"></i> {event.location}
+                            </p>
+                            <p>
+                              <i className="fas fa-clock"></i> {event.time}
+                            </p>
+                          </div>
+                          <p className="event-description">{event.description}</p>
+                          <div className="event-footer">
+                            <Link to={`/event-details/${event.id}`}>
+                              <button className="register-btn">Learn More</button>
+                            </Link>
+                            <button
+                              className="bookmark-btn saved"
+                              onClick={() => handleRemove(event)}
+                            >
+                              <i className="fas fa-bookmark"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="no-events">
+                    <p>You haven't saved any events yet.</p>
+                    <Link to="/events">
+                      <button className="browse-btn">Browse Events</button>
+                    </Link>
+                  </div>
+                )}
+                {savedEvents?.length > 3 && (
+                  <Link to="/savedEvents" className="view-all-link">
+                    View All Saved Events ({savedEvents.length})
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -212,7 +298,7 @@ const UserDashboard = () => {
                   <label>Email</label>
                   <input
                     type="email"
-                    value={userInfo.email}
+                    value={userData?.email || userInfo.email}
                     className="disabled-input"
                     disabled
                     style={{
@@ -226,7 +312,7 @@ const UserDashboard = () => {
                   <label>Full Name</label>
                   <input
                     type="text"
-                    value={userInfo.name}
+                    value={userData?.fullName || userInfo.name}
                     onChange={(e) => setUserInfo({ ...userInfo, name: e.target.value })}
                   />
                 </div>
@@ -236,7 +322,7 @@ const UserDashboard = () => {
                     type="number"
                     min="13"
                     max="120"
-                    value={userInfo.age}
+                    value={userData?.age || userInfo.age}
                     onChange={(e) => setUserInfo({ ...userInfo, age: e.target.value })}
                     placeholder="Enter your age"
                   />
@@ -245,7 +331,7 @@ const UserDashboard = () => {
                   <label>Phone</label>
                   <input
                     type="tel"
-                    value={userInfo.phone}
+                    value={userData?.phone || userInfo.phone}
                     onChange={(e) => setUserInfo({ ...userInfo, phone: e.target.value })}
                   />
                 </div>
@@ -265,6 +351,53 @@ const UserDashboard = () => {
   return (
     <div className="eventra-dashboard">
       <aside className="eventra-sidebar">
+        <div className="logo" style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 15px',
+              borderRadius: '8px',
+              transition: 'all 0.3s ease',
+              ':hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)'
+              }
+            }}>
+              <div className="logo-icon" style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'white',
+                padding: '5px'
+              }}>
+                <img 
+                  src="/img/logo.jpeg" 
+                  alt="Eventra Logo" 
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain'
+                  }} 
+                />
+              </div>
+              <span style={{
+                fontSize: '1.2rem',
+                fontWeight: '600',
+                color: 'white',
+                letterSpacing: '0.5px'
+              }}>
+                <Link to="/" className="active" style={{
+                  textDecoration: 'none',
+                  color: 'inherit'
+                }}>
+                  Eventra
+                </Link>
+              </span>
+            </div>
+        <br />
         <div className="eventra-user-profile">
           <img src={profileImage} alt="User" className="eventra-user-avatar" />
           <div className="eventra-user-info">
@@ -274,12 +407,13 @@ const UserDashboard = () => {
         </div>
         <nav className="eventra-nav">
           <div className="eventra-nav-links">
+
             <button
               className={`nav-link ${activeSection === "dashboard" ? "active" : ""}`}
               onClick={() => setActiveSection("dashboard")}
             >
               <Calendar size={20} />
-              <span>Dashboard</span>
+              <span>Saved Events</span>
             </button>
             <button
               className={`nav-link ${activeSection === "settings" ? "active" : ""}`}
@@ -288,7 +422,7 @@ const UserDashboard = () => {
               <SettingsIcon size={20} />
               <span>Settings</span>
             </button>
-            <button 
+            <button
               className="nav-link"
               onClick={() => {
                 localStorage.removeItem('userData');
@@ -369,4 +503,15 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
+
+
+const handleRemove = (event) => {
+  dispatch(toggleSaveEvent(event));
+  toast.info('Event Removed Successfully', {
+    icon: '❌',
+    ltr: true
+  });
+};
+
+
 
