@@ -8,7 +8,6 @@ function EventMDashbord() {
     <>
       <body>
         <SideNav />
-
         <main className="main-content">
           <TopNav />
           <div className="dashboard-content">

@@ -56,6 +56,9 @@ import Services from './Pages/services';
 import ServiceDetails from './Pages/ServiceDetails';
 import Previous from './Pages/Previous';
 
+// Add this import at the top with other imports
+import ProtectedRoute from './components/ProtectedRoute';
+import Status from './Pages/Status';
 
 function App() {
 
@@ -77,6 +80,8 @@ function App() {
           <Route path='/Footer' element={<Footer />} />
           <Route path="/generateQR" element={<GenerateQR />} />
           <Route path="/subscriber/:id" element={<SubscriberInfo />} />
+          <Route path="/status" element={<Status />} />
+
 
           {/* Events Pages */}
           <Route path='/events' element={<Events />} />
@@ -86,10 +91,26 @@ function App() {
 
 
           {/* EventManager Dashboard */}
-          <Route path="/EventMDashbord" element={<EventMDashbord />} />
-          <Route path='/Eventm' element={<EventM />} />
-          <Route path='/orders' element={<Orderm />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path="/EventMDashbord" element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <EventMDashbord />
+            </ProtectedRoute>
+          } />
+          <Route path='/Eventm' element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <EventM />
+            </ProtectedRoute>
+          } />
+          <Route path='/orders' element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <Orderm />
+            </ProtectedRoute>
+          } />
+          <Route path='/profile' element={
+            <ProtectedRoute allowedStatuses={['approved']}>
+              <Profile />
+            </ProtectedRoute>
+          } />
 
           {/* UserDashboard */}
           <Route path='/notifications' element={<Notifications />} />
