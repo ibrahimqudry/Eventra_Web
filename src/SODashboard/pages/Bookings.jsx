@@ -51,7 +51,7 @@ const Bookings = () => {
     <div className="bookings-container">
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content-sod">
         <TopBar />
 
         <div className="bookings-content">
@@ -190,7 +190,7 @@ const Bookings = () => {
                   <td>Apr 15, 2024</td>
                   <td>$2,500</td>
                   <td>
-                    <span className="status-badge confirmed">Confirmed</span>
+                    <span className="status-badgeee confirmed">Confirmed</span>
                   </td>
                   <td>
                     <div className="actions">
@@ -232,7 +232,7 @@ const Bookings = () => {
                   <td>Apr 18, 2024</td>
                   <td>$350</td>
                   <td>
-                    <span className="status-badge pending">Pending</span>
+                    <span className="status-badgeee pending">Pending</span>
                   </td>
                   <td>
                     <div className="actions">
@@ -274,7 +274,7 @@ const Bookings = () => {
                   <td>Apr 20, 2024</td>
                   <td>$800</td>
                   <td>
-                    <span className="status-badge completed">Completed</span>
+                    <span className="status-badgeee completed">Completed</span>
                   </td>
                   <td>
                     <div className="actions">

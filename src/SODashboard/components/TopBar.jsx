@@ -12,8 +12,8 @@ const TopBar = () => {
   }, []);
 
   return (
-    <nav className="top-nav">
-      <div className="search-bar">
+    <nav className="top-nav-sod">
+      <div className="search-bar-sod">
         <i className="fas fa-search"></i>
         <input type="text" placeholder="Search..." />
       </div>
