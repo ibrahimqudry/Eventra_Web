@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   Bell,
@@ -33,9 +34,10 @@ import "../css/UserDashboard.css";
 import { uploadToCloudinary } from "../utils/cloudinary";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { removeEvent } from '../redux/savedEventsSlice';
+import { removeEvent } from "../redux/savedEventsSlice";
 
 const UserDashboard = () => {
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -216,7 +218,7 @@ const UserDashboard = () => {
   };
 
   const handleBookmark = (event) => {
-    console.log("Removing event from saved events:", event);
+    dispatch(removeEvent({ id: event.id }));
   };
 
   const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
@@ -246,14 +248,12 @@ const UserDashboard = () => {
                 </div>
               </div>
               <div className="eventra-stat-card">
-                
-                  <div className="stat-icon">
-                    <Bookmark size={24} />
-                  </div>
-                  <div className="stat-info">
-                    <h3>Saved Events</h3>
-                  </div>
-                
+                <div className="stat-icon">
+                  <Bookmark size={24} />
+                </div>
+                <div className="stat-info">
+                  <h3>Saved Events</h3>
+                </div>
               </div>
             </div>
 
