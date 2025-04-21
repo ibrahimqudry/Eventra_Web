@@ -97,9 +97,6 @@ const Contact = () => {
         </div>
       </section>
 
-      <section className="map-section">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d27814.54749421954!2d31.24560983955078!3d30.044419899999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145840b8bc0d3ab3%3A0x5f4fc4c65599b9b5!2sCairo%2C%20Egypt!5e0!3m2!1sen!2sus!4v1647935908186!5m2!1sen!2sus" allowFullScreen loading="lazy"></iframe>
-          </section>
           <Footer />
     </>
   )

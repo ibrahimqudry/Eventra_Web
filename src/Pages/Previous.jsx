@@ -138,101 +138,137 @@ const Previous = () => {
     }
 
     return (
-        <div className="container-previous">
-            <div className="carousel-container">
-                <h1 className="carousel-title">
-                    <h1>{clickedEvent.title}</h1>
-                    <span className="pe-subtitle">Previous Event Highlights and Topics that had been discussed</span>
-                </h1>
+      <div className="pep-container-previous">
+        <div className="pep-carousel-container">
+          <h1 className="pep-carousel-title">
+            <h1>Tech Summit 2024</h1>
+            <span className="pep-subtitle">
+              Previous Event Highlights and Topics that had been discussed
+            </span>
+          </h1>
 
-                <Slider {...settings}>
-                    {clickedEvent.images?.length > 0 ? (
-                        clickedEvent.images.map((image, index) => (
-                            <div key={index} className="card">
-                                <img
-                                    src={image || cards[index % cards.length]?.image}
-                                    alt={`Event Image ${index + 1}`}
-                                />
-                                <div className="card-text">
-                                    <p>
-                                        {[
-                                            'Artificial Intelligence & Machine Learning',
-                                            'Cloud Computing & DevOps',
-                                            'Cybersecurity',
-                                            'Web3, Blockchain & FinTech',
-                                            'Metaverse & AR/VR'
-                                        ][index % 5]}
-                                    </p>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        cards.map((card) => (
-                            <div key={card.id} className="card">
-                                <img src={card.image} alt={`Card ${card.id}`} />
-                                <div className="card-text"><p>{card.text}</p></div>
-                            </div>
-                        ))
-                    )}
-                </Slider>
-
-                <div className="pv-event-header">
-                    <div className="ed-event-meta">
-                        <span className="ed-category">
-                            {{
-                                'music': 'Music & Concerts',
-                                'business': 'Business & Networking',
-                                'tech': 'Tech & Innovation',
-                                'arts': 'Arts & Culture',
-                                'food': 'Food & Drink',
-                                'health': 'Health & Wellness',
-                                'sports': 'Sports & Fitness',
-                                'education': 'Education & Workshops',
-                                'charity': 'Charity & Causes',
-                                'festivals': 'Festivals & Fairs',
-                                'parties': 'Parties & Nightlife',
-                                'travel': 'Travel & Outdoor',
-                                'family': 'Family & Kids',
-                                'fashion': 'Fashion & Beauty',
-                                'spirituality': 'Spirituality & Religion',
-                                'film': 'Film & Media',
-                                'theater': 'Theater & Performing Arts',
-                                'gaming': 'Gaming & Esports',
-                                'literature': 'Literature & Books',
-                                'finance': 'Finance & Investment'
-                            }[clickedEvent.category] || clickedEvent.category}
-                        </span>
-                    </div>
+          <Slider {...settings}>
+            {cards.map((card) => (
+              <div key={card.id} className="pep-card">
+                <img src={card.image} alt={`Card ${card.id}`} />
+                <div className="pep-card-text">
+                  <p>{card.text}</p>
                 </div>
-
-                <div className="pe-event-info">
-                    <div className="pe-info-item">
-                        <i className="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h4>Location</h4>
-                            <p>{clickedEvent.location || 'Location not specified'}</p>
-                        </div>
-                    </div>
-                    <div className="pe-info-item">
-                        <i className="fas fa-calendar-alt"></i>
-                        <div>
-                            <h4>Date</h4>
-                            <p>{clickedEvent.date ? new Date(clickedEvent.date).toLocaleDateString() : 'Date not specified'}</p>
-                        </div>
-                    </div>
-                    <div className="pe-info-item">
-                        <i className="fas fa-users"></i>
-                        <div>
-                            <h4>Number Of Attendees</h4>
-                            <p>{clickedEvent.attendees || '0'} Attendees</p>
-                        </div>
-                    </div>
-                </div>
+              </div>
+            ))}
+          </Slider>
+          <div className="pep-pv-event-header">
+            <div className="pep-ed-event-meta">
+              <span className="pep-ed-category">Technology</span>
             </div>
+          </div>
 
-            {/* Keep all your existing review code below */}
-            {/* ... */}
+          <div className="pep-pe-event-info">
+            <div className="pep-pe-info-item">
+              <i className="fas fa-map-marker-alt"></i>
+              <div>
+                <h4>Location</h4>
+                <p>Cairo International Convention Center</p>
+              </div>
+            </div>
+            <div className="pep-pe-info-item">
+              <i className="fas fa-calendar-alt"></i>
+              <div>
+                <h4>Date</h4>
+                <p>April 15, 2024</p>
+              </div>
+            </div>
+            <div className="pep-pe-info-item">
+              <i className="fas fa-users"></i>
+              <div>
+                <h4>Number Of Attendees</h4>
+                <p>500 Attendees</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <h1 className="pep-title">Customer Reviews</h1>
+
+        {reviews.map((review) => (
+          <div className="pep-review-card" key={review.id}>
+            <div className="pep-review-header">
+              <div>
+                <h3>{review.name}</h3>
+                <p className="pep-review-date">{review.date}</p>
+                <div className="pep-stars">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i}>{i < review.rating ? "★" : "☆"}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="pep-review-actions">
+                <span
+                  className="pep-love-icon"
+                  onClick={() => handleLove(review.id)}
+                  style={{
+                    color: lovedComments[review.id]?.includes(
+                      localStorage.getItem("userId")
+                    )
+                      ? "red"
+                      : "gray",
+                  }}
+                >
+                  ❤️ {lovedComments[review.id]?.length || 0}
+                </span>
+                <button
+                  className="pep-review-edit"
+                  onClick={() => handleEdit(review.id)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="pep-review-delete"
+                  onClick={() => handleDelete(review.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+            <p>{review.comment}</p>
+          </div>
+        ))}
+
+        <div className="pep-form-card">
+          <h2>Submit Your Review</h2>
+          <div className="pep-stars">
+            {[...Array(5)].map((_, i) => (
+              <span
+                key={i}
+                className="pep-star-select"
+                onClick={() => setForm({ ...form, rating: i + 1 })}
+              >
+                {i < form.rating ? "★" : "☆"}
+              </span>
+            ))}
+          </div>
+          <input
+            type="text"
+            placeholder="Name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+          <textarea
+            placeholder="Write your review..."
+            value={form.comment}
+            onChange={(e) => setForm({ ...form, comment: e.target.value })}
+          />
+          <button onClick={handleSubmit}>
+            {editId !== null ? "Update Review" : "Submit Review"}
+          </button>
+        </div>
+      </div>
     );
 };
 

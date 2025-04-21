@@ -40,7 +40,6 @@
 }
 
 .slide-content h1 {
-  font-family: "Playfair Display", serif;
   font-size: 4rem;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -116,7 +115,7 @@
   margin-bottom: 0;
 }
 
-.btn-primary {
+.btn-primary-services {
   display: inline-block;
   background: linear-gradient(135deg, #6366f1, #a855f7);
   color: white;
@@ -211,7 +210,7 @@
 }
 
 .category-filter select {
-  padding: 0.75rem 2rem;
+  padding: 0.75rem;
   border: 1px solid #0a0a0a;
   border-radius: 9999px;
   background: white;
@@ -231,7 +230,7 @@
   gap: 2rem;
 }
 
-.service-card {
+.service-card-serv {
   background: white;
   border-radius: 15px;
   overflow: hidden;

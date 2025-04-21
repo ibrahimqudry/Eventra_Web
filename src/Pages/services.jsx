@@ -125,7 +125,7 @@ const Services = () => {
                                 </div>
                             </div>
 
-                            <a href="#services-catalog" className="btn-primary">Explore Services</a>
+                            <a href="#services-catalog" className="btn-primary-services">Explore Services</a>
                         </div>
                         <div className="services-gallery">
                             <div className="gallery-grid">
@@ -169,7 +169,7 @@ const Services = () => {
 
                     <div className="services-cards">
                         {filteredServices.map(service => (
-                            <div className="service-card" key={service.id}>
+                            <div className="service-card-serv" key={service.id}>
                                 <div className="card-image">
                                     <img src={service.image} alt={service.title} />
                                 </div>

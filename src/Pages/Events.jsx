@@ -105,13 +105,17 @@ const Event = () => {
             type="text"
             placeholder="Search events..."
             value={filters.searchQuery}
-            onChange={(e) => setFilters({ ...filters, searchQuery: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, searchQuery: e.target.value })
+            }
           />
         </div>
         <div className="filters">
           <select
             value={filters.category}
-            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, category: e.target.value })
+            }
           >
             <option value="">All Categories</option>
             <option value="music">Music & Concerts</option>
@@ -137,7 +141,9 @@ const Event = () => {
           </select>
           <select
             value={filters.location}
-            onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, location: e.target.value })
+            }
           >
             <option value="">All Locations</option>
             <option value="Cairo">Cairo</option>
@@ -161,7 +167,7 @@ const Event = () => {
           <div className="loading">Loading events...</div>
         ) : filteredEvents.length > 0 ? (
           filteredEvents.map((event) => (
-            <div className="event-card" key={event.id}>
+            <div className="event-card-events" key={event.id}>
               <div className="event-image">
                 <img src={event.image} alt={event.title} />
                 <div className="event-date">
@@ -169,48 +175,79 @@ const Event = () => {
                   <span className="month">{event.date.month}</span>
                 </div>
                 <div className="event-category">
-                    {{
-                        'music': 'Music & Concerts',
-                        'business': 'Business & Networking',
-                        'tech': 'Tech & Innovation',
-                        'arts': 'Arts & Culture',
-                        'food': 'Food & Drink',
-                        'health': 'Health & Wellness',
-                        'sports': 'Sports & Fitness',
-                        'education': 'Education & Workshops',
-                        'charity': 'Charity & Causes',
-                        'festivals': 'Festivals & Fairs',
-                        'parties': 'Parties & Nightlife',
-                        'travel': 'Travel & Outdoor',
-                        'family': 'Family & Kids',
-                        'fashion': 'Fashion & Beauty',
-                        'spirituality': 'Spirituality & Religion',
-                        'film': 'Film & Media',
-                        'theater': 'Theater & Performing Arts',
-                        'gaming': 'Gaming & Esports',
-                        'literature': 'Literature & Books',
-                        'finance': 'Finance & Investment'
-                    }[event.category] || event.category}
+                  {{
+                    music: "Music & Concerts",
+                    business: "Business & Networking",
+                    tech: "Tech & Innovation",
+                    arts: "Arts & Culture",
+                    food: "Food & Drink",
+                    health: "Health & Wellness",
+                    sports: "Sports & Fitness",
+                    education: "Education & Workshops",
+                    charity: "Charity & Causes",
+                    festivals: "Festivals & Fairs",
+                    parties: "Parties & Nightlife",
+                    travel: "Travel & Outdoor",
+                    family: "Family & Kids",
+                    fashion: "Fashion & Beauty",
+                    spirituality: "Spirituality & Religion",
+                    film: "Film & Media",
+                    theater: "Theater & Performing Arts",
+                    gaming: "Gaming & Esports",
+                    literature: "Literature & Books",
+                    finance: "Finance & Investment",
+                  }[event.category] || event.category}
                 </div>
               </div>
-              <div className="event-details">
+              <div className="event-details-events">
                 <h3>{event.title}</h3>
-                <div className="event-info">
-                  <p><i className="fas fa-map-marker-alt"></i> {event.location}</p>
-                  <p><i className="fas fa-clock"></i> {event.time}</p>
-                  <p><i className="fas fa-users"></i> {event.attendees}</p>
+                <div className="event-info-events">
+                  <p className="event-info-eventsp">
+                    <i className="fas fa-map-marker-alt"></i> {event.location}
+                  </p>
+                  <p className="event-info-eventsp">
+                    <i className="fas fa-clock"></i> {event.time}
+                  </p>
+                  <p className="event-info-eventsp">
+                    <i className="fas fa-users"></i> {event.attendees}
+                  </p>
                 </div>
                 <p className="event-description">{event.description}</p>
                 <div className="event-footer">
                   <Link to={`/event-details/${event.id}`}>
                     <button className="register-btn">Learn More</button>
                   </Link>
-                  <button
-                    className={`bookmark-btn ${savedEvents.some(e => e.id === event.id) ? 'saved' : ''}`}
+                  {/* <button
+                    className={`bookmark-btn-events ${
+                      savedEvents.some((e) => e.id === event.id) ? "saved" : ""
+                    }`}
                     onClick={() => handleBookmark(event)}
-                    aria-label={savedEvents.some(e => e.id === event.id) ? 'Remove from saved' : 'Save event'}
+                    aria-label={
+                      savedEvents.some((e) => e.id === event.id)
+                        ? "Remove from saved"
+                        : "Save event"
+                    }
                   >
                     <i className="fa-regular fa-bookmark"></i>
+                  </button> */}
+                  <button
+                    className={`bookmark-btn-events ${
+                      savedEvents.some((e) => e.id === event.id) ? "saved" : ""
+                    }`}
+                    onClick={() => handleBookmark(event)}
+                    aria-label={
+                      savedEvents.some((e) => e.id === event.id)
+                        ? "Remove from saved"
+                        : "Save event"
+                    }
+                  >
+                    <i
+                      className={`fa-bookmark ${
+                        savedEvents.some((e) => e.id === event.id)
+                          ? "fa-solid"
+                          : "fa-regular"
+                      }`}
+                    ></i>
                   </button>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-:root {
+/* :root {
     --primary: #6366f1;
     --primary-dark: #4f46e5;
     --secondary: #a855f7;
@@ -111,7 +111,7 @@
     border-color: var(--primary);
   }
   
-  button {
+    .review-edit , .review-delete {
     background: var(--primary);
     color: white;
     border: none;
@@ -123,10 +123,10 @@
     transition: all 0.2s ease;
   }
   
-  button:hover {
+  :hover {
     background: var(--primary-dark);
     transform: translateY(-1px);
-  }
+  } 
   
   .cancel-edit {
     background: #f3f4f6;
@@ -276,7 +276,7 @@
   }
   
   .slick-arrow:hover:before {
-    color: var(--primary) !important; /* Ensure hover color stays black */
+    color: var(--primary) !important; 
   }
   .no-reviews {
     text-align: center;
@@ -296,7 +296,6 @@
   .love-icon:hover {
     color: red !important;
   }
-  /* Responsive design */
   @media (max-width: 1024px) {
     .carousel-title h1 {
       font-size: 2rem;
@@ -358,4 +357,319 @@
     .cancel-edit {
       margin-left: 0;
     }
-  }
+  } */
+
+    /* :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #a855f7;
+      --text-primary: #1f2937;
+      --text-secondary: #4b5563;
+      --bg-light: #f3f4f6;
+      --bg-white: #ffffff;
+      --border-color: #e5e7eb;
+      --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+  } */
+  
+    .pep-container-previous {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      height: auto;
+    }
+  
+    .pep-title {
+      font-size: 2.5rem;
+      margin: 2rem 0 1rem;
+      text-align: center;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  
+    .pep-review-card,
+    .pep-form-card {
+      background: var(--bg-white);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+    }
+  
+    .pep-review-card:hover {
+      transform: translateY(-2px);
+    }
+  
+    .pep-review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+  
+    .pep-review-date {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin: 5px 0;
+    }
+  
+    .pep-review-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+  
+    .pep-review-actions button {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 5px 10px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+  
+    .pep-review-actions button:hover {
+      background-color: var(--primary-dark);
+      color: white;
+    }
+  
+    .pep-stars {
+      font-size: 1.5rem;
+      color: #f0c040;
+      margin: 5px 0;
+    }
+  
+    .pep-star-select {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+  
+    .pep-star-select:hover {
+      transform: scale(1.2);
+    }
+  
+    .pep-form-card input,
+    .pep-form-card textarea {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+  
+    .pep-form-card input:focus,
+    .pep-form-card textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+  
+    .pep-review-edit,
+    .pep-review-delete {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+  
+    .pep-review-edit:hover,
+    .pep-review-delete:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+  
+    .pep-cancel-edit {
+      background: #f3f4f6;
+      color: var(--text-primary);
+      margin-left: 10px;
+    }
+  
+    .pep-cancel-edit:hover {
+      background: #e5e7eb;
+      transform: translateY(-1px);
+    }
+  
+    .pep-carousel-container {
+      text-align: center;
+      padding: 40px 20px;
+      background: var(--bg-light);
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+  
+    .pep-carousel-title {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+  
+    .pep-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 10px;
+    }
+  
+    .pep-carousel-title h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  
+    .pep-pe-event-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+      padding: 2rem;
+      border-radius: 15px;
+      background: var(--bg-white);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+  
+    .pep-pe-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .pep-pe-info-item i {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+    }
+  
+    .pep-pe-info-item h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-primary);
+    }
+  
+    .pep-pe-info-item p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+  
+    .pep-card {
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+  
+    .pep-card:hover {
+      transform: translateY(-5px);
+    }
+  
+    .pep-card img {
+      width: 100%;
+      height: 50vh;
+      object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+  
+    .pep-card-text {
+      background-color: transparent;
+      margin: 20px 0;
+      padding: 0 10px;
+    }
+  
+    .pep-card-text p {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+  
+    .pep-love-icon {
+      cursor: pointer;
+      font-size: 1.2em;
+      margin-right: 10px;
+      transition: color 0.3s;
+    }
+  
+    .pep-love-icon:hover {
+      color: red !important;
+    }
+  
+    @media (max-width: 1024px) {
+      .pep-carousel-title h1 {
+        font-size: 2rem;
+      }
+  
+      .pep-subtitle {
+        font-size: 1.1rem;
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .pep-container-previous {
+        padding: 15px;
+      }
+  
+      .pep-title {
+        font-size: 2rem;
+      }
+  
+      .pep-carousel-title h1 {
+        font-size: 1.8rem;
+      }
+  
+      .pep-subtitle {
+        font-size: 1rem;
+      }
+  
+      .pep-pe-event-info {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+      }
+  
+      .pep-review-actions {
+        flex-direction: column;
+        align-items: flex-end;
+      }
+    }
+  
+    @media (max-width: 480px) {
+      .pep-title {
+        font-size: 1.8rem;
+      }
+  
+      .pep-carousel-title h1 {
+        font-size: 1.6rem;
+      }
+  
+      .pep-card img {
+        height: 30vh;
+      }
+  
+      .pep-form-card button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+  
+      .pep-cancel-edit {
+        margin-left: 0;
+      }
+    }
