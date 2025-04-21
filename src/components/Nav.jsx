@@ -4,17 +4,19 @@ import "../css/nav.css";
 
 const Nav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
+
     const handleScroll = () => {
       setMenuOpen(false);
     };
-
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleMenuClick = () => {
@@ -27,7 +29,11 @@ const Nav = () => {
         <div className="logo-icon">
           <img src="/img/logo.jpeg" alt="" />
         </div>
-        <span>Eventera</span>
+        <span>
+          <Link to="/" className="active">
+          Eventra
+        </Link>
+        </span>
       </div>
       <div
         className={`bx bx-menu ${menuOpen ? "bx-x" : ""}`}
@@ -53,11 +59,36 @@ const Nav = () => {
           <Link to="/contact">Contact</Link>
         </li>
 
-        <li>
-          <Link to="/login" className="sign-in-btn">
-            Sign In
-          </Link>
-        </li>
+        {userData ? (
+          <>
+            {userData.role === 'eventManager' && (
+              <li>
+                <Link to="/EventMDashbord">Dashboard</Link>
+              </li>
+            )}
+            {userData.role === 'serviceOwner' && (
+              <li>
+                <Link to="/sodashboard">Dashboard</Link>
+              </li>
+            )}
+            {userData.role === 'admin' && (
+              <li>
+                <Link to="/admin">Dashboard</Link>
+              </li>
+            )}
+            <li>
+              <Link to="/user">Profile</Link>
+            </li>
+          </>
+        ) : null}
+
+        {!userData && (
+          <li>
+            <Link to="/login" className="sign-in-btn">
+              Sign In
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
