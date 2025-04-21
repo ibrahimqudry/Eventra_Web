@@ -1,17 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import '../css/Status.css';
 import Navbar from '../components/Nav';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 const Status = () => {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedUserData = localStorage.getItem('userData');
-        if (storedUserData) {
-            setUserData(JSON.parse(storedUserData));
-        }
-        setLoading(false);
+        const fetchUserData = async () => {
+            try {
+                const storedUserData = localStorage.getItem('userData');
+                if (storedUserData) {
+                    const user = JSON.parse(storedUserData);
+                    const userRef = doc(db, 'users', user.uid);
+                    const docSnap = await getDoc(userRef);
+                    
+                    if (docSnap.exists()) {
+                        const freshData = docSnap.data();
+                        localStorage.setItem('userData', JSON.stringify(freshData));
+                        setUserData(freshData);
+                    } else {
+                        setUserData(user);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
     }, []);
 
     const getStatusColor = (status) => {
