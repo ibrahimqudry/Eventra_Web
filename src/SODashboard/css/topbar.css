@@ -6,7 +6,7 @@
 }
 
 
-.top-nav {
+.top-nav-sod {
   background: var(--bg-white);
     padding: 16px 24px;
     display: flex;
@@ -15,7 +15,7 @@
     border-bottom: 1px solid var(--border-color);
 }
 
-.search-bar {
+.search-bar-sod {
     display: flex;
     align-items: center;
     background: var(--bg-light);
@@ -24,12 +24,12 @@
     width: 300px;
 }
 
-.search-bar i {
+.search-bar-sod i {
     color: var(--text-secondary);
     margin-right: 0.75rem;
 }
 
-.search-bar input {
+.search-bar-sod input {
     border: none;
     background: none;
     outline: none;

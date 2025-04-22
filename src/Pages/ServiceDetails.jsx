@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { db } from '../firebase/config';
+import { doc, getDoc, collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import Slider from 'react-slick';
@@ -30,135 +32,143 @@ const ServiceDetails = () => {
         }
     ]);
 
-    // Add handlers
+    // Remove Firebase reviews fetching from useEffect
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch service details only
+                const serviceDoc = await getDoc(doc(db, 'services', id));
+                if (serviceDoc.exists()) {
+                    const serviceData = { id: serviceDoc.id, ...serviceDoc.data() };
+                    setService(serviceData);
+                    console.log('Fetched service:', serviceData);
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
     const handleRatingClick = (selectedRating) => {
         setRating(selectedRating);
     };
 
-    const handleReviewSubmit = (e) => {
+
+    //     e.preventDefault();
+    //     if (rating === 0 || !reviewText.trim()) return;
+
+    //     const newReview = {
+    //         id: reviews.length + 1,
+    //         user: "Current User",
+    //         avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`,
+    //         rating: rating,
+    //         text: reviewText,
+    //         date: "Just now"
+    //     };
+
+    //     setReviews([newReview, ...reviews]);
+    //     setRating(0);
+    //     setReviewText('');
+    // };
+    const [service, setService] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    // Fetch service and reviews from Firebase
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch service details
+                const serviceDoc = await getDoc(doc(db, 'services', id));
+                if (serviceDoc.exists()) {
+                    const serviceData = { id: serviceDoc.id, ...serviceDoc.data() };
+                    setService(serviceData);
+                    console.log('Fetched service:', serviceData);
+
+                    // Fetch reviews for this service
+                    const reviewsSnapshot = await getDocs(collection(db, 'services', id, 'reviews'));
+                    const reviewsData = reviewsSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    setReviews(reviewsData);
+                    console.log('Fetched reviews:', reviewsData);
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
+    // Get current user from localStorage
+    const currentUser = JSON.parse(localStorage.getItem('userData'));
+    console.log('Current User:', currentUser);
+
+    const handleReviewSubmit = async (e) => {
         e.preventDefault();
         if (rating === 0 || !reviewText.trim()) return;
 
-        const newReview = {
-            id: reviews.length + 1,
-            user: "Current User", // You can replace this with actual user data
-            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`,
-            rating: rating,
-            text: reviewText,
-            date: "Just now"
-        };
 
-        setReviews([newReview, ...reviews]);
-        setRating(0);
-        setReviewText('');
+
+        try {
+            const newReview = {
+                user: currentUser?.name || "Current User",
+                avatar: currentUser?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`,
+                rating: rating,
+                text: reviewText,
+                createdAt: serverTimestamp()
+            };
+
+            // Add review to Firebase
+            const docRef = await addDoc(collection(db, 'services', id, 'reviews'), newReview);
+
+            // Update local state
+            setReviews(prev => [{
+                id: docRef.id,
+                ...newReview,
+                date: "Just now" // Temporary until we format the timestamp
+            }, ...prev]);
+
+            setRating(0);
+            setReviewText('');
+        } catch (error) {
+            console.error('Error submitting review:', error);
+        }
     };
 
-    const services = [
-        {
-            id: 1,
-            title: "Wedding Halls",
-            description: "Turn your dream wedding into reality! Grand ballrooms, intimate garden settings, or chic modern spaces every detail crafted to mirror your love story. ✨💍",
-            image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3",
-            category: "wedding"
-        },
-        {
-            id: 2,
-            title: "Makeup Services",
-            description: "Enhance your natural beauty with expert touch! From glamorous bridal looks to chic evening styles, our artists bring your vision to life. 💄✨",
-            image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f",
-            category: "wedding"
-        },
-        {
-            id: 3,
-            title: "Product Launch",
-            description: "Make your product unforgettable! From concept to execution, we create buzz-worthy events that captivate audiences and leave a lasting impression. 🚀✨",
-            image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678",
-            category: "corporate"
-        },
-        {
-            id: 4,
-            title: "Conference Halls",
-            description: "Host impactful events in style! State-of-the-art facilities, flexible setups, and seamless tech integration—perfect for meetings, seminars, and corporate gatherings. 🎤💼",
-            image: "https://images.unsplash.com/photo-1431540015161-0bf868a2d407",
-            category: "corporate"
-        },
-        {
-            id: 5,
-            title: "Award Ceremonies",
-            description: "Celebrate excellence in style! From red-carpet glamour to elegant stages, we create unforgettable moments that honor achievements and inspire greatness. 🏆✨",
-            image: "https://images.unsplash.com/photo-1531058020387-3be344556be6",
-            category: "corporate"
-        },
-        {
-            id: 6,
-            title: "Photography",
-            description: "Capture the world through your unique perspective! Whether it's breathtaking landscapes, candid emotions, or artistic details, every shot tells a story. 🌟📸",
-            image: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5",
-            category: "social"
-        },
-        {
-            id: 7,
-            title: "Events decorations",
-            description: "Transform any space into a magical setting! From elegant floral arrangements to dazzling lighting, we create unforgettable atmospheres for every occasion. ✨🎉",
-            image: "https://images.unsplash.com/photo-1478146896981-b80fe463b330",
-            category: "decor"
-        },
-        {
-            id: 8,
-            title: "Catering For Events",
-            description: "Delight your guests with exquisite flavors! From gourmet dishes to custom menus, we craft unforgettable culinary experiences for every occasion. 🍴✨",
-            image: "https://images.unsplash.com/photo-1555244162-803834f70033",
-            category: "social"
-        },
-        {
-            id: 9,
-            title: "Music Concerts",
-            description: "Feel the rhythm, live the moment! From electrifying performances to unforgettable acoustics, we bring the stage to life for every music lover. 🎶✨",
-            image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
-            category: "social"
-        }
-    ];
+    if (loading) {
+        return (
+            <>
+                <Nav />
+                <div className="loading-spinner">
+                    <div className="spinner"></div>
+                    <p>Loading service details...</p>
+                </div>
+                <Footer />
+            </>
+        );
+    }
 
-    const service = services.find(s => s.id === parseInt(id));
-
-    const packages = [
-        {
-            id: 1,
-            name: "Basic Package",
-            price: "$999",
-            features: [
-                "Basic setup and coordination",
-                "Standard equipment",
-                "4-hour service",
-                "Basic support"
-            ]
-        },
-        {
-            id: 2,
-            name: "Premium Package",
-            price: "$1999",
-            features: [
-                "Full setup and coordination",
-                "Premium equipment",
-                "8-hour service",
-                "Priority support",
-                "Additional customization options"
-            ]
-        },
-        {
-            id: 3,
-            name: "Luxury Package",
-            price: "$2999",
-            features: [
-                "Complete setup and coordination",
-                "Top-tier equipment",
-                "12-hour service",
-                "24/7 dedicated support",
-                "Full customization options",
-                "Additional services included"
-            ]
-        }
-    ];
+    if (!service) {
+        return (
+            <>
+                <Nav />
+                <div className="service-not-found">
+                    <h2>Service not found</h2>
+                    <p>The service you're looking for doesn't exist or may have been removed.</p>
+                    <Link to="/services" className="btn-primary">Browse Services</Link>
+                </div>
+                <Footer />
+            </>
+        );
+    }
 
     if (!service) {
         return <div>Service not found</div>;
@@ -243,9 +253,9 @@ const ServiceDetails = () => {
                         </div>
                         <div className="slider-container">
                             <Slider {...sliderSettings}>
-                                {inspirationImages.map(image => (
-                                    <div key={image.id} className="slider-item">
-                                        <img src={image.url} alt={image.title} />
+                                {service.sliderImages.map((image, index) => (
+                                    <div key={`${image.id || image.url}_${index}`} className="slider-item">
+                                        <img src={image} alt={image.title} />
                                         <h3>{image.title}</h3>
                                     </div>
                                 ))}
@@ -257,13 +267,13 @@ const ServiceDetails = () => {
                     <div className="packages-section">
                         <h2>Available Packages</h2>
                         <div className="packages-grid">
-                            {packages.map(pkg => (
-                                <div className="package-card" key={pkg.id}>
-                                    <h3>{pkg.name}</h3>
+                            {service.packages?.map(pkg => (
+                                <div className="package-card" key={pkg.id || pkg.type}>
+                                    <h3>{pkg.type}</h3>
                                     <div className="price">{pkg.price}</div>
                                     <ul>
-                                        {pkg.features.map((feature, index) => (
-                                            <li key={index}>{feature}</li>
+                                        {pkg.benefits?.map((benefit, index) => (
+                                            <li key={index}>{benefit}</li>
                                         ))}
                                     </ul>
                                     <button className="book-now-btn">Book Now</button>
@@ -282,55 +292,89 @@ const ServiceDetails = () => {
                                     <span>Your Rating:</span>
                                     <div className="stars">
                                         {[1, 2, 3, 4, 5].map((star) => (
-                                            <button 
-                                                key={star} 
+                                            <button
+                                                key={star}
                                                 className={`star-btn ${star <= rating ? 'active' : ''}`}
                                                 onClick={() => handleRatingClick(star)}
+                                                aria-label={`Rate ${star} star${star !== 1 ? 's' : ''}`}
                                             >
                                                 ★
                                             </button>
                                         ))}
                                     </div>
                                 </div>
-                                <textarea 
+                                <textarea
                                     placeholder="Share your experience..."
                                     className="review-textarea"
                                     value={reviewText}
                                     onChange={(e) => setReviewText(e.target.value)}
+                                    minLength="10"
+                                    maxLength="500"
+                                    required
                                 />
-                                <button 
+                                <button
                                     className="submit-review-btn"
                                     onClick={handleReviewSubmit}
+                                    disabled={rating === 0 || !reviewText.trim()}
                                 >
                                     Submit Review
                                 </button>
                             </div>
-                            
+
                             <div className="reviews-list">
-                                {reviews.map(review => (
-                                    <div className="review-card" key={review.id}>
-                                        <div className="review-header">
-                                            <div className="reviewer-info">
-                                                <img src={review.avatar} alt={review.user} />
-                                                <div>
-                                                    <h4>{review.user}</h4>
-                                                    <span className="review-date">{review.date}</span>
+                                {reviews.length > 0 ? (
+                                    reviews.map(review => (
+                                        <div className="review-card" key={review.id}>
+                                            <div className="review-header">
+                                                <div className="reviewer-info">
+                                                    <img
+                                                        src={currentUser.profileImage}
+                                                        alt={review.user}
+                                                        onError={(e) => {
+                                                            e.target.src = 'https://api.dicebear.com/7.x/avataaars/svg?seed=Default';
+                                                        }}
+                                                    />
+                                                    <div>
+                                                        <h4>{currentUser.fullName}</h4>
+                                                        <span className="review-date">
+                                                            {review.date || new Date(review.createdAt?.seconds * 1000).toLocaleDateString()}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className="rating">
+                                                    {Array(5).fill('★').map((star, index) => (
+                                                        <span
+                                                            key={index}
+                                                            style={{ color: index < review.rating ? '#f6e05e' : '#cbd5e0' }}
+                                                            aria-hidden="true"
+                                                        >
+                                                            {star}
+                                                        </span>
+                                                    ))}
                                                 </div>
                                             </div>
-                                            <div className="rating">
-                                                {Array(5).fill('★').map((star, index) => (
-                                                    <span 
-                                                        key={index}
-                                                        style={{ color: index < review.rating ? '#f6e05e' : '#cbd5e0' }}
-                                                    >
-                                                        {star}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                            <p className="review-text">{review.text}</p>
                                         </div>
-                                        <p className="review-text">{review.text}</p>
+                                    ))
+                                ) : (
+                                    <div className="no-reviews-container">
+                                        <img 
+                                            src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" 
+                                            alt="No reviews icon"
+                                            className="no-reviews-icon"
+                                        />
+                                        <p className="no-reviews">
+                                            No reviews yet. <br />
+                                            <span className="no-reviews-subtext">Be the first to share your experience!</span>
+                                        </p>
+                                        <button 
+                                            className="btn-primary"
+                                            onClick={() => document.querySelector('.review-form').scrollIntoView({ behavior: 'smooth' })}
+                                        >
+                                            Write a Review
+                                        </button>
                                     </div>
-                                ))}
+                                )}
                             </div>
                         </div>
                     </div>
@@ -340,5 +384,6 @@ const ServiceDetails = () => {
         </>
     );
 };
+
 
 export default ServiceDetails;

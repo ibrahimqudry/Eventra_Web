@@ -19,12 +19,13 @@ const ServiceForm = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [sliderImages, setSliderImages] = useState([]);
+  const [uploadingSlider, setUploadingSlider] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = !!id;
 
-  // State for the form data with default status "available" when creating new services
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -32,87 +33,33 @@ const ServiceForm = () => {
     price: "",
     unit: "day",
     image: "",
-    status: "available", // new default attribute when adding a new service
-    packages: [], // Field for service packages
+    sliderImages: [],
+    status: "available",
+    packages: [],
+    createdAt: null,
+    updatedAt: null
   });
 
-  // State for package modal and package data
-  const [isPackageModalOpen, setIsPackageModalOpen] = useState(false);
-  const [packageData, setPackageData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    duration: "",
-  });
-
-  // Generic change handler for input fields
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Image upload handler
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-
-    try {
-      setUploading(true);
-      const imageUrl = await uploadToCloudinary(file);
-      setFormData(prev => ({
-        ...prev,
-        image: imageUrl
-      }));
-      setUploading(false);
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      setUploading(false);
-    }
-  };
-
-  // Handler to add a new package into the packages array
-  const handleAddPackage = () => {
-    setFormData(prev => ({
-      ...prev,
-      packages: [...prev.packages, packageData],
-    }));
-    setPackageData({ name: "", description: "", price: "", duration: "" });
-    setIsPackageModalOpen(false);
-  };
-
-  // Fetch service data if editing an existing service
-  useEffect(() => {
-    if (isEditing) {
-      const fetchService = async () => {
-        try {
-          const serviceDocRef = doc(db, "services", id);
-          const docSnap = await getDoc(serviceDocRef);
-          if (docSnap.exists()) {
-            setFormData(docSnap.data());
-          } else {
-            console.log("No such service!");
-          }
-        } catch (error) {
-          console.error("Error fetching service:", error);
-        }
-      };
-      fetchService();
-    }
-  }, [id, isEditing]);
-
-  // Handler for form submission to add/update service in Firestore
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       toast.loading('Saving service...', { id: 'serviceToast' });
-      
+
       const serviceData = {
-        ...formData,
+        name: formData.name,
+        category: formData.category,
+        description: formData.description,
+        price: Number(formData.price),
+        unit: formData.unit,
+        image: formData.image,
+        sliderImages: formData.sliderImages,
+        status: formData.status,
+        packages: formData.packages.map(pkg => ({
+          type: pkg.type,
+          price: Number(pkg.price),
+          benefits: pkg.benefits.filter(b => b.trim() !== ""),
+        })),
         updatedAt: serverTimestamp(),
       };
 
@@ -127,7 +74,7 @@ const ServiceForm = () => {
           createdAt: serverTimestamp(),
         });
         toast.success('Service added successfully!', { id: 'serviceToast' });
-        
+
         // Clear form data
         setFormData({
           name: "",
@@ -141,16 +88,110 @@ const ServiceForm = () => {
         });
         setImagePreview(null);
       }
-      
+
       setTimeout(() => {
         navigate("/soservices");
       }, 1000);
-      
+
     } catch (error) {
       console.error("Error adding/updating service:", error);
       toast.error('Failed to save service', { id: 'serviceToast' });
     }
   };
+  const [isPackageModalOpen, setIsPackageModalOpen] = useState(false);
+  const [packageData, setPackageData] = useState({
+    type: "standard",
+    price: "",
+    benefits: [""]
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    
+    try {
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      
+      // Upload to Cloudinary
+      const imageUrl = await uploadToCloudinary(file);
+      
+      // Update form data
+      setFormData(prev => ({
+        ...prev,
+        image: imageUrl
+      }));
+      
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+      setImagePreview(null);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSliderImagesUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    setUploadingSlider(true);
+
+    try {
+      const uploadPromises = files.map(file => uploadToCloudinary(file));
+      const uploadedUrls = await Promise.all(uploadPromises);
+
+      setSliderImages(prev => [...prev, ...uploadedUrls]);
+      setFormData(prev => ({
+        ...prev,
+        sliderImages: [...(prev.sliderImages || []), ...uploadedUrls]
+      }));
+    } catch (error) {
+      console.error('Error uploading slider images:', error);
+      toast.error('Failed to upload some images');
+    } finally {
+      setUploadingSlider(false);
+    }
+  };
+
+  const handleAddPackage = () => {
+    if (!packageData.type || !packageData.price) {
+      toast.error('Package type and price are required');
+      return;
+    }
+  
+    setFormData(prev => ({
+      ...prev,
+      packages: [
+        ...prev.packages,
+        {
+          type: packageData.type,
+          price: Number(packageData.price),
+          benefits: packageData.benefits.filter(b => b.trim() !== ""),
+          name: `${packageData.type} Package`, // Added default name
+          description: packageData.benefits.join(', ') // Added default description
+        }
+      ]
+    }));
+  
+    // Reset package data and close modal
+    setPackageData({
+      type: "standard",
+      price: "",
+      benefits: [""]
+    });
+    setIsPackageModalOpen(false);
+  };
+  
 
   return (
     <div className="service-form-page">
@@ -216,43 +257,27 @@ const ServiceForm = () => {
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="price">Price</label>
-                <input
-                  type="number"
-                  id="price"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  placeholder="Enter price"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="unit">Unit</label>
-                <select
-                  id="unit"
-                  name="unit"
-                  value={formData.unit}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="day">Per Day</option>
-                  <option value="hour">Per Hour</option>
-                  <option value="session">Per Session</option>
-                  <option value="event">Per Event</option>
-                </select>
-              </div>
-            </div>
 
             <div className="form-group">
               <label htmlFor="image">Service Image</label>
               <div className="image-upload-container">
                 {imagePreview && (
                   <div className="image-preview">
-                    <img src={imagePreview} alt="Preview" />
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="preview-image"
+                    />
+                    <button
+                      type="button"
+                      className="btn-icon preview-remove"
+                      onClick={() => {
+                        setImagePreview(null);
+                        setFormData(prev => ({ ...prev, image: "" }));
+                      }}
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
                   </div>
                 )}
                 <input
@@ -270,6 +295,54 @@ const ServiceForm = () => {
                     <>
                       <i className="fas fa-cloud-upload-alt"></i>
                       <span>Choose an image</span>
+                    </>
+                  )}
+                </label>
+              </div>
+            </div>
+
+
+            <div className="form-group">
+              <label>Slider Images</label>
+              <div className="image-upload-container">
+                {sliderImages.length > 0 && (
+                  <div className="slider-preview">
+                    {sliderImages.map((img, index) => (
+                      <div key={index} className="slider-image-item">
+                        <img src={img} alt={`Slider ${index}`} />
+                        <button
+                          type="button"
+                          className="btn-icon"
+                          onClick={() => {
+                            setSliderImages(prev => prev.filter((_, i) => i !== index));
+                            setFormData(prev => ({
+                              ...prev,
+                              sliderImages: prev.sliderImages.filter((_, i) => i !== index)
+                            }));
+                          }}
+                        >
+                          <i className="fas fa-times"></i>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <input
+                  type="file"
+                  id="slider-images"
+                  accept="image/*"
+                  onChange={handleSliderImagesUpload}
+                  className="image-input"
+                  multiple
+                  disabled={uploadingSlider}
+                />
+                <label htmlFor="slider-images" className="image-upload-label">
+                  {uploadingSlider ? (
+                    <span>Uploading...</span>
+                  ) : (
+                    <>
+                      <i className="fas fa-cloud-upload-alt"></i>
+                      <span>Choose multiple images</span>
                     </>
                   )}
                 </label>
@@ -331,54 +404,47 @@ const ServiceForm = () => {
             <div className="modal-overlay">
               <div className="package-modal">
                 <h3>Add New Package</h3>
+
                 <div className="form-group">
-                  <label>Package Name</label>
-                  <input
-                    type="text"
-                    value={packageData.name}
+                  <label>Package Type</label>
+                  <select
+                    value={packageData.type}
                     onChange={(e) =>
-                      setPackageData(prev => ({ ...prev, name: e.target.value }))
+                      setPackageData(prev => ({ ...prev, type: e.target.value }))
                     }
-                    placeholder="Enter package name"
-                  />
+                    required
+                  >
+                    <option value="standard">Standard</option>
+                    <option value="pro">Pro</option>
+                    <option value="vip">VIP</option>
+                  </select>
                 </div>
+
                 <div className="form-group">
-                  <label>Description</label>
+                  <label>Benefits</label>
                   <textarea
-                    value={packageData.description}
+                    value={packageData.benefits.join("\n")}
                     onChange={(e) =>
                       setPackageData(prev => ({
                         ...prev,
-                        description: e.target.value,
+                        benefits: e.target.value.split("\n"),
                       }))
                     }
-                    placeholder="Describe the package"
+                    placeholder="Enter benefits (one per line)"
                   />
                 </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Price</label>
-                    <input
-                      type="number"
-                      value={packageData.price}
-                      onChange={(e) =>
-                        setPackageData(prev => ({ ...prev, price: e.target.value }))
-                      }
-                      placeholder="Enter price"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Duration</label>
-                    <input
-                      type="text"
-                      value={packageData.duration}
-                      onChange={(e) =>
-                        setPackageData(prev => ({ ...prev, duration: e.target.value }))
-                      }
-                      placeholder="e.g., 2 hours"
-                    />
-                  </div>
+                <div className="form-group">
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    value={packageData.price}
+                    onChange={(e) =>
+                      setPackageData(prev => ({ ...prev, price: e.target.value }))
+                    }
+                    placeholder="Enter price"
+                  />
                 </div>
+
                 <div className="modal-actions">
                   <button
                     type="button"
@@ -399,12 +465,20 @@ const ServiceForm = () => {
             </div>
           )}
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 };
 
 export default ServiceForm;
+
+
+
+
+
+
+
+
 
 
 

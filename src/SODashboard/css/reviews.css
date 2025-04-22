@@ -1,5 +1,5 @@
 /* Reviews Page Styles */
-.reviews-container {
+.reviews-container-sod {
     margin: 0;
     padding: 0;
     font-family: 'Rubik', sans-serif;
@@ -212,7 +212,7 @@
     color: var(--text-primary);
 }
 
-.service-info {
+.service-info-sod {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -222,14 +222,14 @@
     margin-bottom: 1rem;
 }
 
-.service-info img {
+.service-info-sod img {
     width: 40px;
     height: 40px;
     border-radius: 0.5rem;
     object-fit: cover;
 }
 
-.service-info span {
+.service-info-sod span {
     font-size: 0.875rem;
     color: var(--text-secondary);
 }

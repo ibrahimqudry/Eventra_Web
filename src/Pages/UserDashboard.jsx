@@ -1,3 +1,5 @@
+
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   Bell,
@@ -26,6 +28,7 @@ import {
   Save,
   ArrowRight,
   Bookmark,
+  Home,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -33,8 +36,10 @@ import "../css/UserDashboard.css";
 import { uploadToCloudinary } from "../utils/cloudinary";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { removeEvent } from "../redux/savedEventsSlice";
 
 const UserDashboard = () => {
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState(null);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -215,7 +220,7 @@ const UserDashboard = () => {
   };
 
   const handleBookmark = (event) => {
-    console.log("Removing event from saved events:", event);
+    dispatch(removeEvent({ id: event.id }));
   };
 
   const savedEvents = useSelector((state) => state.savedEvents.savedEvents);
@@ -245,14 +250,12 @@ const UserDashboard = () => {
                 </div>
               </div>
               <div className="eventra-stat-card">
-                
-                  <div className="stat-icon">
-                    <Bookmark size={24} />
-                  </div>
-                  <div className="stat-info">
-                    <h3>Saved Events</h3>
-                  </div>
-                
+                <div className="stat-icon">
+                  <Bookmark size={24} />
+                </div>
+                <div className="stat-info">
+                  <h3>Saved Events</h3>
+                </div>
               </div>
             </div>
 
@@ -480,11 +483,22 @@ const UserDashboard = () => {
                 ))
               ) : (
                 <div className="eventra-no-events">
-                  <Bookmark size={48} />
-                  <p>No saved events yet</p>
-                  <Link to="/events" className="eventra-browse-btn">
-                    Browse Events
-                  </Link>
+                    <div className="empty-state">
+                        <img 
+                            src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" 
+                            // src="img/empty.jpg" 
+                            alt="No events"
+                            className="empty-icon"
+                        />
+                        <h3>No Saved Events Yet</h3>
+                        <p className="empty-message">
+                            You haven't saved any events. Start exploring and save your favorites!
+                        </p>
+                        <Link to="/events" className="empty-action-btn">
+                            <Plus size={16} />
+                            Browse Events
+                        </Link>
+                    </div>
                 </div>
               )}
             </div>
@@ -535,6 +549,7 @@ const UserDashboard = () => {
               <MessageSquare size={20} />
               <span>Reviews</span>
             </button>
+
             <button
               className={`nav-link ${
                 activeSection === "saved-events" ? "active" : ""
@@ -544,6 +559,14 @@ const UserDashboard = () => {
               <Bookmark size={20} />
               <span>Saved Events</span>
             </button>
+            <Link
+              to="/"
+              className={`nav-link ${activeSection === "home" ? "active" : ""}`}
+              onClick={() => setActiveSection("home")}
+            >
+              <Home size={20} />
+              <span>Home</span>
+            </Link>
             <button className="nav-link">
               <LogOut size={20} />
               <span>Logout</span>

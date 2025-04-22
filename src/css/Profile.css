@@ -1,21 +1,22 @@
-.profile-container{
-    margin: 0;
-        padding: 0;
-        font-family: 'Rubik', sans-serif;
-        background-color: var(--bg-light);
-        display: flex;
-}
+
+  .profile-container {
+      margin: 0;
+      padding: 0;
+      font-family: 'Rubik', sans-serif;
+      background-color: var(--bg-light);
+      display: flex;
+  }
 .main-profile-content{
-            margin-left: 280px;
-                flex: 1;
-                min-height: 100vh;
+                margin-left: 280px;
+                    flex: 1;
+                    min-height: 100vh;
 }
-.profile-content {
+.profile-content-em {
     padding: 0 2rem 2rem;
 }
 
 /* Profile Header */
-.profile-header-dash {
+.profile-header-em {
     margin-top: 2rem;
     background: var(--bg-white);
     border-radius: 1rem;
@@ -24,18 +25,18 @@
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.profile-cover {
+.profile-cover-em {
     height: 200px;
     position: relative;
 }
 
-.profile-cover img {
+.profile-cover-em img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.edit-cover {
+.edit-cover-em {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
@@ -50,17 +51,17 @@
     transition: all 0.3s ease;
 }
 
-.edit-cover:hover {
+.edit-cover-em:hover {
     background: white;
     transform: translateY(-2px);
 }
 
-.profile-info-dash {
+.profile-info-em {
     padding: 0 2rem 2rem;
     position: relative;
 }
 
-.profile-avatar-dash {
+.profile-avatar-em {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -70,14 +71,14 @@
     left: 2rem;
 }
 
-.profile-avatar-dash img {
+.profile-avatar-em img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
 
-.edit-avatar {
+.edit-avatar-em {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -94,21 +95,21 @@
     transition: transform 0.3s ease;
 }
 
-.edit-avatar:hover {
+.edit-avatar-em:hover {
     transform: scale(1.1);
 }
 
-.profile-details-dash {
+.profile-details-em {
     padding-top: 5rem;
 }
 
-.profile-details h1 {
+.profile-details-em h1 {
     font-size: 1.75rem;
     color: var(--text-primary);
     margin: 0 0 0.25rem;
 }
 
-.profile-details p {
+.profile-details-em p {
     color: var(--text-secondary);
     margin: 0 0 1.5rem;
 }
@@ -162,8 +163,8 @@
 }
 
 .form-group {
+    gap: 10px;
     margin-bottom: 1.5rem;
-    margin-right: 10px;
 }
 
 .form-group label {

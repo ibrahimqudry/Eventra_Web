@@ -1,18 +1,25 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../css/sidebar.css";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('userData');
+    navigate('/login');
+  };
 
   const isActive = (path) => {
     return location.pathname === path;
   };
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="logo">
+    <aside className="sidebar-sod">
+      <div className="sidebar-header-sod">
+        <div className="logo-sod">
           <div className="logo-icon">
             <img src="/img/logo.jpeg" alt="" />
           </div>
@@ -68,7 +75,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/">
+            <Link to="/login" onClick={handleLogout}>
               <i className="fas fa-sign-out-alt"></i>
               <span>Logout</span>
             </Link>

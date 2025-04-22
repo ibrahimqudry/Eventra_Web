@@ -1,87 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import Nav from '../components/Nav';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../css/services.css';
-
+import { db } from '../firebase/config';
+import { collection, getDocs } from 'firebase/firestore';
 
 const Services = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const services = [
-        {
-            id: 1,
-            title: "Wedding Halls",
-            description: "Turn your dream wedding into reality! Grand ballrooms, intimate garden settings, or chic modern spaces every detail crafted to mirror your love story. ✨💍",
-            image: "../img/card1.jpg",
-            category: "wedding"
-        },
-        {
-            id: 2,
-            title: "Makeup Services",
-            description: "Enhance your natural beauty with expert touch! From glamorous bridal looks to chic evening styles, our artists bring your vision to life. 💄✨",
-            image: "../img/card2.jpg",
-            category: "wedding"
-        },
-        {
-            id: 3,
-            title: "Product Launch",
-            description: "Make your product unforgettable! From concept to execution, we create buzz-worthy events that captivate audiences and leave a lasting impression. 🚀✨",
-            image: "/img/card3.webp",
-            category: "corporate"
-        },
-        {
-            id: 4,
-            title: "Conference Halls",
-            description: "Host impactful events in style! State-of-the-art facilities, flexible setups, and seamless tech integration—perfect for meetings, seminars, and corporate gatherings. 🎤💼",
-            image: "/img/card4.jpg",
-            category: "corporate"
-        },
-        {
-            id: 5,
-            title: "Award Ceremonies",
-            description: "Celebrate excellence in style! From red-carpet glamour to elegant stages, we create unforgettable moments that honor achievements and inspire greatness. 🏆✨",
-            image: "/img/card5.webp",
-            category: "corporate"
-        },
-        {
-            id: 6,
-            title: "Photogrphy",
-            description: "Capture the world through your unique perspective! Whether it's breathtaking landscapes, candid emotions, or artistic details, every shot tells a story. 🌟📸",
-            image: "/img/card6.jpg",
-            category: "social"
-        },
-        {
-            id: 7,
-            title: "Events decorations",
-            description: "Transform any space into a magical setting! From elegant floral arrangements to dazzling lighting, we create unforgettable atmospheres for every occasion. ✨🎉",
-            image: "/img/card7.jpg",
-            category: "decor"
-        },
-        {
-            id: 8,
-            title: "Catering For Events",
-            description: "Delight your guests with exquisite flavors! From gourmet dishes to custom menus, we craft unforgettable culinary experiences for every occasion. 🍴✨",
-            image: "/img/card8.jpg",
-            category: "social"
-        },
-        {
-            id: 9,
-            title: "Music Concerts",
-            description: "Feel the rhythm, live the moment! From electrifying performances to unforgettable acoustics, we bring the stage to life for every music lover. 🎶✨",
-            image: "/img/card10.jpg",
-            category: "social"
-        }
-    ];
+    // Fetch services from Firebase
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'services'));
+                const servicesData = [];
+                querySnapshot.forEach((doc) => {
+                    servicesData.push({ id: doc.id, ...doc.data() });
+                });
+                setServices(servicesData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching services:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchServices();
+    }, []);
 
     const filteredServices = services.filter(service => {
-        const matchesSearch = service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            service.description.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = !selectedCategory || service.category === selectedCategory;
+        const title = service.title || '';
+        const description = service.description || '';
+        const category = service.category || '';
+        
+        const matchesSearch = title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            description.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = !selectedCategory || category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
+
+    if (loading) {
+        return (
+            <>
+                <Nav />
+                <div className="loading-spinner">
+                    <div className="spinner"></div>
+                    <p>Loading services...</p>
+                </div>
+                <Footer />
+            </>
+        );
+    }
 
     return (
         <>

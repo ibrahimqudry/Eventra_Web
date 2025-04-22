@@ -29,7 +29,7 @@ const ReviewCard = ({ review }) => {
           <span>{rating.toFixed(1)}</span>
         </div>
       </div>
-      <div className="service-info">
+      <div className="service-info-sod">
         <img src={service.image} alt={service.name} />
         <span>{service.name}</span>
       </div>
@@ -128,9 +128,9 @@ const Reviews = () => {
   );
 
   return (
-    <div className="reviews-container">
+    <div className="reviews-container-sod">
       <Sidebar />
-      <main className="main-content">
+      <main className="main-content-sod">
         <TopBar />
 
         <div className="reviews-content">

@@ -105,7 +105,7 @@ function EventMDashbord() {
 
         <main className="main-contentt">
           <TopNav />
-          <div className="dashboard-content">
+          <div className="dashboard-content-em">
             <div className="stats-grid">
               <div className="stat-card">
                 <div
@@ -177,16 +177,15 @@ function EventMDashbord() {
               </div>
 
             </div>
-          </div>
-
-          <div className="content-section">
-            <div className="section-header">
+          
+          <div className="content-section-em">
+            <div className="section-header-em">
               <h2>Recent Events</h2>
               <Link to="/Eventm" className="btn-link">
                 View All
               </Link>
             </div>
-            <div className="table-responsive">
+            <div className="table-responsive-em">
               <table className="data-table">
                 <thead>
                   <tr>
@@ -240,14 +239,14 @@ function EventMDashbord() {
             </div>
           </div>
       {/* Recent Orders */}
-      <div className="content-section">
-        <div className="section-header">
+      <div className="content-section-em">
+        <div className="section-header-em">
           <h2>Recent Orders</h2>
           <Link to="/orders" className="btn-link">
             View All
           </Link>
         </div>
-        <div className="table-responsive">
+        <div className="table-responsive-em">
           <table className="data-table">
             <thead>
               <tr>
@@ -264,7 +263,7 @@ function EventMDashbord() {
                 <tr key={order.id}>
                   <td>#{order.id.substring(0, 8)}</td>
                   <td>
-                    <div className="customer-info">
+                    <div className="customer-info-em">
                       <img
                         src={order.customer?.photoURL || 'img/per2.avif'}
                         alt={order.customer?.name || 'Customer'}
@@ -276,7 +275,7 @@ function EventMDashbord() {
                   <td>{new Date(order.payment?.date).toLocaleDateString()}</td>
                   <td>${order.payment?.amount || 0}</td>
                   <td>
-                    <span className={`status-badge ${order.status}`}>
+                    <span className={`status-badgee ${order.status}`}>
                       {order.status}
                     </span>
                   </td>
@@ -285,7 +284,8 @@ function EventMDashbord() {
             </tbody>
           </table>
         </div>
-    </div>
+            </div>
+            </div>
   </main>
 </div>
 

@@ -28,8 +28,8 @@ const Nav = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo">
-        <div className="logo-icon">
+      <div className="logo-main">
+        <div className="logo-icon-main">
           <img src="/img/logo.jpeg" alt="" />
         </div>
         <span>
@@ -86,7 +86,7 @@ const Nav = () => {
                   {userData.role === 'admin' && (
                     <Link to="/admin">Dashboard</Link>
                   )}
-                  <Link to="/soprofile">Profile</Link>
+                  <Link to="/user">Profile</Link>
                   <button 
                     className="logout-btn"
                     onClick={() => {
