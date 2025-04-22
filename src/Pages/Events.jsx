@@ -92,9 +92,6 @@ const Event = () => {
         <div className="events-hero-content">
           <h1>Discover Events</h1>
           <p>Find and join amazing events happening around you</p>
-          <Link to="/Create" className="create-event-btn">
-            <i className="fas fa-plus"></i> Create New Event
-          </Link>
         </div>
       </section>
 

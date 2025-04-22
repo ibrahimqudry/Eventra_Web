@@ -33,11 +33,11 @@ const Nav = () => {
     if (!userData) return "/user";
     switch (userData.role) {
       case "eventManager":
-        return "/eventManagerProfile";
+        return "/profile";
       case "serviceOwner":
-        return "/serviceOwnerProfile";
+        return "/soprofile";
       case "admin":
-        return "/adminProfile";
+        return "/admin";
       default:
         return "/user";
     }

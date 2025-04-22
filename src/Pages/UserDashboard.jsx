@@ -567,10 +567,12 @@ const UserDashboard = () => {
               <Home size={20} />
               <span>Home</span>
             </Link>
-            <button className="nav-link">
-              <LogOut size={20} />
-              <span>Logout</span>
-            </button>
+            <Link to="/login" className="nav-link">
+              <button className="nav-link">
+                <LogOut size={20} />
+                <span>Logout</span>
+              </button>
+            </Link>
           </div>
         </nav>
       </aside>
