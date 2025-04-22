@@ -1,4 +1,8 @@
 
+
+
+
+
 .navbar {
     position: relative;
     width: 100%;
@@ -40,8 +44,6 @@
 
 .nav-links {
     display: flex;
-    justify-content: center;
-    align-items: center;
     gap: 2rem;
     list-style: none;
 }
