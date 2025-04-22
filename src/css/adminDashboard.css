@@ -60,11 +60,11 @@
     background: rgba(255, 255, 255, 0.2);
 }
 
-.sidebar-nav {
+.sidebar-nav-admin {
     padding: 1rem 0;
 }
 
-.sidebar-nav a {
+.sidebar-nav-admin a {
     display: flex;
     align-items: center;
     padding: 1rem 1.5rem;
@@ -76,11 +76,11 @@
     white-space: nowrap;
 }
 
-.sidebar-nav a:hover, .sidebar-nav a.active {
+.sidebar-nav-admin a:hover, .sidebar-nav-admin a.active {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.sidebar-nav a i {
+.sidebar-nav-admin a i {
     margin-right: 1rem;
     width: 20px;
     text-align: center;
@@ -359,7 +359,7 @@
     margin-bottom: 1rem;
 }
 
-.status-badge {
+.status-badge-admin {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -370,14 +370,26 @@
     font-weight: 500;
 }
 
-.status-badge[data-status="pending"] {
-    background: rgba(var(--primary), 0.1);
-    color: var(--primary);
+.status-badge-admin[data-status="pending"] {
+    background: #6365f132 ;
+    color: #4f46e5;
 }
 
-.status-badge[data-status="approved"] {
+.status-badge-admin[data-status="approved"] {
     background: rgba(46, 204, 113, 0.1);
     color: #2ecc71;
+}
+.status-badge-admin[data-status="rejected"] {
+    background: rgba(235, 87, 87, 0.1);
+    color: #eb5757;
+}
+.status-badge-admin[data-status="approved"] {
+    background: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+}
+.status-badge-admin[data-status="verified"] {
+    background: rgba(87, 129, 235, 0.1);
+    color: #5797eb;
 }
 
 .registration-card {

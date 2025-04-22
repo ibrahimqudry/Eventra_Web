@@ -137,7 +137,7 @@ const AdminDashboard = () => {
                         {isSidebarOpen ? '←' : '→'}
                     </button>
                 </div>
-                <nav className="sidebar-nav">
+                <nav className="sidebar-nav-admin">
                     <Link to="#" className={activeTab === 'dashboard' ? 'active' : ''} onClick={() => setActiveTab('dashboard')}>
                         <i className="fas fa-home"></i> All Registrations
                     </Link>
@@ -215,7 +215,7 @@ const AdminDashboard = () => {
                             ) : (
                                 filteredRegistrations.map(registration => (
                                     <div key={registration.id} className="registration-card">
-                                        <div className="status-badge" data-status={registration.verificationStatus}>
+                                        <div className="status-badge-admin" data-status={registration.verificationStatus}>
                                             {registration.verificationStatus}
                                         </div>
                                         <div className="registration-info">
