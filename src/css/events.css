@@ -60,23 +60,24 @@
     gap: 1rem;
 }
 
-.search-bar {
+.search-bar-main-events {
     flex: 1;
     min-width: 300px;
     position: relative;
 }
 
-.search-bar i {
+.search-bar-main-events i {
     position: absolute;
-    left: 1rem;
+    left: 0.5rem;
+    margin-right: 40px;
     top: 50%;
     transform: translateY(-50%);
     color: #6b7280;
 }
 
-.search-bar input {
+.search-bar-main-events input {
     width: 100%;
-    padding: 0.25rem 1rem 0.25rem 2.5rem;
+    padding:  1rem;
     border: 1px solid #e5e7eb;
     border-radius: 9999px;
     font-size: 1rem;

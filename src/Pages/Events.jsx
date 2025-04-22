@@ -96,7 +96,7 @@ const Event = () => {
       </section>
 
       <section className="search-filter">
-        <div className="search-bar">
+        <div className="search-bar-main-events">
           <i className="fas fa-search"></i>
           <input
             type="text"
