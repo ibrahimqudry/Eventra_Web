@@ -483,11 +483,22 @@ const UserDashboard = () => {
                 ))
               ) : (
                 <div className="eventra-no-events">
-                  <Bookmark size={48} />
-                  <p>No saved events yet</p>
-                  <Link to="/events" className="eventra-browse-btn">
-                    Browse Events
-                  </Link>
+                    <div className="empty-state">
+                        <img 
+                            src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" 
+                            // src="img/empty.jpg" 
+                            alt="No events"
+                            className="empty-icon"
+                        />
+                        <h3>No Saved Events Yet</h3>
+                        <p className="empty-message">
+                            You haven't saved any events. Start exploring and save your favorites!
+                        </p>
+                        <Link to="/events" className="empty-action-btn">
+                            <Plus size={16} />
+                            Browse Events
+                        </Link>
+                    </div>
                 </div>
               )}
             </div>
