@@ -4,13 +4,13 @@ import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAofkJP63Y8udpLS28gZfjmQaN3bPW6FMU",
-    authDomain: "eventra-df9ca.firebaseapp.com",
-    projectId: "eventra-df9ca",
-    storageBucket: "eventra-df9ca.firebasestorage.app",
-    messagingSenderId: "468930877386",
-    appId: "1:468930877386:web:78cb43bf7d65dacfe06133",
-    measurementId: "G-RQM8SXP352"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

@@ -660,79 +660,9 @@
     .review-form {
         padding: 15px;
     }
-}
-.loading-spinner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 50vh;
-    text-align: center;
-}
-
-.spinner {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #3498db;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.service-not-found {
-    text-align: center;
-    padding: 50px 20px;
-}
-
-.service-not-found h2 {
-    color: #e74c3c;
-    margin-bottom: 20px;
-}
-
-.no-reviews-container {
-    text-align: center;
+}.no-images-message {
     padding: 2rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    margin: 2rem 0;
-}
-
-.no-reviews-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 1rem;
-    opacity: 0.7;
-}
-
-.no-reviews {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-.no-reviews-subtext {
-    font-size: 0.9rem;
+    text-align: center;
     color: #666;
-    display: block;
-    margin-top: 0.5rem;
-}
-
-.btn-primary {
-    background-color: #4a6bff;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-    background-color: #3a5bef;
+    font-style: italic;
 }

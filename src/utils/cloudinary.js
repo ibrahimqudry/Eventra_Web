@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dih2r1pav/upload";
-const UPLOAD_PRESET = "Eventra";
+const CLOUDINARY_URL = import.meta.env.VITE_CLOUDINARY_URL;
+const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 export const uploadToCloudinary = async (file) => {
     const formData = new FormData();
@@ -18,9 +18,9 @@ export const uploadToCloudinary = async (file) => {
 };
 
 const CLOUDINARY_CONFIG = {
-    cloudName: 'dxqjyqz8p',
-    uploadPreset: 'ml_default',
-    apiUrl: 'https://api.cloudinary.com/v1_1/dxqjyqz8p/image/upload'
+    cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dxqjyqz8p',
+    uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'ml_default',
+    apiUrl: import.meta.env.VITE_CLOUDINARY_API_URL || 'https://api.cloudinary.com/v1_1/dxqjyqz8p/image/upload'
 };
 
 export default CLOUDINARY_CONFIG;

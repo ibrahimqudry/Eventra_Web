@@ -253,12 +253,18 @@ const ServiceDetails = () => {
                         </div>
                         <div className="slider-container">
                             <Slider {...sliderSettings}>
-                                {service.sliderImages.map((image, index) => (
-                                    <div key={`${image.id || image.url}_${index}`} className="slider-item">
-                                        <img src={image} alt={image.title} />
-                                        <h3>{image.title}</h3>
+                                {service.sliderImages?.length > 0 ? (
+                                    service.sliderImages.map((image, index) => (
+                                        <div key={`${image.id || image.url}_${index}`} className="slider-item">
+                                            <img src={image} alt={image.title || `Gallery image ${index}`} />
+                                            <h3>{image.title || `Image ${index + 1}`}</h3>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="no-images-message">
+                                        <p>No inspiration images available</p>
                                     </div>
-                                ))}
+                                )}
                             </Slider>
                         </div>
                     </div>
