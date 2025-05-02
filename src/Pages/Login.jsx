@@ -34,8 +34,8 @@ const Login = () => {
 
     const onSubmit = async (data) => {
         try {
-            // Check for admin credentials
-            if (data.email === 'admin@eventra.com' && data.password === 'AdminEventra1+') {
+            if (data.email === import.meta.env.VITE_ADMIN_EMAIL && 
+                data.password === import.meta.env.VITE_ADMIN_PASSWORD) {
                 navigate('/admin');
                 return;
             }
