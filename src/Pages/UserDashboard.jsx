@@ -30,11 +30,11 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import "../css/UserDashboard.css";
 import { uploadToCloudinary } from "../utils/cloudinary";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { removeEvent } from "../redux/savedEventsSlice";
+import "../css/UserDashboard.css";
 
 const UserDashboard = () => {
   const dispatch = useDispatch();
