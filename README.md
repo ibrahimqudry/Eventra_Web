@@ -1,18 +1,16 @@
 # Eventra Web
 
-## Description
 Eventra Web is a web-based event management platform built with React and Vite, integrated with Firebase for backend services and Cloudinary for media management.
 
-## Technologies Used
-- React
-- Vite
-- Firebase (Authentication, Firestore)
-- Cloudinary
-- React Router DOM
-- React Hook Form
-- Zod (for form validation)
+## 🚀 Technologies Used
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 
-## Setup Instructions
+## 🛠️ Setup Instructions
 1. Clone the repository
 ```bash
 git clone https://github.com/ibrahimqudry/Eventra_Web.git
@@ -44,4 +42,4 @@ VITE_CLOUDINARY_API_SECRET=your_api_secret
 npm run dev
 ```
 5. Open your browser and navigate to http://localhost:5173
-Note: Make sure you have Node.js (v16 or higher) and npm installed on your system before starting the setup process.
+- Note: Make sure you have Node.js (v16 or higher) and npm installed on your system before starting the setup process.
