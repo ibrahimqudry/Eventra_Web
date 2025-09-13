@@ -13,7 +13,7 @@ const About = () => {
       <Nav />
       <section className="about-hero">
         <div className="about-hero-content">
-          <h1>About Eventera</h1>
+          <h1>About Eventra</h1>
           <p>Creating Unforgettable Moments Since 2020</p>
         </div>
       </section>
@@ -22,7 +22,7 @@ const About = () => {
         <div className="story-content">
           <div className="story-text">
             <h2>Our Story</h2>
-            <p>Founded in 2020, Eventera has grown from a small local events platform to a comprehensive event management solution trusted by thousands of organizers and attendees worldwide. Our journey began with a simple mission: to make event planning and discovery seamless and enjoyable for everyone.</p>
+            <p>Founded in 2020, Eventra has grown from a small local events platform to a comprehensive event management solution trusted by thousands of organizers and attendees worldwide. Our journey began with a simple mission: to make event planning and discovery seamless and enjoyable for everyone.</p>
             <p>Today, we're proud to be at the forefront of the events industry, connecting people through meaningful experiences and helping create memories that last a lifetime.</p>
           </div>
           <div className="story-image">
